@@ -1,1 +1,1 @@
-JavaPass, your new local password manager !
+# JavaPass, your new local password manager !
