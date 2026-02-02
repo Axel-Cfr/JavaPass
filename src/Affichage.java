@@ -3,5 +3,6 @@ public class Affichage {
 
     public static void afficherBienvenue() {
         System.out.println(GREEN + "Bienvenue sur JavaPass !");
+        System.out.println("Created by Axel Chabot, Morgann Morvan, and Octave Girault");
     }
 }
