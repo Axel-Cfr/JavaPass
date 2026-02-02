@@ -28,6 +28,23 @@ public class AES {
 		String decryptedText = decrypt(encryptedText, secretKey);
 		System.out.println("Message decrypté: " + decryptedText);
 	}
+
+	private static String encrypt(String plainText, SecretKey secretKey) throws Exception
+	{
+		// chargement du clair dans un tableau d'octets
+		byte[] plainTextByte = plainText.getBytes();
+ 
+		// initialisation du chiffreur en mode chiffrement avec clé secrete
+		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+ 
+		// chiffrement du tableau d'octets
+		byte[] encryptedByte = cipher.doFinal(plainTextByte);
+ 
+		// chaine de caractères représentant le chiffré 
+		Base64.Encoder encoder = Base64.getEncoder();
+		String encryptedText = encoder.encodeToString(encryptedByte);
+		return encryptedText;
+	}
  
 	private static String decrypt(String encryptedText, SecretKey secretKey) throws Exception
 	{
@@ -44,22 +61,5 @@ public class AES {
 		// chaine de caractères représentant le clair
 		String decryptedText = new String(decryptedByte);
 		return decryptedText;
-	}
- 
-	private static String encrypt(String plainText, SecretKey secretKey) throws Exception
-	{
-		// chargement du clair dans un tableau d'octets
-		byte[] plainTextByte = plainText.getBytes();
- 
-		// initialisation du chiffreur en mode chiffrement avec clé secrete
-		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
- 
-		// chiffrement du tableau d'octets
-		byte[] encryptedByte = cipher.doFinal(plainTextByte);
- 
-		// chaine de caractères représentant le chiffré 
-		Base64.Encoder encoder = Base64.getEncoder();
-		String encryptedText = encoder.encodeToString(encryptedByte);
-		return encryptedText;
 	}
 }
