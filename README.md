@@ -1,3 +1,3 @@
-# JavaPass, your new local password manager !
+# JavaPass, your new local and open-source password manager !
 
-By AXel Bebs, Morgann wakeup and octave miel
+By Axel Bebs, Morgann Wakeup and Octave Miel
