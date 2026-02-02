@@ -1,0 +1,23 @@
+Architecture avec 2 tables principales:
+
+
+
+utilisateurs et password
+//pour le site de schema
+Table utilisateurs {
+  user_id integer [primary key]//autoincrement
+  username varchar(100) [unique] //not null
+  master_password_hash varchar(256)//not null
+  salt varchar(64)//not null
+  created_at timestamp //DEFAULT CURRENT_TIMESTAMP
+  last_login TIMESTAMP
+}
+//pour requetes SQL
+CREATE TABLE users (
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    master_password_hash VARCHAR(256) NOT NULL,  // Hash du mot de passe maître (jamais en clair!)
+    salt VARCHAR(64) NOT NULL,                   // Salt pour la dérivation de clé
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP
+);
