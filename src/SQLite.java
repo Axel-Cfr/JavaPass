@@ -14,7 +14,7 @@ public class SQLite {
     {
         try{
             Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
-            Statement stmt = co.createStatement();
+            //Statement stmt = co.createStatement();
             System.out.println("Connexion a la base de donnees etablie");
         }
         catch(SQLException e)// On gere les exceptions liees a la base de donnees (tres important))
@@ -25,8 +25,24 @@ public class SQLite {
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static void ajoutTable()//On cree une table dans la base de donnees
+    public static void ajoutTable_base()//On cree une table dans la base de donnees
     {
-        //not finished yet
+        try{
+            Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+            Statement stmt = co.createStatement();
+            String sql = "CREATE TABLE IF NOT EXISTS user " +
+                         "(user_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                         " username      TEXT    NOT NULL, " +
+                         " , " +
+                         " )";
+            stmt.executeUpdate(sql);
+            stmt.close();
+            co.close();
+            System.out.println("Table creee avec succes");
+        }
+        catch(SQLException e)// On gere les exceptions liees a la base de donnees (tres important))
+        {
+            System.err.println(e.getMessage());// message d'erreur
+        }
     }
 }

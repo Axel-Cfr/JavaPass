@@ -2,9 +2,10 @@ Architecture avec 2 tables principales:
 
 https://dbdiagram.io/d
 
+
 utilisateurs et password
 //pour le site de schema
-Table utilisateurs {
+Table user {
   user_id integer [primary key]//autoincrement
   username varchar(100) [unique] //not null
   master_password_hash varchar(256)//not null
