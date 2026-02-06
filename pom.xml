@@ -10,7 +10,7 @@
   <name>JavaPass</name>
   <url>http://maven.apache.org</url>
 
-  <dependencies>
+<dependencies>
     <dependency>
         <groupId>org.bouncycastle</groupId>
         <artifactId>bcprov-jdk18on</artifactId>

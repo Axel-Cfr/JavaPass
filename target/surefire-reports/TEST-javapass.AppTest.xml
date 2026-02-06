@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="javapass.AppTest" time="0.047" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="javapass.AppTest" time="0.026" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="FR"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\Eclipse Adoptium\jdk-25.0.1.8-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\tribu\AppData\Local\Temp\surefire13607814874950440688\surefirebooter-20260204221722849_3.jar C:\Users\tribu\AppData\Local\Temp\surefire13607814874950440688 2026-02-04T22-17-22_440-jvmRun1 surefire-20260204221722849_1tmp surefire_0-20260204221722849_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\tribu\AppData\Local\Temp\surefire8481044466044480734\surefirebooter-20260205185540860_3.jar C:\Users\tribu\AppData\Local\Temp\surefire8481044466044480734 2026-02-05T18-55-40_777-jvmRun1 surefire-20260205185540860_1tmp surefire_0-20260205185540860_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\tribu\Documents\Cours S2\JavaPass\JavaPass\target\test-classes;C:\Users\tribu\Documents\Cours S2\JavaPass\JavaPass\target\classes;C:\Users\tribu\.m2\repository\org\bouncycastle\bcprov-jdk18on\1.83\bcprov-jdk18on-1.83.jar;C:\Users\tribu\.m2\repository\org\xerial\sqlite-jdbc\3.51.1.0\sqlite-jdbc-3.51.1.0.jar;C:\Users\tribu\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\tribu\AppData\Local\Temp\surefire13607814874950440688\surefirebooter-20260204221722849_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\tribu\AppData\Local\Temp\surefire8481044466044480734\surefirebooter-20260205185540860_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="25.0.1+8-LTS"/>
@@ -60,5 +60,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testApp" classname="javapass.AppTest" time="0.005"/>
+  <testcase name="testApp" classname="javapass.AppTest" time="0.002"/>
 </testsuite>
