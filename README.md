@@ -14,9 +14,9 @@ Soon...
 
 ## Authors
 
-- Axel
-- Morgann
-- Octave
+- [Axel](https://github.com/Axel-Cfr)
+- [Morgann](https://github.com/Morgannnnnnnn)
+- [Octave](https://github.com/O-glt)
 
 ## Links
 
