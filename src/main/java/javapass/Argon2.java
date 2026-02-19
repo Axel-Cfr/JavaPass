@@ -8,7 +8,8 @@ import org.bouncycastle.crypto.params.Argon2Parameters;
 
 public class Argon2 {
 
-    private static byte[] generateSalt16Byte() {
+    // Fonction qui génère et retourne un sel de 16bytes (= 128bits)
+    private static byte[] generateSalt() {
         SecureRandom secureRandom = new SecureRandom();
         byte[] salt = new byte[16];
         secureRandom.nextBytes(salt);
@@ -17,24 +18,26 @@ public class Argon2 {
     }
 
     public static byte[][] derivePassword(String password, String userType) {
-        byte[] salt = generateSalt16Byte();
+        byte[] salt = generateSalt();
 
-        int iterations;
-        int memLimit;
-        int hashLength;
-        int parallelism;
-        int argon2Type;
+        int iterations; // Nombre de fois qu'Argon2 modifie tout les blocs mémoire
+        int memLimit; // Quantité de mémoire allouée
+        int hashLength; // Longueur du hash demandé
+        int parallelism; // Nombre de coeurs alloués
+        int argon2Type; // Variante d'Argon2 utilisée (d, i ou id)
 
         if (userType.equals("PC")) {
+            // Paramètres de hash de la norme RFC_9106_HIGH_MEMORY
             iterations = 1;
             memLimit = 2097152;
             hashLength = 32;
             parallelism = 4;
             argon2Type = Argon2Parameters.ARGON2_d;
         } else if (userType.equals("Server")) {
-            iterations = 4;
+            // Paramètres de hash supérieur à la norme RFC_9106_LOW_MEMORY
+            iterations = 4; // 4 itérations au lieu de 3
             // 128mio pour ne pas surcharger le serveur en cas de connexions multiples (=134mo de RAM)
-            memLimit = 131072;
+            memLimit = 131072; // 128mio au lieu de 64 (128mio = 131072kio)
             hashLength = 32;
             parallelism = 4;
             argon2Type = Argon2Parameters.ARGON2_id;
