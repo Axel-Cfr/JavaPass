@@ -8,6 +8,7 @@ import java.sql.Statement;
 //SQLite permet de stocker des données localement fournis avec l'application.
 //utilise Java Database Connectivity (JDBC) API pour se connecter à une base de données SQLite.
 //Avec un système de pilotes, le jdbc.jar est notre pilote.
+
 public class SQLite {
 
 /////////////////////////////////////////////////////////////////////////////////////////////
