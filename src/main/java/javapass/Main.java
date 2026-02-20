@@ -1,14 +1,28 @@
 package javapass;
 
-import javax.crypto.SecretKey;
+/*import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.SecretKeySpec;*/
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Affichage.afficherBienvenue();
+        String action = Affichage.afficherBienvenue();
+		
+		Affichage.clearScreen();
 
-        String input = "JavaPass";
+		if(action.equals("L") || action.equals("l")) {
+			Affichage.bandeau();
+			Affichage.connection();
+		} else if(action.equals("S") || action.equals("s")) {
+			Affichage.bandeau();
+			Affichage.inscription();
+		} else {
+			System.exit(0);
+		}
+
+        // Thread.sleep(10000);
+
+        /*String input = "JavaPass";
 		String password = "JavaPass";
         String userType = "PC";
 		
@@ -21,6 +35,6 @@ public class Main {
     	String cipherText = AES.encrypt(algorithm, input, key, gcmParameterSpec);
     	String plainText = AES.decrypt(algorithm, cipherText, key, gcmParameterSpec);
     	
-        System.out.println(input.equals(plainText) + " " + plainText);
+        System.out.println(input.equals(plainText) + " " + plainText);*/
     }
 }
