@@ -9,7 +9,7 @@ import javax.crypto.spec.GCMParameterSpec;
 
 public class AES {
 	
-	// Fonction qui crée le vecteur d'initialisation et le tag d'authentification propre à CGM
+	// Fonction qui crée le vecteur d'initialisation (12bytes) et le tag d'authentification propre à CGM (16bytes)
 	public static GCMParameterSpec generateIv() {
 		byte[] iv = new byte[12];
     	new SecureRandom().nextBytes(iv);
