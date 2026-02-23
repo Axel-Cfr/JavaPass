@@ -7,6 +7,7 @@ import javax.crypto.spec.SecretKeySpec;*/
 public class Main {
     public static void main(String[] args) throws Exception {
         String action = Affichage.afficherBienvenue();
+		SQLite.initialisationDB();
 		
 		Affichage.clearScreen();
 

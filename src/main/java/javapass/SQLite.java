@@ -10,19 +10,12 @@ import java.sql.Statement;
 //Avec un système de pilotes, le jdbc.jar est notre pilote.
 
 public class SQLite {
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-    public static void main(String[] args) {
-        initialisationDB();
-        ajoutTable_base();
-    }
-
-    public static void initialisationDB() //On etablis la connection avec la base de donnees
-    {
-        try{
+    
+    public static void initialisationDB() { //On etablis la connection avec la base de donnees
+        try {
             Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
-            //Statement stmt = co.createStatement();
             System.out.println("Connexion a la base de donnees etablie");
+            ajoutTable_base();
         }
         catch(SQLException e)// On gere les exceptions liees a la base de donnees (tres important))
         {
@@ -30,11 +23,8 @@ public class SQLite {
         }
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static void ajoutTable_base()//On cree une table dans la base de donnees
-    {
-        try{
+    public static void ajoutTable_base() { //On cree les tables dans la base de donnees si elles n'existent pas
+        try {
             Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
             Statement stmt = co.createStatement();
             String sql = "CREATE TABLE IF NOT EXISTS users (" +
@@ -46,9 +36,28 @@ public class SQLite {
                             "last_login TIMESTAMP" +
                         ");";
             stmt.executeUpdate(sql);
+            sql = "CREATE TABLE IF NOT EXISTS passwords (" +
+                            "password_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "user_id INTEGER NOT NULL," +
+                            "website_name VARCHAR(100) NOT NULL," +
+                            "url VARCHAR(100)," +
+                            "encrypted_username VARBINARY(128) NOT NULL," +
+                            "encrypted_password VARBINARY(128) NOT NULL," +
+                            "iv_username binary(12) NOT NULL," +
+                            "iv_password binary(12) NOT NULL," +
+
+                            "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE" +
+                        ");";
+                        /*"-- En option"
+                        category VARCHAR(50),
+                        notes TEXT,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        */
+            stmt.executeUpdate(sql);
             stmt.close();
             co.close();
-            System.out.println("Table creee avec succes");
+            System.out.println("Tables créées avec succès");
         }
         catch(SQLException e)// On gere les exceptions liees a la base de donnees (tres important))
         {
