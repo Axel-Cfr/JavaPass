@@ -37,7 +37,7 @@ public class SQLite {
         try{
             Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
             Statement stmt = co.createStatement();
-            String sql = "CREATE TABLE users (" +
+            String sql = "CREATE TABLE IF NOT EXISTS users (" +
                             "user_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "username VARCHAR(100) UNIQUE NOT NULL," +
                             "encrypted_textAndTag_verify VARBINARY(128) NOT NULL," +
