@@ -10,7 +10,10 @@ import java.sql.Statement;
 //Avec un système de pilotes, le jdbc.jar est notre pilote.
 
 public class SQLite {
-    
+    /* public static void main(String[] args) {
+        initialisationDB();
+        ajoutTable_base();
+    } */
     public static void initialisationDB() { //On etablis la connection avec la base de donnees
         try {
             Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
@@ -54,6 +57,7 @@ public class SQLite {
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         */
+                        
             stmt.executeUpdate(sql);
             stmt.close();
             co.close();
