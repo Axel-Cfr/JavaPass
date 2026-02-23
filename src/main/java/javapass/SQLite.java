@@ -14,6 +14,7 @@ public class SQLite {
 /////////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         initialisationDB();
+        ajoutTable_base();
     }
 
     public static void initialisationDB() //On etablis la connection avec la base de donnees
@@ -36,11 +37,14 @@ public class SQLite {
         try{
             Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
             Statement stmt = co.createStatement();
-            String sql = "CREATE TABLE IF NOT EXISTS user " +
-                         "(user_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                         " username      TEXT    NOT NULL, " +
-                         " , " +
-                         " )";
+            String sql = "CREATE TABLE users (" +
+                            "user_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "username VARCHAR(100) UNIQUE NOT NULL," +
+                            "encrypted_textAndTag_verify VARBINARY(128) NOT NULL," +
+                            "iv_verify BINARY(12) NOT NULL," +
+                            "salt BINARY(16) NOT NULL," +
+                            "last_login TIMESTAMP" +
+                        ");";
             stmt.executeUpdate(sql);
             stmt.close();
             co.close();
