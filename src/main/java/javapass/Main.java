@@ -6,20 +6,10 @@ import javax.crypto.spec.SecretKeySpec;*/
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        String action = Affichage.afficherBienvenue();
+        Interface.afficherBienvenue();
 		SQLite.initialisationDB();
 		
-		Affichage.clearScreen();
-
-		if(action.equals("L") || action.equals("l")) {
-			Affichage.bandeau();
-			Affichage.connection();
-		} else if(action.equals("S") || action.equals("s")) {
-			Affichage.bandeau();
-			Affichage.inscription();
-		} else {
-			System.exit(0);
-		}
+		Interface.clearScreen();
 
         // Thread.sleep(10000);
 
