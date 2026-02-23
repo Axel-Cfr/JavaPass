@@ -3,10 +3,14 @@ package javapass;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Affichage {
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+public class Interface {
     public static final String GREEN = "\033[0;32m"; //Green
 
-    public static String afficherBienvenue() {
+    public static void afficherBienvenue() throws Exception {
         String[] logo = {
         "                                                             ",
         "                                                             ",
@@ -49,7 +53,14 @@ public class Affichage {
         }
         Scanner scanner = new Scanner(System.in);
         String action = scanner.nextLine();
-        return action;
+
+        if(action.equals("L") || action.equals("l")) {
+			Interface.bandeau();
+		} else if(action.equals("S") || action.equals("s")) {
+			Interface.inscription();
+		} else {
+			System.exit(0);
+		}
     }
 
     public static void clearScreen() throws IOException {
@@ -74,7 +85,10 @@ public class Affichage {
         }
     }
 
-    public static void connection() {
+    public static void connection() throws Exception {
+        clearScreen();
+        bandeau();
+
         System.out.print("\n\nIdentifiant : ");
         Scanner scanner = new Scanner(System.in);
         String login = scanner.nextLine();
@@ -82,13 +96,24 @@ public class Affichage {
         String password = scanner.nextLine();
     }
 
-    public static void inscription() {
+    public static void inscription() throws Exception {
+        clearScreen();
+        bandeau();
+
         System.out.print("\n\nIdentifiant: ");
         Scanner scanner = new Scanner(System.in);
-        String login = scanner.nextLine();
+        String identifiant = scanner.nextLine();
         System.out.print("\n\nMot de passe : ");
         String password = scanner.nextLine();
         System.out.print("\n\nConfirmer votre mot de passe : ");
         String passwordverif = scanner.nextLine();
+
+        byte[][] hashAndSalt = Argon2.derivePassword(password, "PC");
+		byte[] hash = hashAndSalt[0];
+		byte[] salt = hashAndSalt[1];
+    	SecretKey key = new SecretKeySpec(hash, "AES");
+    	GCMParameterSpec gcmParameterSpec = AES.generateIv();
+    	String algorithm = "AES/GCM/NoPadding";
+    	String cipherText = AES.encrypt(algorithm, identifiant, key, gcmParameterSpec);
     }
 }
