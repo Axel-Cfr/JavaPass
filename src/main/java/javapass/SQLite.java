@@ -10,10 +10,11 @@ import java.sql.Statement;
 //Avec un système de pilotes, le jdbc.jar est notre pilote.
 
 public class SQLite {
-    /* public static void main(String[] args) {
+    public static void main(String[] args) {
         initialisationDB();
         ajoutTable_base();
-    } */
+    }
+
     public static void initialisationDB() { //On etablis la connection avec la base de donnees
         try {
             Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
@@ -68,4 +69,30 @@ public class SQLite {
             System.err.println(e.getMessage());// message d'erreur
         }
     }
+    public static void ajout_utilisateur(String username, byte[] encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, String last_login) { //On ajout un utilisateur dans la base de donnees/ watchout aux type des parametres
+        try {
+            Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+            Statement stmt = co.createStatement();
+            String sql = "INSERT INTO users VALUES (" +
+                            "{username}," +
+                            "{encrypted_textAndTag_verify}" +
+                            "{iv_verify}" +
+                            "{salt}" +
+                            "{last_login})";
+            stmt.executeUpdate(sql);
+            stmt.close();
+            co.close();
+            System.out.println("utilisateur ajouté avec succès");
+        } 
+        catch (SQLException e) 
+        {
+            System.err.println(e.getMessage());
+        }
+    }
 }
+/*  
+on va créer des méthodes permetant de recup : 
+encrypted_textAndTag_verify
+iv_verify
+salt
+*/
