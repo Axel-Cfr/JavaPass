@@ -55,9 +55,11 @@ public class Interface {
         String action = scanner.nextLine();
 
         if(action.equals("L") || action.equals("l")) {
-			Interface.bandeau();
+			bandeau();
+            connection();
 		} else if(action.equals("S") || action.equals("s")) {
-			Interface.inscription();
+            bandeau();
+			inscription();
 		} else {
 			System.exit(0);
 		}
@@ -112,8 +114,11 @@ public class Interface {
 		byte[] hash = hashAndSalt[0];
 		byte[] salt = hashAndSalt[1];
     	SecretKey key = new SecretKeySpec(hash, "AES");
-    	GCMParameterSpec gcmParameterSpec = AES.generateIv();
+        byte[] iv = AES.generateIv();
+    	GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
     	String algorithm = "AES/GCM/NoPadding";
     	String cipherText = AES.encrypt(algorithm, identifiant, key, gcmParameterSpec);
+
+        SQLite.ajout_utilisateur(identifiant, cipherText, iv, salt, "14/02/2026");
     }
 }

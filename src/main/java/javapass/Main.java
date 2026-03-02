@@ -6,10 +6,8 @@ import javax.crypto.spec.SecretKeySpec;*/
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Interface.afficherBienvenue();
 		SQLite.initialisationDB();
-		
-		Interface.clearScreen();
+        Interface.afficherBienvenue();
 
         // Thread.sleep(10000);
 
