@@ -1,6 +1,8 @@
 package javapass;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import javax.crypto.SecretKey;
@@ -119,6 +121,9 @@ public class Interface {
     	String algorithm = "AES/GCM/NoPadding";
     	String cipherText = AES.encrypt(algorithm, identifiant, key, gcmParameterSpec);
 
-        SQLite.ajout_utilisateur(identifiant, cipherText, iv, salt, "14/02/2026");
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedString = localDate.format(formatter);
+        SQLite.ajout_utilisateur(identifiant, cipherText, iv, salt, formattedString);
     }
 }

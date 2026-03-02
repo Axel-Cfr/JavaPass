@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 //https://www.youtube.com/watch?v=TN_xTjbrzzc
 //SQLite permet de stocker des données localement fournis avec l'application.
 //utilise Java Database Connectivity (JDBC) API pour se connecter à une base de données SQLite.
