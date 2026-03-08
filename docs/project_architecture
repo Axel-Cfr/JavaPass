@@ -1,0 +1,61 @@
+# Architecture du Projet JavaPass :
+
+![Image de l'architecture du projet](img\plantUML.png)
+
+## Ressources :
+
+Lien pour visualiser l'architecture : https://editor.plantuml.com
+
+Lien pour connaître la syntaxe UML : https://plantuml.com/fr/class-diagram
+
+## Architecture (à copier coller sur le site)
+
+```
+@startuml
+class Main
+class Interfaces
+class Services
+class SQLite
+class AES
+class Argon2
+class User
+
+Main --> SQLite : initialise
+Main --> Interfaces : utilise
+Interfaces --> Services : utilise
+Services --> AES : utilise
+Services --> Argon2 : utilise
+Services --> SQLite : utilise
+Services ..> User : crée
+Interfaces --> User : utilise
+SQLite --> User : utilise
+
+Main : main()
+
+SQLite : initialistionDB()
+SQLite : ajoutTable_base()
+SQLite : ajout_utilisateur()
+SQLite : ajout_mdp()
+
+Services : authentification()
+Services : generatePassword()
+Services : researchID()
+
+Interfaces : afficherBienvenue()
+Interfaces : clearScreen()
+Interfaces : bandeau()
+Interfaces : connection()
+Interfaces : inscription()
+
+AES : generateIv()
+AES : generateGCMParameterSpec()
+AES : encrypt()
+AES : decrypt()
+
+Argon2 : generateSalt()
+Argon2 : derivePassword()
+
+User : getUserId()
+User : getKey()
+@enduml
+```
