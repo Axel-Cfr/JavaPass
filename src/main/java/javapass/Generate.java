@@ -42,11 +42,13 @@ public class Generate {
         char[] motDePasse = new char[taille];
         int position = 0;
 
-        //Au moins un caractère de chaque catégorie sélectionnée
-        if (minuscule) motDePasse[position++] = MINUSCULES.charAt(RANDOM.nextInt(MINUSCULES.length()));
-        if (majuscule) motDePasse[position++] = MAJUSCULES.charAt(RANDOM.nextInt(MAJUSCULES.length()));
-        if (chiffres) motDePasse[position++] = CHIFFRES.charAt(RANDOM.nextInt(CHIFFRES.length()));
-        if (speciaux) motDePasse[position++] = SPECIAUX.charAt(RANDOM.nextInt(SPECIAUX.length()));
+        // Au moins 3 caractères de chaque catégorie sélectionnée
+        for (int k = 0; k < 3; k++) {
+            if (minuscule) motDePasse[position++] = MINUSCULES.charAt(RANDOM.nextInt(MINUSCULES.length()));
+            if (majuscule) motDePasse[position++] = MAJUSCULES.charAt(RANDOM.nextInt(MAJUSCULES.length()));
+            if (chiffres) motDePasse[position++] = CHIFFRES.charAt(RANDOM.nextInt(CHIFFRES.length()));
+            if (speciaux) motDePasse[position++] = SPECIAUX.charAt(RANDOM.nextInt(SPECIAUX.length()));
+        }
 
         for (int i = position; i < taille; i++) {
             motDePasse[i] = choix.charAt(RANDOM.nextInt(choix.length()));
