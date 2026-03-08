@@ -1,6 +1,6 @@
 # Architecture SQLIte avec 2 tables principales :
 
-![Image de la BDD](img\DBdiagram.png)
+![Image de la BDD](img/DBdiagram.png)
 
 ## Ressources :
 
