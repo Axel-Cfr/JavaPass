@@ -1,13 +1,7 @@
 package javapass;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 public class Interface {
     public static final String GREEN = "\033[0;32m"; //Green
@@ -106,24 +100,17 @@ public class Interface {
 
         System.out.print("\n\nIdentifiant: ");
         Scanner scanner = new Scanner(System.in);
-        String identifiant = scanner.nextLine();
+        String username = scanner.nextLine();
         System.out.print("\n\nMot de passe : ");
         String password = scanner.nextLine();
         System.out.print("\n\nConfirmer votre mot de passe : ");
         String passwordverif = scanner.nextLine();
+        System.out.print("\n\nEntrez le type de machine sur lequel vous utilisez JavaPass");
+        System.out.print("\n[1] : Ordinateur puissant strictement personnel");
+        System.out.print("\n[2] : Serveur");
+        System.out.print("\n[3] : Autres");
+        String option = scanner.nextLine();
 
-        byte[][] hashAndSalt = Argon2.derivePassword(password, "PC");
-		byte[] hash = hashAndSalt[0];
-		byte[] salt = hashAndSalt[1];
-    	SecretKey key = new SecretKeySpec(hash, "AES");
-        byte[] iv = AES.generateIv();
-    	GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
-    	String algorithm = "AES/GCM/NoPadding";
-    	String cipherText = AES.encrypt(algorithm, identifiant, key, gcmParameterSpec);
-
-        LocalDate localDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String formattedString = localDate.format(formatter);
-        SQLite.ajout_utilisateur(identifiant, cipherText, iv, salt, formattedString);
+        boolean result = Services.inscription(username, password, passwordverif, option);
     }
 }
