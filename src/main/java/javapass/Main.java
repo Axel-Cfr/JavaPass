@@ -9,7 +9,8 @@ public class Main {
 		SQLite.initialisationDB();
         Interface.afficherBienvenue();
 
-    	//String mdp = Generate.generate(18, true, true, true, true);
+    	//Services services = new Services();
+    	//String mdp = services.generate(18, true, true, true, true);
         //System.out.println("Mot de passe généré : " + mdp);
 
         // Thread.sleep(10000);
