@@ -3,15 +3,15 @@ package javapass;
 import java.security.SecureRandom;
 
 public class Services {
-    boolean authentification(String username, String password) {
+    public static boolean authentification(String username, String password) {
         return true;
     }
 
-    public SecureRandom generateSecureRandom() {
+    public static SecureRandom generateSecureRandom() {
         return new SecureRandom();
     }
 
-    public String generate(int taille, boolean minuscule, boolean majuscule, boolean chiffres, boolean speciaux) {
+    public static String generate(int taille, boolean minuscule, boolean majuscule, boolean chiffres, boolean speciaux) {
         
         // Listes des caractères disponibles
         String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
