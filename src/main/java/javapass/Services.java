@@ -41,7 +41,7 @@ public class Services {
         String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
         String MAJUSCULES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String CHIFFRES = "0123456789";
-        String SPECIAUX = "!@#$%^&*()_+€£µ§?/|{}[]'\"";
+        String SPECIAUX = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
         // Un mot de passe ne peut pas être plus petit que TAILLE_MINIMUM si c'est le cas on prend la TAILLE_PAR_DEFAUT
         int TAILLE_PAR_DEFAUT = 20;
