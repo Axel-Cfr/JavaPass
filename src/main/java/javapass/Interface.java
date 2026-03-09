@@ -61,8 +61,8 @@ public class Interface {
 		}
     }
 
-    public static void clearScreen() throws IOException {
-        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start();
+    public static void clearScreen() throws IOException, InterruptedException {
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     }
 
     public static void bandeau() {
@@ -109,6 +109,7 @@ public class Interface {
         System.out.print("\n[1] : Ordinateur puissant strictement personnel");
         System.out.print("\n[2] : Serveur");
         System.out.print("\n[3] : Autres");
+        System.out.print("\n\nEntrez votre choix (1, 2 ou 3): ");
         String option = scanner.nextLine();
 
         boolean result = Services.inscription(username, password, passwordverif, option);
