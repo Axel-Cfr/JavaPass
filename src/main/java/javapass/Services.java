@@ -1,3 +1,4 @@
+package javapass;
 
 import java.security.SecureRandom;
 
