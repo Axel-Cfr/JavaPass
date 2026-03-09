@@ -26,14 +26,16 @@ public class Argon2 {
         int parallelism; // Nombre de coeurs alloués
         int argon2Type; // Variante d'Argon2 utilisée (d, i ou id)
 
-        if (userType.equals("PC")) {
+        if (userType.equals("1")) {
+            // 1 => PC
             // Paramètres de hash de la norme RFC_9106_HIGH_MEMORY
             iterations = 1;
             memLimit = 2097152;
             hashLength = 32;
             parallelism = 4;
             argon2Type = Argon2Parameters.ARGON2_d;
-        } else if (userType.equals("Server")) {
+        } else if (userType.equals("2")) {
+            // 2 => Serveur
             // Paramètres de hash supérieur à la norme RFC_9106_LOW_MEMORY
             iterations = 4; // 4 itérations au lieu de 3
             // 128mio pour ne pas surcharger le serveur en cas de connexions multiples (=134mo de RAM)
@@ -42,6 +44,8 @@ public class Argon2 {
             parallelism = 4;
             argon2Type = Argon2Parameters.ARGON2_id;
         } else {
+            // 2 => Serveur
+            // Paramètres de hash supérieur à la norme RFC_9106_LOW_MEMORY
             iterations = 4;
             // 128mio pour ne pas surcharger les appareils bas de gamme (=134mo de RAM)
             memLimit = 131072;

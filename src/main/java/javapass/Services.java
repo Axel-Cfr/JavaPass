@@ -1,9 +1,33 @@
 package javapass;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class Services {
-    public static boolean authentification(String username, String password) {
+    public boolean authentification(String username, String password) {
+        return true;
+    }
+
+    public static boolean inscription(String username, String password, String passwordverif, String option) throws Exception {
+        byte[][] hashAndSalt = Argon2.derivePassword(password, option);
+		byte[] hash = hashAndSalt[0];
+		byte[] salt = hashAndSalt[1];
+    	SecretKey key = new SecretKeySpec(hash, "AES");
+        byte[] iv = AES.generateIv();
+    	GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
+    	String algorithm = "AES/GCM/NoPadding";
+    	String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
+
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedString = localDate.format(formatter);
+        SQLite.ajout_utilisateur(username, cipherText, iv, salt, formattedString);
+
         return true;
     }
 
