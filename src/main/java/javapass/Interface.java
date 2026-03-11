@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Interface {
-    public static final String GREEN = "\033[0;32m"; //Green
+    public final String GREEN = "\033[0;32m"; //Green
+    Services services = new Services();
 
-    public static void afficherBienvenue() throws Exception {
+    public void afficherBienvenue() throws Exception {
+        services.connectionDB();
         String[] logo = {
         "                                                             ",
         "                                                             ",
@@ -61,11 +63,11 @@ public class Interface {
 		}
     }
 
-    public static void clearScreen() throws IOException {
-        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start();
+    public void clearScreen() throws IOException, InterruptedException {
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     }
 
-    public static void bandeau() {
+    public void bandeau() {
         String[] lines = {
             "===========================================================================================================",
             "===========================================================================================================",
@@ -83,7 +85,7 @@ public class Interface {
         }
     }
 
-    public static void connection() throws Exception {
+    public void connection() throws Exception {
         clearScreen();
         bandeau();
 
@@ -94,7 +96,7 @@ public class Interface {
         String password = scanner.nextLine();
     }
 
-    public static void inscription() throws Exception {
+    public void inscription() throws Exception {
         clearScreen();
         bandeau();
 
@@ -109,8 +111,9 @@ public class Interface {
         System.out.print("\n[1] : Ordinateur puissant strictement personnel");
         System.out.print("\n[2] : Serveur");
         System.out.print("\n[3] : Autres");
+        System.out.print("\n\nEntrez votre choix (1, 2 ou 3): ");
         String option = scanner.nextLine();
 
-        boolean result = Services.inscription(username, password, passwordverif, option);
+        boolean result = services.inscription(username, password, passwordverif, option);
     }
 }

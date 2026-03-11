@@ -44,7 +44,7 @@ public class Argon2 {
             parallelism = 4;
             argon2Type = Argon2Parameters.ARGON2_id;
         } else {
-            // 2 => Serveur
+            // 3 => Autres configurations
             // Paramètres de hash supérieur à la norme RFC_9106_LOW_MEMORY
             iterations = 4;
             // 128mio pour ne pas surcharger les appareils bas de gamme (=134mo de RAM)
