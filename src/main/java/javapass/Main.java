@@ -1,7 +1,7 @@
 package javapass;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         try {
             Interface interface_utilisateur = new Interface();
             interface_utilisateur.afficherBienvenue();

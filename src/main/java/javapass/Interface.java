@@ -8,7 +8,10 @@ public class Interface {
     Services services = new Services();
 
     public void afficherBienvenue() throws Exception {
-        services.connectionDB();
+        String result = services.connectionDB();
+        if(!result.equals("Done")) {
+            erreur(result);
+        }
         String[] logo = {
         "                                                             ",
         "                                                             ",
@@ -18,7 +21,7 @@ public class Interface {
         "                         +jI                                 ",
         "                          (rf{'                              ",
         "                        ^l '|rrt.                            ",
-        "                      .;tl   (rr^        Bienvenue sur                    ",
+        "                      .;tl   (rr^        Bienvenue sur       ",
         "                .:]fj/]^  `l//-                              ",
         "              ,tr)^    If1:                   ██╗ █████╗ ██╗   ██╗ █████╗ ██████╗  █████╗ ███████╗███████╗",
         "             `/rj      \\:                     ██║██╔══██╗██║   ██║██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝",
@@ -63,8 +66,12 @@ public class Interface {
 		}
     }
 
-    public void clearScreen() throws IOException, InterruptedException {
-        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+    public void clearScreen() {
+        try {
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        } catch(IOException | InterruptedException e) {
+            erreur(e.getMessage());
+        }
     }
 
     public void bandeau() {
@@ -83,24 +90,32 @@ public class Interface {
         for (String line : lines) {
             System.out.println(line);
         }
+        System.out.println("\n\n");
     }
 
-    public void connection() throws Exception {
+    public void erreur(String e) {
+        clearScreen();
+        bandeau();
+        System.err.println("Une erreur s'est produite, veuillez redémarrer JavaPass");
+        System.err.println("Détail de l'erreur :\n"+e);
+    }
+
+    public void connection() {
         clearScreen();
         bandeau();
 
-        System.out.print("\n\nIdentifiant : ");
+        System.out.print("Identifiant : ");
         Scanner scanner = new Scanner(System.in);
         String login = scanner.nextLine();
         System.out.print("\n\nMot de passe : ");
         String password = scanner.nextLine();
     }
 
-    public void inscription() throws Exception {
+    public void inscription() {
         clearScreen();
         bandeau();
 
-        System.out.print("\n\nIdentifiant: ");
+        System.out.print("Identifiant: ");
         Scanner scanner = new Scanner(System.in);
         String username = scanner.nextLine();
         System.out.print("\n\nMot de passe : ");
@@ -114,6 +129,11 @@ public class Interface {
         System.out.print("\n\nEntrez votre choix (1, 2 ou 3): ");
         String option = scanner.nextLine();
 
-        boolean result = services.inscription(username, password, passwordverif, option);
+        String result = services.inscription(username, password, passwordverif, option);
+        if(result.equals("Done")) {
+            System.out.println("Utilisateur crée avec succès");
+        } else {
+            erreur(result);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package javapass;
 
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -11,8 +12,13 @@ import javax.crypto.spec.SecretKeySpec;
 public class Services {
     SQLite sqlite = new SQLite();
 
-    public void connectionDB() {
-        sqlite.initialisationDB();
+    public String connectionDB() {
+        try {
+            sqlite.initialisationDB();
+            return "Done";
+        } catch(SQLException e) {
+            return e.getMessage();
+        }
     }
 
     public boolean authentification(String username, String password) {
@@ -20,22 +26,26 @@ public class Services {
         return true;
     }
 
-    public boolean inscription(String username, String password, String passwordverif, String option) throws Exception {
-        byte[][] hashAndSalt = Argon2.derivePassword(password, option);
-		byte[] hash = hashAndSalt[0];
-		byte[] salt = hashAndSalt[1];
-    	SecretKey key = new SecretKeySpec(hash, "AES");
-        byte[] iv = AES.generateIv();
-    	GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
-    	String algorithm = "AES/GCM/NoPadding";
-    	String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
+    public String inscription(String username, String password, String passwordverif, String option) {
+        try {
+            byte[][] hashAndSalt = Argon2.derivePassword(password, option);
+		    byte[] hash = hashAndSalt[0];
+		    byte[] salt = hashAndSalt[1];
+    	    SecretKey key = new SecretKeySpec(hash, "AES");
+            byte[] iv = AES.generateIv();
+    	    GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
+    	    String algorithm = "AES/GCM/NoPadding";
+    	    String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
 
-        LocalDate localDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String formattedString = localDate.format(formatter);
-        sqlite.ajout_utilisateur(username, cipherText, iv, salt, formattedString);
+            LocalDate localDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String formattedString = localDate.format(formatter);
+            sqlite.ajout_utilisateur(username, cipherText, iv, salt, formattedString);
 
-        return true;
+            return "Done";
+        } catch(Exception e) {
+            return e.getMessage();
+        }
     }
 
     public SecureRandom generateSecureRandom() {

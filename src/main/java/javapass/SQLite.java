@@ -17,16 +17,10 @@ public class SQLite {
         ajoutTable_base();
     }*/
 
-    public void initialisationDB() { //On etablis la connection avec la base de donnees
-        try {
-            Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
-            System.out.println("Connexion a la base de donnees etablie");
-            ajoutTable_base();
-        }
-        catch(SQLException e)// On gere les exceptions liees a la base de donnees (tres important))
-        {
-            System.err.println(e.getMessage());// message d'erreur
-        }
+    public void initialisationDB() throws SQLException { //On etablis la connection avec la base de donnees
+        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        System.out.println("Connexion a la base de donnees etablie");
+        ajoutTable_base();
     }
 
     public void ajoutTable_base() { //On cree les tables dans la base de donnees si elles n'existent pas
@@ -72,26 +66,20 @@ public class SQLite {
         }
     }
 
-    public void ajout_utilisateur(String username, String  encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, String last_login) { //On ajout un utilisateur dans la base de donnees/ watchout aux type des parametres
-        try {
-            Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
-            String sql = "INSERT INTO users VALUES (null,?,?,?,?,?)";
-            PreparedStatement pstmt = co.prepareStatement(sql);
-            pstmt.setString(1, username);
-            pstmt.setString(2, encrypted_textAndTag_verify);
-            pstmt.setBytes(3, iv_verify);
-            pstmt.setBytes(4, salt);
-            pstmt.setString(5, last_login);
-            
-            pstmt.executeUpdate();
-            pstmt.close();
-            co.close();
-            System.out.println("utilisateur ajouté avec succès");
-        } 
-        catch (SQLException e) 
-        {
-            System.err.println(e.getMessage());
-        }
+    public void ajout_utilisateur(String username, String  encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, String last_login) throws SQLException { //On ajout un utilisateur dans la base de donnees/ watchout aux type des parametres
+        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        String sql = "INSERT INTO users VALUES (null,?,?,?,?,?)";
+        PreparedStatement pstmt = co.prepareStatement(sql);
+        pstmt.setString(1, username);
+        pstmt.setString(2, encrypted_textAndTag_verify);
+        pstmt.setBytes(3, iv_verify);
+        pstmt.setBytes(4, salt);
+        pstmt.setString(5, last_login);
+        
+        pstmt.executeUpdate();
+        pstmt.close();
+        co.close();
+        //System.out.println("utilisateur ajouté avec succès");
     }
 }
 /*  
