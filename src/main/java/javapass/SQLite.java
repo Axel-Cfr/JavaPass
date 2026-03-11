@@ -17,7 +17,7 @@ public class SQLite {
         ajoutTable_base();
     }*/
 
-    public static void initialisationDB() { //On etablis la connection avec la base de donnees
+    public void initialisationDB() { //On etablis la connection avec la base de donnees
         try {
             Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
             System.out.println("Connexion a la base de donnees etablie");
@@ -29,7 +29,7 @@ public class SQLite {
         }
     }
 
-    public static void ajoutTable_base() { //On cree les tables dans la base de donnees si elles n'existent pas
+    public void ajoutTable_base() { //On cree les tables dans la base de donnees si elles n'existent pas
         try {
             Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
             Statement stmt = co.createStatement();
@@ -71,7 +71,8 @@ public class SQLite {
             System.err.println(e.getMessage());// message d'erreur
         }
     }
-    public static void ajout_utilisateur(String username, String  encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, String last_login) { //On ajout un utilisateur dans la base de donnees/ watchout aux type des parametres
+
+    public void ajout_utilisateur(String username, String  encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, String last_login) { //On ajout un utilisateur dans la base de donnees/ watchout aux type des parametres
         try {
             Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
             String sql = "INSERT INTO users VALUES (null,?,?,?,?,?)";

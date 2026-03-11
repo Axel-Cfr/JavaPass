@@ -9,11 +9,18 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Services {
+    SQLite sqlite = new SQLite();
+
+    public void connectionDB() {
+        sqlite.initialisationDB();
+    }
+
     public boolean authentification(String username, String password) {
+
         return true;
     }
 
-    public static boolean inscription(String username, String password, String passwordverif, String option) throws Exception {
+    public boolean inscription(String username, String password, String passwordverif, String option) throws Exception {
         byte[][] hashAndSalt = Argon2.derivePassword(password, option);
 		byte[] hash = hashAndSalt[0];
 		byte[] salt = hashAndSalt[1];
@@ -26,16 +33,16 @@ public class Services {
         LocalDate localDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedString = localDate.format(formatter);
-        SQLite.ajout_utilisateur(username, cipherText, iv, salt, formattedString);
+        sqlite.ajout_utilisateur(username, cipherText, iv, salt, formattedString);
 
         return true;
     }
 
-    public static SecureRandom generateSecureRandom() {
+    public SecureRandom generateSecureRandom() {
         return new SecureRandom();
     }
 
-    public static String generate(int taille, boolean minuscule, boolean majuscule, boolean chiffres, boolean speciaux) {
+    public String generate(int taille, boolean minuscule, boolean majuscule, boolean chiffres, boolean speciaux) {
         
         // Listes des caractères disponibles
         String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
