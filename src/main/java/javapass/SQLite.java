@@ -82,57 +82,48 @@ public class SQLite {
         co.close();
         //System.out.println("utilisateur ajouté avec succès");
     }
-    public static void ajout_mdp(int user_id, String website_name, String url, String encrypted_username, byte[] iv_username, byte[] iv_password) { //On ajout un mdp dans la base de donnees/ watchout aux type des parametres
-        try {
-            Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
-            String sql = "INSERT INTO passwords VALUES (null,?,?,?,?,?)";
-            PreparedStatement pstmt = co.prepareStatement(sql);
-            pstmt.setInt(1, user_id);
-            pstmt.setString(2, website_name);
-            pstmt.setString(3, url);
-            pstmt.setString(4, encrypted_username);
-            pstmt.setBytes(5, iv_username);
-            pstmt.setBytes(6, iv_password);
-            
-            pstmt.executeUpdate();
-            pstmt.close();
-            co.close();
-            System.out.println("Mot de passe ajouté avec succès");
-        } 
-        catch (SQLException e) 
-        {
-            System.err.println(e.getMessage());
-        }
-    }
-    public ReturningUserValues get_user(String username){
-        try {
-            Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
-            String sql = "SELECT * FROM users WHERE username = ?";
-            PreparedStatement pstmt = co.prepareStatement(sql);
-            pstmt.setString(1,username);
-            ResultSet rs = pstmt.executeQuery(sql);
 
-            //while(rs.next()) est utilisé dans certain cas, mais pas ici au cas ou je le laisse
-            int user_id = rs.getInt("user_id");
-            //on a deja username en parametre
-            String  encrypted_textAndTag_verify = rs.getString("encrypted_textAndTag_verify");
-            byte[] iv_verify = rs.getBytes("iv_verify");
-            byte[] salt = rs.getBytes("salt");
-            String last_login = rs.getString("last_login");
-
-            ReturningUserValues rv = new ReturningUserValues(user_id, username, encrypted_textAndTag_verify, iv_verify, salt, last_login);
+    public static void ajout_mdp(int user_id, String website_name, String url, String encrypted_username, byte[] iv_username, byte[] iv_password) throws SQLException {
+        //On ajout un mdp dans la base de donnees
+        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        String sql = "INSERT INTO passwords VALUES (null,?,?,?,?,?)";
+        PreparedStatement pstmt = co.prepareStatement(sql);
+        pstmt.setInt(1, user_id);
+        pstmt.setString(2, website_name);
+        pstmt.setString(3, url);
+        pstmt.setString(4, encrypted_username);
+        pstmt.setBytes(5, iv_username);
+        pstmt.setBytes(6, iv_password);
             
-            pstmt.close();
-            co.close();
-            return rv;
-        } 
-        catch (SQLException e)//throw to services a^pres 
-        {
-            System.err.println(e.getMessage());
-            return null;
-        }
+        pstmt.executeUpdate();
+        pstmt.close();
+        co.close();
+        System.out.println("Mot de passe ajouté avec succès");
     }
-    public final class ReturningUserValues{
+
+    public ReturningUserValues get_user(String username) throws SQLException {
+        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        String sql = "SELECT * FROM users WHERE username = ?";
+        PreparedStatement pstmt = co.prepareStatement(sql);
+        pstmt.setString(1,username);
+        ResultSet rs = pstmt.executeQuery(sql);
+
+        //while(rs.next()) est utilisé dans certain cas, mais pas ici au cas ou je le laisse
+        int user_id = rs.getInt("user_id");
+        //on a deja username en parametre
+        String  encrypted_textAndTag_verify = rs.getString("encrypted_textAndTag_verify");
+        byte[] iv_verify = rs.getBytes("iv_verify");
+        byte[] salt = rs.getBytes("salt");
+        String last_login = rs.getString("last_login");
+
+        ReturningUserValues rv = new ReturningUserValues(user_id, username, encrypted_textAndTag_verify, iv_verify, salt, last_login);
+            
+        pstmt.close();
+        co.close();
+        return rv;
+    }
+
+    public final class ReturningUserValues {
         private final int user_id;
         private final String username;
         private final String encrypted_textAndTag_verify;
@@ -149,36 +140,31 @@ public class SQLite {
         }
         //peutetre ajouter getters
     }
-    public ReturningMdpValues get_mdp(int user_id){
-        try {
-            Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
-            String sql = "SELECT * FROM passwords WHERE user_id = ?";
-            PreparedStatement pstmt = co.prepareStatement(sql);
-            pstmt.setInt(1,user_id);
-            ResultSet rs = pstmt.executeQuery(sql);
 
-            //while(rs.next()) est utilisé dans certain cas, mais pas ici au cas ou je le laisse
-            int password_id = rs.getInt("password_id");
-            //on a deja user_id en parametre
-            String website_name = rs.getString("website_name");
-            String url = rs.getString("url");
-            String encrypted_username = rs.getString("encrypted_username");
-            byte[] iv_username = rs.getBytes("iv_username");
-            byte[] iv_password = rs.getBytes("iv_password");
+    public ReturningMdpValues get_mdp(int user_id) throws SQLException {
+        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        String sql = "SELECT * FROM passwords WHERE user_id = ?";
+        PreparedStatement pstmt = co.prepareStatement(sql);
+        pstmt.setInt(1,user_id);
+        ResultSet rs = pstmt.executeQuery(sql);
 
-            ReturningMdpValues rv = new ReturningMdpValues(password_id, user_id, website_name, url, encrypted_username, iv_username, iv_password);
+        //while(rs.next()) est utilisé dans certain cas, mais pas ici au cas ou je le laisse
+        int password_id = rs.getInt("password_id");
+        //on a deja user_id en parametre
+        String website_name = rs.getString("website_name");
+        String url = rs.getString("url");
+        String encrypted_username = rs.getString("encrypted_username");
+        byte[] iv_username = rs.getBytes("iv_username");
+        byte[] iv_password = rs.getBytes("iv_password");
+
+        ReturningMdpValues rv = new ReturningMdpValues(password_id, user_id, website_name, url, encrypted_username, iv_username, iv_password);
             
-            pstmt.close();
-            co.close();
-            return rv;
-        } 
-        catch (SQLException e)//throw to services a^pres 
-        {
-            System.err.println(e.getMessage());
-            return null;
-        }
+        pstmt.close();
+        co.close();
+        return rv;
     }
-    public final class ReturningMdpValues{
+
+    public final class ReturningMdpValues {
         private final int password_id;
         private final int user_id;
         private final String website_name;

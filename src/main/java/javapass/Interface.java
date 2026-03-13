@@ -132,6 +132,10 @@ public class Interface {
         String result = services.inscription(username, password, passwordverif, option);
         if(result.equals("Done")) {
             System.out.println("Utilisateur crée avec succès");
+        } else if(result.equals("Different")) {
+            System.out.println("\n Entrez le même mot de passe");
+            services.wait(3000);
+            inscription();
         } else {
             erreur(result);
         }

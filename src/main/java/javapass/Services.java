@@ -28,21 +28,25 @@ public class Services {
 
     public String inscription(String username, String password, String passwordverif, String option) {
         try {
-            byte[][] hashAndSalt = Argon2.derivePassword(password, option);
-		    byte[] hash = hashAndSalt[0];
-		    byte[] salt = hashAndSalt[1];
-    	    SecretKey key = new SecretKeySpec(hash, "AES");
-            byte[] iv = AES.generateIv();
-    	    GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
-    	    String algorithm = "AES/GCM/NoPadding";
-    	    String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
+            if(password.equals(passwordverif)) {
+                byte[][] hashAndSalt = Argon2.derivePassword(password, option);
+		        byte[] hash = hashAndSalt[0];
+		        byte[] salt = hashAndSalt[1];
+    	        SecretKey key = new SecretKeySpec(hash, "AES");
+                byte[] iv = AES.generateIv();
+    	        GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
+    	        String algorithm = "AES/GCM/NoPadding";
+    	        String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
 
-            LocalDate localDate = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String formattedString = localDate.format(formatter);
-            sqlite.ajout_utilisateur(username, cipherText, iv, salt, formattedString);
+                LocalDate localDate = LocalDate.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                String formattedString = localDate.format(formatter);
+                sqlite.ajout_utilisateur(username, cipherText, iv, salt, formattedString);
 
-            return "Done";
+                return "Done";
+            } else {
+                return  "Different";
+            }
         } catch(Exception e) {
             return e.getMessage();
         }
@@ -110,5 +114,14 @@ public class Services {
         }
 
         return new String(motDePasse);
+    }
+
+    public String wait(int millisecond) {
+        try {
+            Thread.sleep(3000);
+            return "Done";
+        } catch(InterruptedException e) {
+            return e.getMessage();
+        }
     }
 }
