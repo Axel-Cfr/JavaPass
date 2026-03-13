@@ -9,6 +9,8 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import javapass.SQLite.ReturningUserValues;
+
 public class Services {
     SQLite sqlite = new SQLite();
 
@@ -21,17 +23,41 @@ public class Services {
         }
     }
 
-    public boolean authentification(String username, String password) {
+    public String authentification(String username, String password) {
+        try {
+            ReturningUserValues uservalue = sqlite.get_user(username);
 
-        return true;
+            byte[][] hashAndSalt = Argon2.derivePassword(password, uservalue.argon2Type);
+		    byte[] hash = hashAndSalt[0];
+		    byte[] salt = hashAndSalt[1];
+    	    SecretKey key = new SecretKeySpec(hash, "AES");
+            byte[] iv = uservalue.iv_verify;
+    	    GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
+    	    String algorithm = "AES/GCM/NoPadding";
+            String decryptedText = AES.decrypt(algorithm, username, key, gcmParameterSpec);
+            if(decryptedText.equals(username)) {
+                return "Done";
+            } else {
+                return "Wrong";
+            }
+        } catch(Exception e) {
+            return e.getMessage();
+        }
     }
 
     public String inscription(String username, String password, String passwordverif, String option) {
         try {
             if(password.equals(passwordverif)) {
-                byte[][] hashAndSalt = Argon2.derivePassword(password, option);
+                int argon2Type;
+                if(option.equals("1")) {
+                    argon2Type = 0;
+                } else {
+                    argon2Type = 2;
+                }
+                byte[][] hashAndSalt = Argon2.derivePassword(password, argon2Type);
 		        byte[] hash = hashAndSalt[0];
 		        byte[] salt = hashAndSalt[1];
+                byte[] byteArgon2Type = hashAndSalt[2];
     	        SecretKey key = new SecretKeySpec(hash, "AES");
                 byte[] iv = AES.generateIv();
     	        GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
@@ -41,7 +67,7 @@ public class Services {
                 LocalDate localDate = LocalDate.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 String formattedString = localDate.format(formatter);
-                sqlite.ajout_utilisateur(username, cipherText, iv, salt, formattedString);
+                sqlite.ajout_utilisateur(username, cipherText, iv, salt, argon2Type, formattedString);
 
                 return "Done";
             } else {

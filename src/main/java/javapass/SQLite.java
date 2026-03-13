@@ -34,6 +34,7 @@ public class SQLite {
                             "encrypted_textAndTag_verify TEXT NOT NULL," +
                             "iv_verify BLOB NOT NULL," +
                             "salt BLOB NOT NULL," +
+                            "argon2Type INTEGER," +
                             "last_login TEXT" +
                         ");";
             stmt.executeUpdate(sql);
@@ -67,15 +68,16 @@ public class SQLite {
         }
     }
 
-    public void ajout_utilisateur(String username, String  encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, String last_login) throws SQLException { //On ajout un utilisateur dans la base de donnees/ watchout aux type des parametres
+    public void ajout_utilisateur(String username, String  encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, int argon2Type, String last_login) throws SQLException { //On ajout un utilisateur dans la base de donnees/ watchout aux type des parametres
         Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
-        String sql = "INSERT INTO users VALUES (null,?,?,?,?,?)";
+        String sql = "INSERT INTO users VALUES (null,?,?,?,?,?,?)";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, username);
         pstmt.setString(2, encrypted_textAndTag_verify);
         pstmt.setBytes(3, iv_verify);
         pstmt.setBytes(4, salt);
-        pstmt.setString(5, last_login);
+        pstmt.setInt(5, argon2Type);
+        pstmt.setString(6, last_login);
         
         pstmt.executeUpdate();
         pstmt.close();
@@ -114,9 +116,10 @@ public class SQLite {
         String  encrypted_textAndTag_verify = rs.getString("encrypted_textAndTag_verify");
         byte[] iv_verify = rs.getBytes("iv_verify");
         byte[] salt = rs.getBytes("salt");
+        int argon2Type = rs.getInt("argon2type");
         String last_login = rs.getString("last_login");
 
-        ReturningUserValues rv = new ReturningUserValues(user_id, username, encrypted_textAndTag_verify, iv_verify, salt, last_login);
+        ReturningUserValues rv = new ReturningUserValues(user_id, username, encrypted_textAndTag_verify, iv_verify, salt, argon2Type, last_login);
             
         pstmt.close();
         co.close();
@@ -124,18 +127,20 @@ public class SQLite {
     }
 
     public final class ReturningUserValues {
-        private final int user_id;
-        private final String username;
-        private final String encrypted_textAndTag_verify;
-        private final byte[] iv_verify;
-        private final byte[] salt;
-        private final String last_login;
-        public ReturningUserValues(int user_id, String username, String encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, String last_login){
+        public final int user_id;
+        public final String username;
+        public final String encrypted_textAndTag_verify;
+        public final byte[] iv_verify;
+        public final byte[] salt;
+        public final int argon2Type;
+        public final String last_login;
+        public ReturningUserValues(int user_id, String username, String encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, int argon2Type, String last_login){
             this.user_id = user_id;
             this.username = username;
             this.encrypted_textAndTag_verify = encrypted_textAndTag_verify;
             this.iv_verify = iv_verify;
             this.salt = salt;
+            this.argon2Type = argon2Type;
             this.last_login = last_login;
         }
         //peutetre ajouter getters

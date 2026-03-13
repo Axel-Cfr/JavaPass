@@ -106,9 +106,20 @@ public class Interface {
 
         System.out.print("Identifiant : ");
         Scanner scanner = new Scanner(System.in);
-        String login = scanner.nextLine();
+        String username = scanner.nextLine();
         System.out.print("\n\nMot de passe : ");
         String password = scanner.nextLine();
+        
+        String result = services.authentification(username, password);
+        if(result.equals("Done")) {
+            System.out.println("Connexion...");
+        } else if(result.equals("Wrong")) {
+            System.out.println("\n Mot de passe erroné");
+            services.wait(3000);
+            connection();
+        } else {
+            erreur(result);
+        }
     }
 
     public void inscription() {

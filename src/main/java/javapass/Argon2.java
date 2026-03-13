@@ -1,5 +1,6 @@
 package javapass;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
@@ -17,7 +18,7 @@ public class Argon2 {
         return salt;
     }
 
-    public static byte[][] derivePassword(String password, String userType) {
+    public static byte[][] derivePassword(String password, int userType) {
         byte[] salt = generateSalt();
 
         int iterations; // Nombre de fois qu'Argon2 modifie tout les blocs mémoire
@@ -26,7 +27,7 @@ public class Argon2 {
         int parallelism; // Nombre de coeurs alloués
         int argon2Type; // Variante d'Argon2 utilisée (d, i ou id)
 
-        if (userType.equals("1")) {
+        if (userType == 0) {
             // 1 => PC
             // Paramètres de hash de la norme RFC_9106_HIGH_MEMORY
             iterations = 1;
@@ -34,7 +35,7 @@ public class Argon2 {
             hashLength = 32;
             parallelism = 4;
             argon2Type = Argon2Parameters.ARGON2_d;
-        } else if (userType.equals("2")) {
+        } else if (userType == 2) {
             // 2 => Serveur
             // Paramètres de hash supérieur à la norme RFC_9106_LOW_MEMORY
             iterations = 4; // 4 itérations au lieu de 3
@@ -65,7 +66,8 @@ public class Argon2 {
         generate.init(builder.build());
         byte[] hashbytes = new byte[hashLength];
         generate.generateBytes(password.getBytes(StandardCharsets.UTF_8), hashbytes, 0, hashbytes.length);
+        byte[] byteArgon2Type = ByteBuffer.allocate(4).putInt(argon2Type).array();
 
-        return new byte[][]{hashbytes, salt};
+        return new byte[][]{hashbytes, salt, byteArgon2Type};
     }
 }
