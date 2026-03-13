@@ -26,15 +26,25 @@ public class Services {
     public String authentification(String username, String password) {
         try {
             ReturningUserValues uservalue = sqlite.get_user(username);
-
-            byte[][] hashAndSalt = Argon2.derivePassword(password, uservalue.argon2Type);
-		    byte[] hash = hashAndSalt[0];
-		    byte[] salt = hashAndSalt[1];
-    	    SecretKey key = new SecretKeySpec(hash, "AES");
+            
+            byte[] salt = uservalue.salt;
+            byte[] hash = Argon2.derivePassword(password, salt, uservalue.argon2Type);
+            System.out.println(salt.length);
+            System.out.println(hash.length);
+            wait(3000);
+    	    
+            SecretKey key = new SecretKeySpec(hash, "AES");
+            System.out.println("continue");
+            wait(3000);
+            
             byte[] iv = uservalue.iv_verify;
     	    GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
+            System.out.println("continue");
+            wait(3000);
     	    String algorithm = "AES/GCM/NoPadding";
             String decryptedText = AES.decrypt(algorithm, username, key, gcmParameterSpec);
+            System.out.println("continue");
+            wait(3000);
             if(decryptedText.equals(username)) {
                 return "Done";
             } else {
@@ -54,10 +64,10 @@ public class Services {
                 } else {
                     argon2Type = 2;
                 }
-                byte[][] hashAndSalt = Argon2.derivePassword(password, argon2Type);
-		        byte[] hash = hashAndSalt[0];
-		        byte[] salt = hashAndSalt[1];
-                byte[] byteArgon2Type = hashAndSalt[2];
+                byte[] salt = Argon2.generateSalt();
+                byte[] hash = Argon2.derivePassword(password, salt, argon2Type);
+
+                //byte[] byteArgon2Type = hashAndSalt[2];
     	        SecretKey key = new SecretKeySpec(hash, "AES");
                 byte[] iv = AES.generateIv();
     	        GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);

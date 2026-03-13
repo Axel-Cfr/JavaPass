@@ -108,7 +108,7 @@ public class SQLite {
         String sql = "SELECT * FROM users WHERE username = ?";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1,username);
-        ResultSet rs = pstmt.executeQuery(sql);
+        ResultSet rs = pstmt.executeQuery();
 
         //while(rs.next()) est utilisé dans certain cas, mais pas ici au cas ou je le laisse
         int user_id = rs.getInt("user_id");
@@ -116,7 +116,7 @@ public class SQLite {
         String  encrypted_textAndTag_verify = rs.getString("encrypted_textAndTag_verify");
         byte[] iv_verify = rs.getBytes("iv_verify");
         byte[] salt = rs.getBytes("salt");
-        int argon2Type = rs.getInt("argon2type");
+        int argon2Type = rs.getInt("argon2Type");
         String last_login = rs.getString("last_login");
 
         ReturningUserValues rv = new ReturningUserValues(user_id, username, encrypted_textAndTag_verify, iv_verify, salt, argon2Type, last_login);

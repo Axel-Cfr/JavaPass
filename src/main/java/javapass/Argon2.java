@@ -10,7 +10,7 @@ import org.bouncycastle.crypto.params.Argon2Parameters;
 public class Argon2 {
 
     // Fonction qui génère et retourne un sel de 16bytes (= 128bits)
-    private static byte[] generateSalt() {
+    public static byte[] generateSalt() {
         SecureRandom secureRandom = new SecureRandom();
         byte[] salt = new byte[16];
         secureRandom.nextBytes(salt);
@@ -18,8 +18,7 @@ public class Argon2 {
         return salt;
     }
 
-    public static byte[][] derivePassword(String password, int userType) {
-        byte[] salt = generateSalt();
+    public static byte[] derivePassword(String password, byte[] salt, int userType) {
 
         int iterations; // Nombre de fois qu'Argon2 modifie tout les blocs mémoire
         int memLimit; // Quantité de mémoire allouée
@@ -68,6 +67,6 @@ public class Argon2 {
         generate.generateBytes(password.getBytes(StandardCharsets.UTF_8), hashbytes, 0, hashbytes.length);
         byte[] byteArgon2Type = ByteBuffer.allocate(4).putInt(argon2Type).array();
 
-        return new byte[][]{hashbytes, salt, byteArgon2Type};
+        return hashbytes;
     }
 }
