@@ -20,32 +20,37 @@ class AES
 class Argon2
 class User
 
-Main --> SQLite : initialise
-Main --> Interfaces : utilise
+Main ..> Interfaces : crée
+Interfaces ..> Services : crée
 Interfaces --> Services : utilise
 Services --> AES : utilise
 Services --> Argon2 : utilise
+Services ..> SQLite : initialise
 Services --> SQLite : utilise
 Services ..> User : crée
-Interfaces --> User : utilise
-SQLite --> User : utilise
 
 Main : main()
+
+Interfaces : afficherBienvenue()
+Interfaces : clearScreen()
+Interfaces : bandeau()
+Interfaces : erreur()
+Interfaces : connection()
+Interfaces : inscription()
+Interfaces : accueil()
+
+Services : connectionDB()
+Services : authentification()
+Services : inscription()
+Services : generatePassword()
+Services : researchID()
 
 SQLite : initialistionDB()
 SQLite : ajoutTable_base()
 SQLite : ajout_utilisateur()
 SQLite : ajout_mdp()
-
-Services : authentification()
-Services : generatePassword()
-Services : researchID()
-
-Interfaces : afficherBienvenue()
-Interfaces : clearScreen()
-Interfaces : bandeau()
-Interfaces : connection()
-Interfaces : inscription()
+SQLite : get_user()
+SQLite : get_mdp()
 
 AES : generateIv()
 AES : generateGCMParameterSpec()

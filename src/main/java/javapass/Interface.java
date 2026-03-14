@@ -144,7 +144,7 @@ public class Interface {
         if(result.equals("Done")) {
             System.out.println("Utilisateur crée avec succès");
         } else if(result.equals("Different")) {
-            System.out.println("\n Entrez le même mot de passe");
+            System.out.println("\nEntrez le même mot de passe");
             services.wait(3000);
             inscription();
         } else {

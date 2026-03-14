@@ -1,6 +1,5 @@
 package javapass;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
@@ -65,7 +64,6 @@ public class Argon2 {
         generate.init(builder.build());
         byte[] hashbytes = new byte[hashLength];
         generate.generateBytes(password.getBytes(StandardCharsets.UTF_8), hashbytes, 0, hashbytes.length);
-        byte[] byteArgon2Type = ByteBuffer.allocate(4).putInt(argon2Type).array();
 
         return hashbytes;
     }

@@ -83,7 +83,7 @@ public class Services {
         return new SecureRandom();
     }
 
-    public String generate(int taille, boolean minuscule, boolean majuscule, boolean chiffres, boolean speciaux) {
+    public String generatePassword(int taille, boolean minuscule, boolean majuscule, boolean chiffres, boolean speciaux) {
         
         // Listes des caractères disponibles
         String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
