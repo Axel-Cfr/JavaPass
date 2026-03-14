@@ -18,7 +18,6 @@ public class AES {
 
 	// Fonction qui crée un objet GCMParameterSpec avec un iv et le tag d'authentification propre à CGM (16bytes)
 	public static GCMParameterSpec generateGCMParameterSpec(byte[] iv) {
-    	new SecureRandom().nextBytes(iv);
     	return new GCMParameterSpec(128, iv);
 	}
 

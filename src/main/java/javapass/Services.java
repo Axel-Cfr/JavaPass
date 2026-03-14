@@ -29,22 +29,13 @@ public class Services {
             
             byte[] salt = uservalue.salt;
             byte[] hash = Argon2.derivePassword(password, salt, uservalue.argon2Type);
-            System.out.println(salt.length);
-            System.out.println(hash.length);
-            wait(3000);
     	    
             SecretKey key = new SecretKeySpec(hash, "AES");
-            System.out.println("continue");
-            wait(3000);
-            
             byte[] iv = uservalue.iv_verify;
     	    GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
-            System.out.println("continue");
-            wait(3000);
     	    String algorithm = "AES/GCM/NoPadding";
-            String decryptedText = AES.decrypt(algorithm, username, key, gcmParameterSpec);
-            System.out.println("continue");
-            wait(3000);
+            String decryptedText = AES.decrypt(algorithm, uservalue.encrypted_textAndTag_verify, key, gcmParameterSpec);
+
             if(decryptedText.equals(username)) {
                 return "Done";
             } else {
