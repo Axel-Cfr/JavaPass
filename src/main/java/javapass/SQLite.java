@@ -80,17 +80,18 @@ public class SQLite {
         //System.out.println("utilisateur ajouté avec succès");
     }
 
-    public static void ajout_mdp(int user_id, String website_name, String url, String encrypted_username, byte[] iv_username, byte[] iv_password) throws SQLException {
+    public static void ajout_mdp(int user_id, String website_name, String url, String encrypted_username, String encrypted_password, byte[] iv_username, byte[] iv_password) throws SQLException {
         //On ajout un mdp dans la base de donnees
         Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
-        String sql = "INSERT INTO passwords VALUES (null,?,?,?,?,?)";
+        String sql = "INSERT INTO passwords VALUES (null,?,?,?,?,?,?)";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setInt(1, user_id);
         pstmt.setString(2, website_name);
         pstmt.setString(3, url);
         pstmt.setString(4, encrypted_username);
-        pstmt.setBytes(5, iv_username);
-        pstmt.setBytes(6, iv_password);
+        pstmt.setString(5, encrypted_password);
+        pstmt.setBytes(6, iv_username);
+        pstmt.setBytes(7, iv_password);
             
         pstmt.executeUpdate();
         pstmt.close();
@@ -146,7 +147,7 @@ public class SQLite {
         String sql = "SELECT * FROM passwords WHERE user_id = ?";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setInt(1,user_id);
-        ResultSet rs = pstmt.executeQuery(sql);
+        ResultSet rs = pstmt.executeQuery();
 
         //while(rs.next()) est utilisé dans certain cas, mais pas ici au cas ou je le laisse
         int password_id = rs.getInt("password_id");
@@ -154,10 +155,11 @@ public class SQLite {
         String website_name = rs.getString("website_name");
         String url = rs.getString("url");
         String encrypted_username = rs.getString("encrypted_username");
+        String encrypted_password = rs.getString("encrypted_password");
         byte[] iv_username = rs.getBytes("iv_username");
         byte[] iv_password = rs.getBytes("iv_password");
 
-        ReturningMdpValues rv = new ReturningMdpValues(password_id, user_id, website_name, url, encrypted_username, iv_username, iv_password);
+        ReturningMdpValues rv = new ReturningMdpValues(password_id, user_id, website_name, url, encrypted_username, encrypted_password, iv_username, iv_password);
             
         pstmt.close();
         co.close();
@@ -170,14 +172,16 @@ public class SQLite {
         private final String website_name;
         private final String url;
         private final String encrypted_username;
+        private final String encrypted_password;
         private final byte[] iv_username;
         private final byte[] iv_password;
-        public ReturningMdpValues(int password_id, int user_id, String website_name, String url, String encrypted_username, byte[] iv_username, byte[] iv_password){
+        public ReturningMdpValues(int password_id, int user_id, String website_name, String url, String encrypted_username, String encrypted_password, byte[] iv_username, byte[] iv_password){
             this.password_id = password_id;
             this.user_id = user_id;
             this.website_name = website_name;
             this.url = url;
             this.encrypted_username = encrypted_username;
+            this.encrypted_password = encrypted_password;
             this.iv_username = iv_username;
             this.iv_password = iv_password;
         }

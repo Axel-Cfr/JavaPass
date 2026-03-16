@@ -151,4 +151,8 @@ public class Interface {
             erreur(result);
         }
     }
+
+    public void accueil(User user) {
+        
+    }
 }
