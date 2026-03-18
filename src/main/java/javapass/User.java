@@ -22,4 +22,40 @@ public class User {
         this.ivsUsername = ivsUsername;
         this.ivsPassword = ivsPassword;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public byte[] getKey() {
+        return key;
+    }
+
+    public String getLast_login() {
+        return last_login;
+    }
+
+    public String[] getWebsiteNames() {
+        return websiteNames;
+    }
+
+    public String[] getUrls() {
+        return urls;
+    }
+
+    public String[] getEncryptedUsernames() {
+        return encryptedUsernames;
+    }
+
+    public String[] getEncryptedPasswords() {
+        return encryptedPasswords;
+    }
+
+    public byte[][] getIvsUsername() {
+        return ivsUsername;
+    }
+
+    public byte[][] getIvsPassword() {
+        return ivsPassword;
+    }
 }

@@ -13,7 +13,7 @@ import javapass.SQLite.ReturningUserValues;
 
 public class Services {
     SQLite sqlite = new SQLite();
-
+    User user;
     public String connectionDB() {
         try {
             sqlite.initialisationDB();
@@ -37,6 +37,7 @@ public class Services {
             String decryptedText = AES.decrypt(algorithm, uservalue.encrypted_textAndTag_verify, key, gcmParameterSpec);
 
             if(decryptedText.equals(username)) {
+                user = new User(username, hash, uservalue.last_login, null, null, null, null, null, null);
                 return "Done";
             } else {
                 return "Wrong";

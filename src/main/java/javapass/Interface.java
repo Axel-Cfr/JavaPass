@@ -126,18 +126,18 @@ public class Interface {
         clearScreen();
         bandeau();
 
-        System.out.print("Identifiant: ");
+        System.out.println("Identifiant: ");
         Scanner scanner = new Scanner(System.in);
         String username = scanner.nextLine();
-        System.out.print("\n\nMot de passe : ");
+        System.out.println("\nMot de passe : ");
         String password = scanner.nextLine();
-        System.out.print("\n\nConfirmer votre mot de passe : ");
+        System.out.println("\nConfirmer votre mot de passe : ");
         String passwordverif = scanner.nextLine();
-        System.out.print("\n\nEntrez le type de machine sur lequel vous utilisez JavaPass");
-        System.out.print("\n[1] : Ordinateur puissant strictement personnel");
-        System.out.print("\n[2] : Serveur");
-        System.out.print("\n[3] : Autres");
-        System.out.print("\n\nEntrez votre choix (1, 2 ou 3): ");
+        System.out.println("\nEntrez le type de machine sur lequel vous utilisez JavaPass");
+        System.out.println("[1] : Ordinateur puissant strictement personnel");
+        System.out.println("[2] : Serveur");
+        System.out.println("[3] : Autres");
+        System.out.println("\nEntrez votre choix (1, 2 ou 3): ");
         String option = scanner.nextLine();
 
         String result = services.inscription(username, password, passwordverif, option);
@@ -152,7 +152,30 @@ public class Interface {
         }
     }
 
-    public void accueil(User user) {
-        
+    public void accueil() {
+        clearScreen();
+        bandeau();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Bonjour "+services.user.getUsername());
+        System.out.println("Dernière connexion "+services.user.getLast_login());
+        System.out.println("\nQue voulez vous faire ?");
+        System.out.println("[1] : Consulter mes mots de passe");
+        System.out.println("[2] : Ajouter un nouveau mot de passe");
+        System.out.println("[3] : Quitter JavaPass");
+        System.out.println("\nEntrez votre choix (1, 2 ou 3): ");
+        String option = scanner.nextLine();
+
+        if(option.equals("1")) {
+            System.out.println("Consultation des mots de passe...");
+        } else if(option.equals("2")) {
+            System.out.println("Ajout d'un nouveau mot de passe...");
+        } else if(option.equals("3")) {
+            System.out.println("Passez une bonne journée :D");
+            services.wait(3000);
+            System.exit(0);
+        } else {
+            accueil();
+        }
     }
 }
