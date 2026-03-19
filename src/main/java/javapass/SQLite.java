@@ -123,14 +123,14 @@ public class SQLite {
     }
 
     public final class ReturningUserValues {
-        public final int user_id;
-        public final String username;
-        public final String encrypted_textAndTag_verify;
-        public final byte[] iv_verify;
-        public final byte[] salt;
-        public final int argon2Type;
-        public final String last_login;
-        public ReturningUserValues(int user_id, String username, String encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, int argon2Type, String last_login){
+        private final int user_id;
+        private final String username;
+        private final String encrypted_textAndTag_verify;
+        private final byte[] iv_verify;
+        private final byte[] salt;
+        private final int argon2Type;
+        private final String last_login;
+        private ReturningUserValues(int user_id, String username, String encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, int argon2Type, String last_login){
             this.user_id = user_id;
             this.username = username;
             this.encrypted_textAndTag_verify = encrypted_textAndTag_verify;
@@ -139,8 +139,36 @@ public class SQLite {
             this.argon2Type = argon2Type;
             this.last_login = last_login;
         }
-        //peutetre ajouter getters
-    }
+
+        public int getUser_id() {
+            return user_id;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getEncrypted_textAndTag_verify() {
+            return encrypted_textAndTag_verify;
+        }
+
+        public byte[] getIv_verify() {
+            return iv_verify;
+        }
+
+        public byte[] getSalt() {
+            return salt;
+        }
+
+        public int getArgon2Type() {
+            return argon2Type;
+        }
+
+        public String getLast_login() {
+            return last_login;
+        }
+        
+        }
 
     public ReturningMdpValues get_mdp(int user_id) throws SQLException {
         Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
@@ -185,6 +213,37 @@ public class SQLite {
             this.iv_username = iv_username;
             this.iv_password = iv_password;
         }
-        //peutetre ajouter getters
+
+        public int getPassword_id() {
+            return password_id;
+        }
+
+        public int getUser_id() {
+            return user_id;
+        }
+
+        public String getWebsite_name() {
+            return website_name;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public String getEncrypted_username() {
+            return encrypted_username;
+        }
+
+        public String getEncrypted_password() {
+            return encrypted_password;
+        }
+
+        public byte[] getIv_username() {
+            return iv_username;
+        }
+
+        public byte[] getIv_password() {
+            return iv_password;
+        }
     }
 }
