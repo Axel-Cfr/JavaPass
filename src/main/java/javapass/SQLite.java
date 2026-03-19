@@ -130,7 +130,7 @@ public class SQLite {
         private final byte[] salt;
         private final int argon2Type;
         private final String last_login;
-        private ReturningUserValues(int user_id, String username, String encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, int argon2Type, String last_login){
+        public ReturningUserValues(int user_id, String username, String encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, int argon2Type, String last_login){
             this.user_id = user_id;
             this.username = username;
             this.encrypted_textAndTag_verify = encrypted_textAndTag_verify;
