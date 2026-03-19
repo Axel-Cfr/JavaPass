@@ -14,6 +14,7 @@ import javapass.SQLite.ReturningUserValues;
 public class Services {
     SQLite sqlite = new SQLite();
     User user;
+
     public String connectionDB() {
         try {
             sqlite.initialisationDB();
@@ -27,17 +28,18 @@ public class Services {
         try {
             ReturningUserValues uservalue = sqlite.get_user(username);
             
-            byte[] salt = uservalue.salt;
-            byte[] hash = Argon2.derivePassword(password, salt, uservalue.argon2Type);
+            byte[] salt = uservalue.getSalt();
+            byte[] hash = Argon2.derivePassword(password, salt, uservalue.getArgon2Type());
     	    
             SecretKey key = new SecretKeySpec(hash, "AES");
-            byte[] iv = uservalue.iv_verify;
+            byte[] iv = uservalue.getIv_verify();
     	    GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
     	    String algorithm = "AES/GCM/NoPadding";
-            String decryptedText = AES.decrypt(algorithm, uservalue.encrypted_textAndTag_verify, key, gcmParameterSpec);
+            String decryptedText = AES.decrypt(algorithm, uservalue.getEncrypted_textAndTag_verify(), key, gcmParameterSpec);
 
             if(decryptedText.equals(username)) {
-                user = new User(username, hash, uservalue.last_login, null, null, null, null, null, null);
+                SQLite.ReturningMdpValues mdpValues = sqlite.get_mdp(uservalue.getUser_id());
+                user = new User(username, hash, uservalue.getLast_login(), mdpValues.getWebsite_name(), null, null, null, null, null);
                 return "Done";
             } else {
                 return "Wrong";

@@ -130,7 +130,7 @@ public class SQLite {
         private final byte[] salt;
         private final int argon2Type;
         private final String last_login;
-        private ReturningUserValues(int user_id, String username, String encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, int argon2Type, String last_login){
+        ReturningUserValues(int user_id, String username, String encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, int argon2Type, String last_login){
             this.user_id = user_id;
             this.username = username;
             this.encrypted_textAndTag_verify = encrypted_textAndTag_verify;
@@ -197,13 +197,13 @@ public class SQLite {
     public final class ReturningMdpValues {
         private final int password_id;
         private final int user_id;
-        private final String website_name;
+        private final String[] website_name;
         private final String url;
         private final String encrypted_username;
         private final String encrypted_password;
         private final byte[] iv_username;
         private final byte[] iv_password;
-        public ReturningMdpValues(int password_id, int user_id, String website_name, String url, String encrypted_username, String encrypted_password, byte[] iv_username, byte[] iv_password){
+        public ReturningMdpValues(int password_id, int user_id, String[] website_name, String url, String encrypted_username, String encrypted_password, byte[] iv_username, byte[] iv_password){
             this.password_id = password_id;
             this.user_id = user_id;
             this.website_name = website_name;
