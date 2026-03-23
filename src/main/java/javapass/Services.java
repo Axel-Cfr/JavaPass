@@ -38,8 +38,8 @@ public class Services {
             String decryptedText = AES.decrypt(algorithm, uservalue.getEncrypted_textAndTag_verify(), key, gcmParameterSpec);
 
             if(decryptedText.equals(username)) {
-                SQLite.ReturningMdpValues mdpValues = sqlite.get_mdp(uservalue.getUser_id());
-                user = new User(username, hash, uservalue.getLast_login(), mdpValues.getWebsite_name(), null, null, null, null, null);
+                SQLite.MdpValues mdpValues = sqlite.get_mdp(uservalue.getUser_id());
+                // user = new User(username, hash, uservalue.getLast_login(), mdpValues.getWebsite_name(), null, null, null, null, null);
                 return "Done";
             } else {
                 return "Wrong";
