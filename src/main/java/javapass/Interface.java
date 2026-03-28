@@ -5,7 +5,11 @@ import java.util.Scanner;
 
 public class Interface {
     public final String GREEN = "\033[0;32m"; //Green
-    Services services = new Services();
+    Services services;
+
+    public Interface(Services services) {
+        this.services =  services;
+    }
 
     public void afficherBienvenue() throws Exception {
         String result = services.connectionDB();
@@ -184,13 +188,10 @@ public class Interface {
         bandeau();
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Bonjour "+services.user.getUsername());
-        System.out.println("Dernière connexion "+services.user.getLast_login());
-        System.out.println("\nQue voulez vous faire ?");
-        System.out.println("[1] : Consulter mes mots de passe");
-        System.out.println("[2] : Ajouter un nouveau mot de passe");
-        System.out.println("[3] : Quitter JavaPass");
-        System.out.println("\nEntrez votre choix (1, 2 ou 3): ");
+        System.out.println("Quel mot de passe voulez-vous afficher ?");
+        System.out.println("Entrez le nom du site");
         String option = scanner.nextLine();
+
+        
     }
 }

@@ -99,7 +99,7 @@ public class SQLite {
         System.out.println("Mot de passe ajouté avec succès");
     }
 
-    public ReturningUserValues get_user(String username) throws SQLException {
+    public UserValues get_user(String username) throws SQLException {
         Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         String sql = "SELECT * FROM users WHERE username = ?";
         PreparedStatement pstmt = co.prepareStatement(sql);
@@ -115,14 +115,14 @@ public class SQLite {
         int argon2Type = rs.getInt("argon2Type");
         String last_login = rs.getString("last_login");
 
-        ReturningUserValues rv = new ReturningUserValues(user_id, username, encrypted_textAndTag_verify, iv_verify, salt, argon2Type, last_login);
+        UserValues rv = new UserValues(user_id, username, encrypted_textAndTag_verify, iv_verify, salt, argon2Type, last_login);
             
         pstmt.close();
         co.close();
         return rv;
     }
 
-    public final class ReturningUserValues {
+    public final class UserValues {
         private final int user_id;
         private final String username;
         private final String encrypted_textAndTag_verify;
@@ -130,7 +130,7 @@ public class SQLite {
         private final byte[] salt;
         private final int argon2Type;
         private final String last_login;
-        public ReturningUserValues(int user_id, String username, String encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, int argon2Type, String last_login){
+        public UserValues(int user_id, String username, String encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt, int argon2Type, String last_login){
             this.user_id = user_id;
             this.username = username;
             this.encrypted_textAndTag_verify = encrypted_textAndTag_verify;

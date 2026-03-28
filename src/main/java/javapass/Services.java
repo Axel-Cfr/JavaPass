@@ -9,7 +9,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import javapass.SQLite.ReturningUserValues;
+import javapass.SQLite.UserValues;
 
 public class Services {
     SQLite sqlite = new SQLite();
@@ -26,7 +26,7 @@ public class Services {
 
     public String authentification(String username, String password) {
         try {
-            ReturningUserValues uservalue = sqlite.get_user(username);
+            UserValues uservalue = sqlite.get_user(username);
             
             byte[] salt = uservalue.getSalt();
             byte[] hash = Argon2.derivePassword(password, salt, uservalue.getArgon2Type());
@@ -39,7 +39,7 @@ public class Services {
 
             if(decryptedText.equals(username)) {
                 SQLite.MdpValues mdpValues = sqlite.get_mdp(uservalue.getUser_id());
-                // user = new User(username, hash, uservalue.getLast_login(), mdpValues.getWebsite_name(), null, null, null, null, null);
+                // user = new User(username, hash, uservalue.getLast_login(), Returning);
                 return "Done";
             } else {
                 return "Wrong";
@@ -81,6 +81,8 @@ public class Services {
             return e.getMessage();
         }
     }
+
+    // public ArrayList<String> 
 
     public SecureRandom generateSecureRandom() {
         return new SecureRandom();
