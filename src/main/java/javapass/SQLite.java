@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
+import javapass.SQLite.ReturningMdpValues;
 
 //https://www.youtube.com/watch?v=TN_xTjbrzzc
 //SQLite permet de stocker des données localement fournis avec l'application.
@@ -170,31 +173,49 @@ public class SQLite {
         
         }
 
-    public ReturningMdpValues get_mdp(int user_id) throws SQLException {
+        public ArrayList<ReturningMdpValues> get_mdp(int user_id) throws SQLException {
         Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         String sql = "SELECT * FROM passwords WHERE user_id = ?";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setInt(1,user_id);
         ResultSet rs = pstmt.executeQuery();
-
+        ArrayList<ReturningMdpValues> rv = new ArrayList<>();
+        
+        //mettre chaque variables dans une liste
         //while(rs.next()) est utilisé dans certain cas, mais pas ici au cas ou je le laisse
-        int password_id = rs.getInt("password_id");
+        while(rs.next()){
+            int password_id = rs.getInt("password_id");
+            //on a deja user_id en parametre
+            String website_name = rs.getString("website_name");
+            String url = rs.getString("url");
+            String encrypted_username = rs.getString("encrypted_username");
+            String encrypted_password = rs.getString("encrypted_password");
+            byte[] iv_username = rs.getBytes("iv_username");
+            byte[] iv_password = rs.getBytes("iv_password");
+
+            rv.add(new ReturningMdpValues(password_id, user_id, website_name, url, encrypted_username, encrypted_password, iv_username, iv_password));
+        //utiliser une liste de ReturningMdpValues pour stocker les mdp de chaque utilisateur, et faire un return de cette liste ou alors creer plusieurs listes ou utilisateurs ou les arrays lists
+        /* int password_id = rs.getInt("password_id");
         //on a deja user_id en parametre
         String website_name = rs.getString("website_name");
         String url = rs.getString("url");
         String encrypted_username = rs.getString("encrypted_username");
         String encrypted_password = rs.getString("encrypted_password");
         byte[] iv_username = rs.getBytes("iv_username");
-        byte[] iv_password = rs.getBytes("iv_password");
+        byte[] iv_password = rs.getBytes("iv_password"); */
 
-        ReturningMdpValues rv = new ReturningMdpValues(password_id, user_id, website_name, url, encrypted_username, encrypted_password, iv_username, iv_password);
+
+        ///ReturningMdpValues rv = new ReturningMdpValues(password_id, user_id, website_name, url, encrypted_username, encrypted_password, iv_username, iv_password);
             
         pstmt.close();
         co.close();
         return rv;
+        }
+            return null;
     }
 
     public final class ReturningMdpValues {
+        ///Je pense que je vais devoir faire une liste de ReturningMdpValues pour stocker les mdp de chaque utilisateur, et faire un return de cette liste ou alors creer plusieurs listes ou utilisateurs ou les arrays lists
         private final int password_id;
         private final int user_id;
         private final String website_name;
@@ -203,6 +224,7 @@ public class SQLite {
         private final String encrypted_password;
         private final byte[] iv_username;
         private final byte[] iv_password;
+        
         public ReturningMdpValues(int password_id, int user_id, String website_name, String url, String encrypted_username, String encrypted_password, byte[] iv_username, byte[] iv_password){
             this.password_id = password_id;
             this.user_id = user_id;
@@ -214,16 +236,19 @@ public class SQLite {
             this.iv_password = iv_password;
         }
 
+
+
+
         public int getPassword_id() {
-            return password_id;
+            return this.password_id;
         }
 
         public int getUser_id() {
-            return user_id;
+            return this.user_id;
         }
 
         public String getWebsite_name() {
-            return website_name;
+            return this.website_name;
         }
 
         public String getUrl() {
