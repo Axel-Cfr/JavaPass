@@ -5,7 +5,11 @@ import java.util.Scanner;
 
 public class Interface {
     public final String GREEN = "\033[0;32m"; //Green
-    Services services = new Services();
+    Services services;
+
+    public Interface(Services services) {
+        this.services =  services;
+    }
 
     public void afficherBienvenue() throws Exception {
         String result = services.connectionDB();
@@ -177,5 +181,17 @@ public class Interface {
         } else {
             accueil();
         }
+    }
+
+    public void voirMDP() {
+        clearScreen();
+        bandeau();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Quel mot de passe voulez-vous afficher ?");
+        System.out.println("Entrez le nom du site");
+        String option = scanner.nextLine();
+
+        
     }
 }

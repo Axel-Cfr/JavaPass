@@ -3,7 +3,8 @@ package javapass;
 public class Main {
     public static void main(String[] args) {
         try {
-            Interface interface_utilisateur = new Interface();
+            Services services = new Services();
+            Interface interface_utilisateur = new Interface(services);
             interface_utilisateur.afficherBienvenue();
         } catch(Exception e) {
             System.out.println(e.getMessage());
@@ -11,7 +12,5 @@ public class Main {
 
     	//String mdp = Services.generate(150, true, true, true, true);
         //System.out.println("Mot de passe généré : " + mdp);
-
-        // Thread.sleep(10000);
     }
 }

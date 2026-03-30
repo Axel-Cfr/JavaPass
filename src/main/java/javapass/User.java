@@ -1,26 +1,18 @@
 package javapass;
 
+import java.util.ArrayList;
+
 public class User {
     private String username;
     private byte[] key;
     private String last_login;
-    private String[] websiteNames;
-    private String[] urls;
-    private String[] encryptedUsernames;
-    private String[] encryptedPasswords;
-    private byte[][] ivsUsername;
-    private byte[][] ivsPassword;
+    private ArrayList<SQLite.MdpValues> passwordList;
 
-    User(String username, byte[] key, String last_login, String[] websiteNames, String[] urls, String[] encryptedUsernames, String[] encryptedPasswords, byte[][] ivsUsername, byte[][] ivsPassword) {
+    User(String username, byte[] key, String last_login, ArrayList<SQLite.MdpValues> passwordList) {
         this.username = username;
         this.key = key;
         this.last_login = last_login;
-        this.websiteNames = websiteNames;
-        this.urls = urls;
-        this.encryptedUsernames = encryptedUsernames;
-        this.encryptedPasswords = encryptedPasswords;
-        this.ivsUsername = ivsUsername;
-        this.ivsPassword = ivsPassword;
+        this.passwordList = passwordList;
     }
 
     public String getUsername() {
@@ -35,27 +27,44 @@ public class User {
         return last_login;
     }
 
-    public String[] getWebsiteNames() {
-        return websiteNames;
+    public int getPasswordValues(String websiteName) {
+        for(int i = 0; i < passwordList.size(); i++) {
+            if(websiteName.equals(passwordList.get(i).getWebsite_name())) {
+                return i;
+            }
+        }
+        return -1;
     }
 
-    public String[] getUrls() {
-        return urls;
+    public String getWebsiteName(int i) {
+        return passwordList.get(i).getWebsite_name();
     }
 
-    public String[] getEncryptedUsernames() {
-        return encryptedUsernames;
+    public String getUrl(int i) {
+        return passwordList.get(i).getUrl();
     }
 
-    public String[] getEncryptedPasswords() {
-        return encryptedPasswords;
+    public String getEncryptedUsername(int i) {
+        return passwordList.get(i).getEncrypted_username();
     }
 
-    public byte[][] getIvsUsername() {
-        return ivsUsername;
+    public String getEncryptedPassword(int i) {
+        return passwordList.get(i).getEncrypted_password();
     }
 
-    public byte[][] getIvsPassword() {
-        return ivsPassword;
+    public byte[] getIvUsername(int i) {
+        return passwordList.get(i).getIv_username();
+    }
+
+    public byte[] getIvPassword(int i) {
+        return passwordList.get(i).getIv_password();
+    }
+
+    public ArrayList<String> getPasswordList() {
+        ArrayList<String> websiteNameList = new ArrayList<String>();
+        for(int i = 0; i < passwordList.size(); i++) {
+            websiteNameList.add(passwordList.get(i).getWebsite_name());
+        }
+        return websiteNameList;
     }
 }
