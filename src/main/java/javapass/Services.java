@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
@@ -54,9 +55,9 @@ public class Services {
             if(password.equals(passwordverif)) {
                 int argon2Type;
                 if(option.equals("1")) {
-                    argon2Type = 0;
+                    argon2Type = 0; // Argon2d
                 } else {
-                    argon2Type = 2;
+                    argon2Type = 2; // Argon2id
                 }
                 byte[] salt = Argon2.generateSalt();
                 byte[] hash = Argon2.derivePassword(password, salt, argon2Type);
@@ -82,12 +83,33 @@ public class Services {
         }
     }
 
-    // public ArrayList<String> 
+    // Fonction qui renvoie la liste de tout les noms de sites 
+    // desquels l'utilisateur a enregistré son mot de passe
+    public ArrayList<String> returnWebsiteName() {
+        return user.getWebsiteNameList();
+    }
 
+    // Fonction de recherche des noms de sites enregistré par l'utilisateur
+    public ArrayList<String> ResearchWebisteName(ArrayList<String> websiteNameList, String input) {
+        if(input == null || input.isBlank()) {
+            return websiteNameList;
+        }
+
+        ArrayList<String> newWebsiteNameList = new ArrayList<String>();
+        for(int i = 0; i < websiteNameList.size(); i++) {
+            if(websiteNameList.get(i).contains(input)) {
+                newWebsiteNameList.add(websiteNameList.get(i));
+            }
+        }
+        return newWebsiteNameList;
+    }
+
+    // Fonction qui génère un nombre flottant réellement aléatoire
     public SecureRandom generateSecureRandom() {
         return new SecureRandom();
     }
 
+    // Fonction qui génère un mot de passe sécurisé en fonction des paramètres passés
     public String generatePassword(int taille, boolean minuscule, boolean majuscule, boolean chiffres, boolean speciaux) {
         
         // Listes des caractères disponibles

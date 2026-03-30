@@ -1,6 +1,7 @@
 package javapass;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Interface {
@@ -66,6 +67,7 @@ public class Interface {
             bandeau();
 			inscription();
 		} else {
+            scanner.close();
 			System.exit(0);
 		}
     }
@@ -122,6 +124,7 @@ public class Interface {
             services.wait(3000);
             connection();
         } else {
+            scanner.close();
             erreur(result);
         }
     }
@@ -152,6 +155,7 @@ public class Interface {
             services.wait(3000);
             inscription();
         } else {
+            scanner.close();
             erreur(result);
         }
     }
@@ -176,6 +180,7 @@ public class Interface {
             System.out.println("Ajout d'un nouveau mot de passe...");
         } else if(option.equals("3")) {
             System.out.println("Passez une bonne journée :D");
+            scanner.close();
             services.wait(3000);
             System.exit(0);
         } else {
@@ -183,15 +188,23 @@ public class Interface {
         }
     }
 
-    public void voirMDP() {
-        clearScreen();
-        bandeau();
-
+    public void voirListeMDP() {
+        ArrayList<String> websiteNameList = services.returnWebsiteName();
+        String resultatRecherche = "In progress";
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Quel mot de passe voulez-vous afficher ?");
-        System.out.println("Entrez le nom du site");
-        String option = scanner.nextLine();
 
+        while(resultatRecherche.equals("Done")) {
+            clearScreen();
+            bandeau();
         
+            System.out.println("Quel mot de passe voulez-vous afficher ?");
+            System.out.println("Entrez le numéro du site\n");
+            System.out.println("Ou entrez [s*] puis votre saisie pour rechercher un mot de passe");
+
+            for(int i = 0; i < websiteNameList.size(); i++) {
+                System.out.println("["+(i+1)+"]"+websiteNameList.get(i));
+            }
+            String option = scanner.nextLine();
+        }
     }
 }

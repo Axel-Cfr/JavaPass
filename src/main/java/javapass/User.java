@@ -60,7 +60,7 @@ public class User {
         return passwordList.get(i).getIv_password();
     }
 
-    public ArrayList<String> getPasswordList() {
+    public ArrayList<String> getWebsiteNameList() {
         ArrayList<String> websiteNameList = new ArrayList<String>();
         for(int i = 0; i < passwordList.size(); i++) {
             websiteNameList.add(passwordList.get(i).getWebsite_name());
