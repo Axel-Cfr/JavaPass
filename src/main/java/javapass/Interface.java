@@ -104,6 +104,7 @@ public class Interface {
         bandeau();
         System.err.println("Une erreur s'est produite, veuillez redémarrer JavaPass");
         System.err.println("Détail de l'erreur :\n"+e);
+        System.exit(0);
     }
 
     public void connection() {
@@ -202,16 +203,17 @@ public class Interface {
             System.out.println("Ou entrez [s*] puis votre saisie pour rechercher un mot de passe\n");
 
             for(int i = 0; i < websiteNameList.size(); i++) {
-                System.out.println("["+(i+1)+"]"+websiteNameList.get(i));
+                System.out.println("["+(i+1)+"] "+websiteNameList.get(i));
             }
+
             String option = scanner.nextLine();
-            if(option.substring(0, 2).equals("s*")) {
+            if(option.startsWith("s*")) {
                 websiteNameList = services.researchWebsiteName(option.substring(2, option.length()));
             } else {
-                try {
+                try {   
                     int intOption = Integer.parseInt(option);
                     if(intOption >= 1 && intOption <= websiteNameList.size()) {
-                        String[] passwordInfos = services.givePasswordInfos(websiteNameList.get(intOption));
+                        String[] passwordInfos = services.givePasswordInfos(websiteNameList.get(intOption-1));
                         if(passwordInfos.length == 1) {
                             scanner.close();
                             erreur(passwordInfos[0]);
@@ -223,6 +225,7 @@ public class Interface {
                         System.out.println("\nVeuillez faire une entrée valide");
                         services.wait(3000);
                     }
+                
                 } catch (Exception e) {
                     System.out.println("\nVeuillez faire une entrée valide");
                     services.wait(3000);

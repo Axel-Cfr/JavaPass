@@ -111,16 +111,16 @@ public class Services {
         try {
             String[] passwordInfos = new String[4];
             int indPassword = user.getPasswordValues(websiteName);
-            String encryptedUsername = user.getEncryptedUsername(indPassword);
-            String encryptedPassword = user.getEncryptedPassword(indPassword);
 
             // Dechiffre le nom d'utilisateur et le mot de passe
             SecretKey key = new SecretKeySpec(user.getKey(), "AES");
-            byte[] iv = user.getIvPassword(indPassword);
-    	    GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
+            byte[] ivUsername = user.getIvUsername(indPassword);
+            byte[] ivPassword = user.getIvPassword(indPassword);
+    	    GCMParameterSpec gcmParameterSpecU = AES.generateGCMParameterSpec(ivUsername);
+            GCMParameterSpec gcmParameterSpecP = AES.generateGCMParameterSpec(ivPassword);
     	    String algorithm = "AES/GCM/NoPadding";
-            String decryptedUsername = AES.decrypt(algorithm, user.getEncryptedUsername(indPassword), key, gcmParameterSpec);
-            String decryptedPassword = AES.decrypt(algorithm, user.getEncryptedPassword(indPassword), key, gcmParameterSpec);
+            String decryptedUsername = AES.decrypt(algorithm, user.getEncryptedUsername(indPassword), key, gcmParameterSpecU);
+            String decryptedPassword = AES.decrypt(algorithm, user.getEncryptedPassword(indPassword), key, gcmParameterSpecP);
 
             // Remplis le tableau avec le nom du site, l'url, le nom de l'utilisateur et mot de passe
             passwordInfos[0] = user.getWebsiteName(indPassword);
