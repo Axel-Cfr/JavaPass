@@ -91,7 +91,8 @@ public class Services {
     }
 
     // Fonction de recherche des noms de sites enregistré par l'utilisateur
-    public ArrayList<String> ResearchWebisteName(ArrayList<String> websiteNameList, String input) {
+    public ArrayList<String> researchWebsiteName(String input) {
+        ArrayList<String> websiteNameList = returnWebsiteName();
         if(input == null || input.isBlank()) {
             return websiteNameList;
         }
@@ -103,6 +104,35 @@ public class Services {
             }
         }
         return newWebsiteNameList;
+    }
+
+    // Fonction qui retourne les informations dechiffrées du mots de passe choisi
+    public String[] givePasswordInfos(String websiteName) {
+        try {
+            String[] passwordInfos = new String[4];
+            int indPassword = user.getPasswordValues(websiteName);
+            String encryptedUsername = user.getEncryptedUsername(indPassword);
+            String encryptedPassword = user.getEncryptedPassword(indPassword);
+
+            // Dechiffre le nom d'utilisateur et le mot de passe
+            SecretKey key = new SecretKeySpec(user.getKey(), "AES");
+            byte[] iv = user.getIvPassword(indPassword);
+    	    GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
+    	    String algorithm = "AES/GCM/NoPadding";
+            String decryptedUsername = AES.decrypt(algorithm, user.getEncryptedUsername(indPassword), key, gcmParameterSpec);
+            String decryptedPassword = AES.decrypt(algorithm, user.getEncryptedPassword(indPassword), key, gcmParameterSpec);
+
+            // Remplis le tableau avec le nom du site, l'url, le nom de l'utilisateur et mot de passe
+            passwordInfos[0] = user.getWebsiteName(indPassword);
+            passwordInfos[1] = user.getUrl(indPassword);
+            passwordInfos[2] = decryptedUsername;
+            passwordInfos[3] = decryptedPassword;
+
+            return passwordInfos;
+        } catch(Exception e) {
+            String[] error = {e.getMessage()};
+            return error;
+        }
     }
 
     // Fonction qui génère un nombre flottant réellement aléatoire

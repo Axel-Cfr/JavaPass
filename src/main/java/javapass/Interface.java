@@ -175,7 +175,7 @@ public class Interface {
         String option = scanner.nextLine();
 
         if(option.equals("1")) {
-            System.out.println("Consultation des mots de passe...");
+            voirListeMDP();
         } else if(option.equals("2")) {
             System.out.println("Ajout d'un nouveau mot de passe...");
         } else if(option.equals("3")) {
@@ -193,20 +193,40 @@ public class Interface {
         String resultatRecherche = "In progress";
         Scanner scanner = new Scanner(System.in);
 
-        while(resultatRecherche.equals("Done")) {
+        while(!resultatRecherche.equals("Done")) {
             clearScreen();
             bandeau();
         
             System.out.println("Quel mot de passe voulez-vous afficher ?");
-            System.out.println("Entrez le numéro du site\n");
-            System.out.println("Ou entrez [s*] puis votre saisie pour rechercher un mot de passe");
+            System.out.println("Entrez le numéro du site");
+            System.out.println("Ou entrez [s*] puis votre saisie pour rechercher un mot de passe\n");
 
             for(int i = 0; i < websiteNameList.size(); i++) {
                 System.out.println("["+(i+1)+"]"+websiteNameList.get(i));
             }
             String option = scanner.nextLine();
             if(option.substring(0, 2).equals("s*")) {
-
+                websiteNameList = services.researchWebsiteName(option.substring(2, option.length()));
+            } else {
+                try {
+                    int intOption = Integer.parseInt(option);
+                    if(intOption >= 1 && intOption <= websiteNameList.size()) {
+                        String[] passwordInfos = services.givePasswordInfos(websiteNameList.get(intOption));
+                        if(passwordInfos.length == 1) {
+                            scanner.close();
+                            erreur(passwordInfos[0]);
+                        } else {
+                            resultatRecherche = "Done";
+                            System.out.println("Consultation du mot de passe...");
+                        }
+                    } else {
+                        System.out.println("\nVeuillez faire une entrée valide");
+                        services.wait(3000);
+                    }
+                } catch (Exception e) {
+                    System.out.println("\nVeuillez faire une entrée valide");
+                    services.wait(3000);
+                }
             }
         }
     }
