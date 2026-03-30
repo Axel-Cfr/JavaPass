@@ -118,7 +118,7 @@ public class Interface {
         
         String result = services.authentification(username, password);
         if(result.equals("Done")) {
-            System.out.println("Connexion...");
+            accueil();
         } else if(result.equals("Wrong")) {
             System.out.println("\n Mot de passe erroné");
             services.wait(3000);
@@ -205,6 +205,9 @@ public class Interface {
                 System.out.println("["+(i+1)+"]"+websiteNameList.get(i));
             }
             String option = scanner.nextLine();
+            if(option.substring(0, 2).equals("s*")) {
+
+            }
         }
     }
 }
