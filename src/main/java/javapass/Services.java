@@ -39,8 +39,9 @@ public class Services {
             String decryptedText = AES.decrypt(algorithm, uservalue.getEncrypted_textAndTag_verify(), key, gcmParameterSpec);
 
             if(decryptedText.equals(username)) {
-                SQLite.MdpValues mdpValues = sqlite.get_mdp(uservalue.getUser_id());
-                // user = new User(username, hash, uservalue.getLast_login(), Returning);
+                ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(uservalue.getUser_id());
+                user = new User(username, hash, uservalue.getLast_login(), mdpValues);
+                
                 return "Done";
             } else {
                 return "Wrong";
@@ -95,7 +96,7 @@ public class Services {
             return websiteNameList;
         }
 
-        ArrayList<String> newWebsiteNameList = new ArrayList<String>();
+        ArrayList<String> newWebsiteNameList = new ArrayList<>();
         for(int i = 0; i < websiteNameList.size(); i++) {
             if(websiteNameList.get(i).contains(input)) {
                 newWebsiteNameList.add(websiteNameList.get(i));
