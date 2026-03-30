@@ -170,7 +170,7 @@ public class SQLite {
         
         }
 
-    public ReturningMdpValues get_mdp(int user_id) throws SQLException {
+    public MdpValues get_mdp(int user_id) throws SQLException {
         Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         String sql = "SELECT * FROM passwords WHERE user_id = ?";
         PreparedStatement pstmt = co.prepareStatement(sql);
@@ -187,14 +187,14 @@ public class SQLite {
         byte[] iv_username = rs.getBytes("iv_username");
         byte[] iv_password = rs.getBytes("iv_password");
 
-        ReturningMdpValues rv = new ReturningMdpValues(password_id, user_id, website_name, url, encrypted_username, encrypted_password, iv_username, iv_password);
+        MdpValues rv = new MdpValues(password_id, user_id, website_name, url, encrypted_username, encrypted_password, iv_username, iv_password);
             
         pstmt.close();
         co.close();
         return rv;
     }
 
-    public final class ReturningMdpValues {
+    public final class MdpValues {
         private final int password_id;
         private final int user_id;
         private final String website_name;
@@ -203,7 +203,7 @@ public class SQLite {
         private final String encrypted_password;
         private final byte[] iv_username;
         private final byte[] iv_password;
-        public ReturningMdpValues(int password_id, int user_id, String website_name, String url, String encrypted_username, String encrypted_password, byte[] iv_username, byte[] iv_password){
+        public MdpValues(int password_id, int user_id, String website_name, String url, String encrypted_username, String encrypted_password, byte[] iv_username, byte[] iv_password){
             this.password_id = password_id;
             this.user_id = user_id;
             this.website_name = website_name;
