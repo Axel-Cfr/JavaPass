@@ -184,7 +184,7 @@ public class Interface {
         if(option.equals("1")) {
             voirListeMDP();
         } else if(option.equals("2")) {
-            System.out.println("Ajout d'un nouveau mot de passe...");
+            ajouterMDP();
         } else if(option.equals("3")) {
             System.out.println("Passez une bonne journée :D");
             scanner.close();
