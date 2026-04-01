@@ -44,8 +44,9 @@ public class Services {
             String decryptedText = AES.decrypt(algorithm, uservalue.getEncrypted_textAndTag_verify(), key, gcmParameterSpec);
 
             if(decryptedText.equals(username)) {
+                int userID = uservalue.getUser_id();
                 ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(uservalue.getUser_id());
-                user = new User(username, hash, uservalue.getLast_login(), mdpValues);
+                user = new User(userID, username, hash, uservalue.getLast_login(), mdpValues);
                 
                 return "Done";
             } else {
@@ -137,6 +138,40 @@ public class Services {
         } catch(Exception e) {
             String[] error = {e.getMessage()};
             return error;
+        }
+    }
+
+    // Fonction qui ajoute un mot de passe
+    public String addNewPassword(String[] PasswordInfos) {
+        try {
+            int userID = user.getUserID();
+            String websiteName = PasswordInfos[0];
+            String url = PasswordInfos[1];
+            String username = PasswordInfos[2];
+            String password = PasswordInfos[3];
+            byte[] hash = user.getKey();
+            SecretKey key = new SecretKeySpec(hash, "AES");
+
+            // Chiffrement du nom d'utilisateur et du mot de passe
+            String algorithm = "AES/GCM/NoPadding";
+            byte[] ivUsername = AES.generateIv();
+    	    GCMParameterSpec gcmParameterSpecU = AES.generateGCMParameterSpec(ivUsername);
+    	    String encryptedUsername = AES.encrypt(algorithm, username, key, gcmParameterSpecU);
+            byte[] ivPassword = AES.generateIv();
+    	    GCMParameterSpec gcmParameterSpecP = AES.generateGCMParameterSpec(ivPassword);
+    	    String encryptedPassword = AES.encrypt(algorithm, username, key, gcmParameterSpecP);
+
+            // Ajout du mot de passe dans la base de données
+            sqlite.ajout_mdp(userID, websiteName, url, encryptedUsername, encryptedPassword, ivUsername, ivPassword);
+            
+            // Recréation du user actualisé
+            UserValues uservalue = sqlite.get_user(username);
+            ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(uservalue.getUser_id());
+            user = new User(userID, username, hash, uservalue.getLast_login(), mdpValues);
+            
+            return "Done";
+        } catch(Exception e) {
+            return e.getMessage();
         }
     }
 

@@ -12,7 +12,7 @@ public class Interface {
         this.services =  services;
     }
 
-    public void afficherBienvenue() throws Exception {
+    public void afficherBienvenue() {
         String result = services.connectionDB();
         if(!result.equals("Done")) {
             erreur(result);
@@ -57,19 +57,23 @@ public class Interface {
         for (String lines : logo) {
             System.out.println(GREEN + lines);
         }
-        Scanner scanner = new Scanner(System.in);
-        String action = scanner.nextLine();
+        try {
+            Scanner scanner = new Scanner(System.in);
+            String action = scanner.nextLine();
 
-        if(action.equals("L") || action.equals("l")) {
-			bandeau();
-            connection();
-		} else if(action.equals("S") || action.equals("s")) {
-            bandeau();
-			inscription();
-		} else {
-            scanner.close();
-			System.exit(0);
-		}
+            if(action.equals("L") || action.equals("l")) {
+		    	bandeau();
+                connection();
+		    } else if(action.equals("S") || action.equals("s")) {
+                bandeau();
+		    	inscription();
+		    } else {
+                scanner.close();
+		    	System.exit(0);
+		    }
+        } catch(Exception e) {
+            erreur(e.getMessage());
+        }
     }
 
     public void clearScreen() {
@@ -151,6 +155,8 @@ public class Interface {
         String result = services.inscription(username, password, passwordverif, option);
         if(result.equals("Done")) {
             System.out.println("Utilisateur crée avec succès");
+            services.wait(2000);
+            afficherBienvenue();
         } else if(result.equals("Different")) {
             System.out.println("\nEntrez le même mot de passe");
             services.wait(3000);
@@ -219,7 +225,7 @@ public class Interface {
                             erreur(passwordInfos[0]);
                         } else {
                             resultatRecherche = "Done";
-                            System.out.println("Consultation du mot de passe...");
+                            voirMDP(passwordInfos);
                         }
                     } else {
                         System.out.println("\nVeuillez faire une entrée valide");
@@ -232,5 +238,26 @@ public class Interface {
                 }
             }
         }
+    }
+
+    public void voirMDP(String[] passwordInfos) {
+        clearScreen();
+        bandeau();
+
+        String websiteName = passwordInfos[0];
+        String url = passwordInfos[1];
+        String username = passwordInfos[2];
+        String password = passwordInfos[3];
+
+        System.out.println("Nom du site : "+websiteName);
+        if(!(url == null || url.isBlank())) {
+            System.out.println("\nUrl du site : "+url);
+        }
+        System.out.println("\nNom d'utilisateur : "+username);
+        System.out.println("\nMot de passe : "+password);
+
+        services.wait(20000);
+
+        accueil();
     }
 }
