@@ -200,7 +200,8 @@ public class Services {
         return new String(motDePasse);
     }
 
-    private boolean[] Check(String password) {
+    // Fonction qui vérifie la présence de minuscule, majuscule, chiffre et caractère spécial dans un mot de passe
+    private boolean[] check(String password) {
         boolean hasMinuscule = false;
         boolean hasMajuscule = false;
         boolean hasChiffre = false;
@@ -219,34 +220,41 @@ public class Services {
         return new boolean[] {hasMinuscule, hasMajuscule, hasChiffre, hasSpecial};
     }
 
+    // Fonction qui vérifie si un mot de passe est valide et retourne les erreurs
     public String verifyPassword(String password) {
         if (password == null || password.length() < 12) {
             return "Le mot de passe doit faire au moins 12 caractères";
         }
 
-        boolean[] results = Check(password);
+        // Vérifie la présence de minuscule, majuscule, chiffre et caractère spécial avec la méthode check
+        boolean[] results = check(password);
         boolean hasMinuscule = results[0];
         boolean hasMajuscule = results[1];
         boolean hasChiffre = results[2];
         boolean hasSpecial = results[3];
 
+        // Stockage des erreurs grâce à la méthode check
         StringBuilder errors = new StringBuilder();
         if (!hasMinuscule) errors.append("- Il manque une minuscule.\n");
         if (!hasMajuscule) errors.append("- Il manque une majuscule.\n");
         if (!hasChiffre) errors.append("- Il manque un chiffre.\n");
         if (!hasSpecial) errors.append("- Il manque un caractère spécial.\n");
 
+        // retourne les erreurs en transformant le StringBuilder en String
         if (errors.length() > 0) {
             return errors.toString();
         }
 
+        // Si aucune erreur alors le mot de passe est valide
         return "Le mot de passe est valide.";
     }
 
+    // Fonction qui améliore un mot de passe en lui ajoutant les éléments manquants
     public String enhancePassword(String password) {
         if (password == null) password = "";
 
-        boolean[] results = Check(password);
+        // Vérifie la présence de minuscule, majuscule, chiffre et caractère spécial avec la méthode check
+        boolean[] results = check(password);
         boolean hasMinuscule = results[0];
         boolean hasMajuscule = results[1];
         boolean hasChiffre = results[2];
@@ -255,6 +263,7 @@ public class Services {
         StringBuilder newPassword = new StringBuilder(password);
         SecureRandom random = generateSecureRandom();
 
+        // Ajout des types manquants
         if (!hasMinuscule) newPassword.append(MINUSCULES.charAt(random.nextInt(MINUSCULES.length())));
         if (!hasMajuscule) newPassword.append(MAJUSCULES.charAt(random.nextInt(MAJUSCULES.length())));
         if (!hasChiffre) newPassword.append(CHIFFRES.charAt(random.nextInt(CHIFFRES.length())));
