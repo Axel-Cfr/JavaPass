@@ -240,6 +240,8 @@ public class Interface {
         }
     }
 
+    // Fonction qui affiche les informations du mot de passe choisi
+    // (Nom du site, url, nom d'utilisateur ou email, mot de passe)
     public void voirMDP(String[] passwordInfos) {
         clearScreen();
         bandeau();
@@ -259,5 +261,39 @@ public class Interface {
         services.wait(20000);
 
         accueil();
+    }
+
+    // Fonction permettant d'ajouter un mot de passe et ses informations complémentaires
+    public void ajouterMDP() {
+        clearScreen();
+        bandeau();
+        boolean sortie = false;
+        
+        while(!sortie) {
+            System.out.println("Ajout d'un nouveau mot de passe\n");
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("\nEntrez le nom du site");
+            String websiteName = scanner.nextLine();
+            System.out.println("\nEntrez l'url du site (optionnel)");
+            String url = scanner.nextLine();
+            System.out.println("\nEntrez le nom d'utilisateur ou l'email pour ce site");
+            String username = scanner.nextLine();
+            System.out.println("\nEntrez le mot de passe pour ce site");
+            String password = scanner.nextLine();
+
+            if(!(websiteName.isBlank() || username.isBlank() || password.isBlank())) {
+                String[] passwordInfo = {websiteName, url, username, password};
+                String retour = services.addNewPassword(passwordInfo);
+                if(retour.equals("Done")) {
+                    accueil();
+                } else {
+                    scanner.close();
+                    erreur(retour);
+                }
+            } else {
+                System.out.println("\nMerci de faire des entrées valides");
+                services.wait(3000);
+            }
+        }
     }
 }
