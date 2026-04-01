@@ -219,6 +219,30 @@ public class Services {
         return new boolean[] {hasMinuscule, hasMajuscule, hasChiffre, hasSpecial};
     }
 
+    public String verifyPassword(String password) {
+        if (password == null || password.length() < 12) {
+            return "Le mot de passe doit faire au moins 12 caractères";
+        }
+
+        boolean[] results = Check(password);
+        boolean hasMinuscule = results[0];
+        boolean hasMajuscule = results[1];
+        boolean hasChiffre = results[2];
+        boolean hasSpecial = results[3];
+
+        StringBuilder errors = new StringBuilder();
+        if (!hasMinuscule) errors.append("- Il manque une minuscule.\n");
+        if (!hasMajuscule) errors.append("- Il manque une majuscule.\n");
+        if (!hasChiffre) errors.append("- Il manque un chiffre.\n");
+        if (!hasSpecial) errors.append("- Il manque un caractère spécial.\n");
+
+        if (errors.length() > 0) {
+            return errors.toString();
+        }
+
+        return "Le mot de passe est valide.";
+    }
+
     public String wait(int millisecond) {
         try {
             Thread.sleep(3000);
