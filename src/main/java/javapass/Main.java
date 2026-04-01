@@ -9,8 +9,5 @@ public class Main {
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
-
-    	//String mdp = Services.generate(150, true, true, true, true);
-        //System.out.println("Mot de passe généré : " + mdp);
     }
 }

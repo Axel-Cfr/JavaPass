@@ -243,6 +243,31 @@ public class Services {
         return "Le mot de passe est valide.";
     }
 
+    public String enhancePassword(String password) {
+        if (password == null) password = "";
+
+        boolean[] results = Check(password);
+        boolean hasMinuscule = results[0];
+        boolean hasMajuscule = results[1];
+        boolean hasChiffre = results[2];
+        boolean hasSpecial = results[3];
+
+        StringBuilder newPassword = new StringBuilder(password);
+        SecureRandom random = generateSecureRandom();
+
+        if (!hasMinuscule) newPassword.append(MINUSCULES.charAt(random.nextInt(MINUSCULES.length())));
+        if (!hasMajuscule) newPassword.append(MAJUSCULES.charAt(random.nextInt(MAJUSCULES.length())));
+        if (!hasChiffre) newPassword.append(CHIFFRES.charAt(random.nextInt(CHIFFRES.length())));
+        if (!hasSpecial) newPassword.append(SPECIAUX.charAt(random.nextInt(SPECIAUX.length())));
+
+        String caracteresDisponibles = MINUSCULES + MAJUSCULES + CHIFFRES + SPECIAUX;
+        while (newPassword.length() < 12) {
+            newPassword.append(caracteresDisponibles.charAt(random.nextInt(caracteresDisponibles.length())));
+        }
+
+        return newPassword.toString();
+    }
+
     public String wait(int millisecond) {
         try {
             Thread.sleep(3000);
