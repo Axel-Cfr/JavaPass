@@ -21,12 +21,13 @@ class Argon2
 class User
 
 Main ..> Interfaces : crée
-Interfaces ..> Services : crée
+Main ..> Services : crée
 Interfaces --> Services : utilise
 Services --> AES : utilise
 Services --> Argon2 : utilise
 Services ..> SQLite : initialise
 Services --> SQLite : utilise
+Services --> User : utilise
 Services ..> User : crée
 
 Main : main()
@@ -38,17 +39,29 @@ Interfaces : erreur()
 Interfaces : connection()
 Interfaces : inscription()
 Interfaces : accueil()
+Interfaces : voirListeMDP()
+Interfaces : voirMDP()
+Interfaces : AjouterMDP()
+Interfaces : quitter()
 
 Services : connectionDB()
 Services : authentification()
 Services : inscription()
+Services : returnWebsiteName()
+Services : researchWebsiteName()
+Services : givePasswordInfos()
+Services : addNewPassword()
 Services : generatePassword()
-Services : researchID()
+Services : check()
+Services : verifyPassword()
+Services : enhancePassword()
 
 SQLite : initialistionDB()
 SQLite : ajoutTable_base()
 SQLite : ajout_utilisateur()
 SQLite : ajout_mdp()
+SQLite : UserValues()
+SQLite : MdpValues()
 SQLite : get_user()
 SQLite : get_mdp()
 
@@ -60,7 +73,18 @@ AES : decrypt()
 Argon2 : generateSalt()
 Argon2 : derivePassword()
 
-User : getUserId()
+User : User()
+User : getUserID()
+User : getUsername()
 User : getKey()
+User : getLast_login()
+User : getPasswordIndice()
+User : getWebsiteName()
+User : getUrl()
+User : getEncryptedUsername()
+User : getEncryptedPassword()
+User : getIvUsername()
+User : getIvPassword()
+User : getWebsiteNameList()
 @enduml
 ```
