@@ -3,16 +3,22 @@ package javapass;
 import java.util.ArrayList;
 
 public class User {
+    private int userID;
     private String username;
     private byte[] key;
     private String last_login;
     private ArrayList<SQLite.MdpValues> passwordList;
 
-    User(String username, byte[] key, String last_login, ArrayList<SQLite.MdpValues> passwordList) {
+    User(int userID, String username, byte[] key, String last_login, ArrayList<SQLite.MdpValues> passwordList) {
+        this.userID = userID;
         this.username = username;
         this.key = key;
         this.last_login = last_login;
         this.passwordList = passwordList;
+    }
+
+    public int getUserID() {
+        return userID;
     }
 
     public String getUsername() {
