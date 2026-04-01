@@ -16,6 +16,11 @@ public class Services {
     SQLite sqlite = new SQLite();
     User user;
 
+    private static final String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
+    private static final String MAJUSCULES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String CHIFFRES = "0123456789";
+    private static final String SPECIAUX = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+
     public String connectionDB() {
         try {
             sqlite.initialisationDB();
@@ -142,12 +147,6 @@ public class Services {
 
     // Fonction qui génère un mot de passe sécurisé en fonction des paramètres passés
     public String generatePassword(int taille, boolean minuscule, boolean majuscule, boolean chiffres, boolean speciaux) {
-        
-        // Listes des caractères disponibles
-        String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
-        String MAJUSCULES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String CHIFFRES = "0123456789";
-        String SPECIAUX = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
         // Un mot de passe ne peut pas être plus petit que TAILLE_MINIMUM si c'est le cas on prend la TAILLE_PAR_DEFAUT
         int TAILLE_PAR_DEFAUT = 20;
@@ -199,6 +198,25 @@ public class Services {
         }
 
         return new String(motDePasse);
+    }
+
+    private boolean[] Check(String password) {
+        boolean hasMinuscule = false;
+        boolean hasMajuscule = false;
+        boolean hasChiffre = false;
+        boolean hasSpecial = false;
+
+        if (password != null) {
+            for (int i = 0; i < password.length(); i++) {
+                String lettre = String.valueOf(password.charAt(i));
+
+                if (MINUSCULES.contains(lettre)) hasMinuscule = true;
+                else if (MAJUSCULES.contains(lettre)) hasMajuscule = true;
+                else if (CHIFFRES.contains(lettre)) hasChiffre = true;
+                else if (SPECIAUX.contains(lettre)) hasSpecial = true;
+            }
+        }
+        return new boolean[] {hasMinuscule, hasMajuscule, hasChiffre, hasSpecial};
     }
 
     public String wait(int millisecond) {
