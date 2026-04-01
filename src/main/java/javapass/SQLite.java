@@ -250,4 +250,29 @@ public class SQLite {
             return this.iv_password;
         }
     }
+
+    public void suppr_utilisateur(String username) throws SQLException { //On supprime un utilisateur via son username
+        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        String sql = "DELETE FROM users WHERE username = ?";
+        PreparedStatement pstmt = co.prepareStatement(sql);
+        pstmt.setString(1, username);
+        
+        pstmt.executeUpdate();
+        pstmt.close();
+        co.close();
+        //System.out.println("utilisateur supprimé avec succès");
+    }
+///enlever static
+    public static void suppr_mdp(int user_id,String website_name) throws SQLException { //On supprime un utilisateur via son username
+        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        ///String sql = "DELETE FROM passwords AS p JOIN users AS u ON u.user_id = p.user_id AND p.website_name = ?";
+        String sql = "DELETE FROM passwords WHERE website_name = ? AND user_id = ?;";
+        PreparedStatement pstmt = co.prepareStatement(sql);
+        pstmt.setString(1, website_name);
+        pstmt.setInt(2, user_id);
+        pstmt.executeUpdate();
+        pstmt.close();
+        co.close();
+        System.out.println("utilisateur supprimé avec succès");
+    }
 }
