@@ -158,7 +158,7 @@ public class Interface {
             services.wait(2000);
             afficherBienvenue();
         } else if(result.equals("Different")) {
-            System.out.println("\nEntrez le même mot de passe");
+            System.out.println("\nVeuillez entrer le même mot de passe");
             services.wait(3000);
             inscription();
         } else {

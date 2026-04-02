@@ -165,9 +165,10 @@ public class Services {
             sqlite.ajout_mdp(userID, websiteName, url, encryptedUsername, encryptedPassword, ivUsername, ivPassword);
             
             // Recréation du user actualisé
-            UserValues uservalue = sqlite.get_user(username);
-            ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(uservalue.getUser_id());
-            user = new User(userID, username, hash, uservalue.getLast_login(), mdpValues);
+            UserValues uservalue = sqlite.get_user(user.getUsername());
+            String last_login = user.getLast_login();
+            ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userID);
+            user = new User(userID, username, hash, last_login, mdpValues);
             
             return "Done";
         } catch(Exception e) {
