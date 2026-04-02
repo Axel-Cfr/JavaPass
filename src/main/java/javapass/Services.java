@@ -166,9 +166,10 @@ public class Services {
             
             // Recréation du user actualisé
             UserValues uservalue = sqlite.get_user(user.getUsername());
+            String usernameAccount = user.getUsername();
             String last_login = user.getLast_login();
             ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userID);
-            user = new User(userID, username, hash, last_login, mdpValues);
+            user = new User(userID, usernameAccount, hash, last_login, mdpValues);
             
             return "Done";
         } catch(Exception e) {
@@ -315,7 +316,7 @@ public class Services {
 
     public String wait(int millisecond) {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(millisecond);
             return "Done";
         } catch(InterruptedException e) {
             return e.getMessage();
