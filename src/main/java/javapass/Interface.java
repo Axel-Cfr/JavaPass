@@ -281,8 +281,19 @@ public class Interface {
             String url = scanner.nextLine();
             System.out.println("\nEntrez le nom d'utilisateur ou l'email pour ce site");
             String username = scanner.nextLine();
-            System.out.println("\nEntrez le mot de passe pour ce site");
-            String password = scanner.nextLine();
+            System.out.println("\nQue voulez vous faire ?");
+            System.out.println("[1] : Saisir votre mot de passe");
+            System.out.println("[2] : Générer un mot de passe");
+            System.out.println("\nEntrez votre choix (1 ou 2): ");
+            String choice = scanner.nextLine();
+
+            String password = "";
+            if(choice.equals("1")) {
+                System.out.println("\nEntrez le mot de passe pour ce site");
+                password = scanner.nextLine();
+            } else if(choice.equals("2")) {
+                password = services.generatePassword(20, true, true, true, true);
+            }
 
             if(!(websiteName.isBlank() || username.isBlank() || password.isBlank())) {
                 String[] passwordInfo = {websiteName, url, username, password};
