@@ -159,7 +159,7 @@ public class Services {
     	    String encryptedUsername = AES.encrypt(algorithm, username, key, gcmParameterSpecU);
             byte[] ivPassword = AES.generateIv();
     	    GCMParameterSpec gcmParameterSpecP = AES.generateGCMParameterSpec(ivPassword);
-    	    String encryptedPassword = AES.encrypt(algorithm, username, key, gcmParameterSpecP);
+    	    String encryptedPassword = AES.encrypt(algorithm, password, key, gcmParameterSpecP);
 
             // Ajout du mot de passe dans la base de données
             sqlite.ajout_mdp(userID, websiteName, url, encryptedUsername, encryptedPassword, ivUsername, ivPassword);

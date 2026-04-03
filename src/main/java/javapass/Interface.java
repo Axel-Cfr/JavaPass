@@ -206,7 +206,8 @@ public class Interface {
         
             System.out.println("Quel mot de passe voulez-vous afficher ?");
             System.out.println("Entrez le numéro du site");
-            System.out.println("Ou entrez [s*] puis votre saisie pour rechercher un mot de passe\n");
+            System.out.println("Ou entrez [s*] puis votre saisie pour rechercher un mot de passe");
+            System.out.println("Entrez [Q] pour quitter\n");
 
             for(int i = 0; i < websiteNameList.size(); i++) {
                 System.out.println("["+(i+1)+"] "+websiteNameList.get(i));
@@ -215,6 +216,8 @@ public class Interface {
             String option = scanner.nextLine();
             if(option.startsWith("s*")) {
                 websiteNameList = services.researchWebsiteName(option.substring(2, option.length()));
+            } else if (option.equals("Q") || option.equals("q")) {
+                accueil();
             } else {
                 try {   
                     int intOption = Integer.parseInt(option);
