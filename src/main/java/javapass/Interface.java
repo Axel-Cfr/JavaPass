@@ -249,6 +249,8 @@ public class Interface {
         clearScreen();
         bandeau();
 
+        Scanner scanner = new Scanner(System.in);
+
         String websiteName = passwordInfos[0];
         String url = passwordInfos[1];
         String username = passwordInfos[2];
@@ -261,9 +263,50 @@ public class Interface {
         System.out.println("\nNom d'utilisateur : "+username);
         System.out.println("\nMot de passe : "+password);
 
-        services.wait(20000);
+        boolean done = false;
+        while(!done) {
+            System.out.println("\n\nActions disponibles :");
+            System.out.println("[1] Retour a la liste");
+            System.out.println("[2] Supprimer ce mot de passe");
+            System.out.println("[3] Modifier ce mot de passe");
+            System.out.println("\nEntrez votre choix (1, 2 ou 3): ");
 
-        accueil();
+            String option = scanner.nextLine();
+            if(option.equals("1")) {
+                done = true;
+                voirListeMDP();
+            } else if(option.equals("2")) {
+                while(true) {
+                    System.out.println("\nConfirmer la suppression ? [O/N]");
+                    String confirm = scanner.nextLine();
+
+                    if(confirm.equals("O") || confirm.equals("o")) {
+                        String result = services.deletePassword(websiteName);
+                        if(result.equals("Done")) {
+                            System.out.println("\nMot de passe supprime avec succes.");
+                            services.wait(2000);
+                            done = true;
+                            voirListeMDP();
+                        } else {
+                            erreur(result);
+                        }
+                        break;
+                    } else if(confirm.equals("N") || confirm.equals("n")) {
+                        break;
+                    } else {
+                        System.out.println("Veuillez repondre par O ou N.");
+                        services.wait(1200);
+                    }
+                }
+            } else if(option.equals("3")) {
+                System.out.println("\nPas encore disponible.");
+                services.wait(2000);
+            } else {
+                System.out.println("\nVeuillez faire une entrée valide");
+                services.wait(1500);
+            }
+        }
+        scanner.close();
     }
 
     // Fonction permettant d'ajouter un mot de passe et ses informations complémentaires

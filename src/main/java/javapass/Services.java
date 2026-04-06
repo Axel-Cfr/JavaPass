@@ -177,6 +177,32 @@ public class Services {
         }
     }
 
+    //Fonction qui modifie un mot de passe
+    /*public String updatePassword(String[] PasswordInfos) {
+
+    }*/
+
+    // Fonction qui supprime un mot de passe
+    public String deletePassword(String websiteName) {
+        try {
+            int userID = user.getUserID();
+            byte[] hash = user.getKey();
+            String usernameAccount = user.getUsername();
+            String last_login = user.getLast_login();
+
+            // Suppression du mot de passe dans la base de données
+            sqlite.suppr_mdp(userID, websiteName);
+
+            // Recréation du user actualisé
+            ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userID);
+            user = new User(userID, usernameAccount, hash, last_login, mdpValues);
+
+            return "Done";
+        } catch(Exception e) {
+            return e.getMessage();
+        }
+    }
+
     // Fonction qui génère un nombre flottant réellement aléatoire
     public SecureRandom generateSecureRandom() {
         return new SecureRandom();
