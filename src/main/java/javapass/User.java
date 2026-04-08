@@ -33,7 +33,9 @@ public class User {
         return last_login;
     }
 
-    public int getPasswordValues(String websiteName) {
+    // Renvoie l'indice du mot de passe contenu dans l'ArrayList
+    // ayant pour nom de site celui passé en paramètre
+    public int getPasswordIndice(String websiteName) {
         for(int i = 0; i < passwordList.size(); i++) {
             if(websiteName.equals(passwordList.get(i).getWebsite_name())) {
                 return i;
@@ -66,6 +68,7 @@ public class User {
         return passwordList.get(i).getIv_password();
     }
 
+    // Renvoie une liste des noms des sites contenus dans chaque objet de la liste de mots de passe
     public ArrayList<String> getWebsiteNameList() {
         ArrayList<String> websiteNameList = new ArrayList<String>();
         for(int i = 0; i < passwordList.size(); i++) {

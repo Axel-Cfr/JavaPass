@@ -125,7 +125,7 @@ public class Interface {
         if(result.equals("Done")) {
             accueil();
         } else if(result.equals("Wrong")) {
-            System.out.println("\n Mot de passe erroné");
+            System.out.println("\n Veuillez entrer des identifiants valides");
             services.wait(3000);
             connection();
         } else {
@@ -177,8 +177,9 @@ public class Interface {
         System.out.println("\nQue voulez vous faire ?");
         System.out.println("[1] : Consulter mes mots de passe");
         System.out.println("[2] : Ajouter un nouveau mot de passe");
-        System.out.println("[3] : Quitter JavaPass");
-        System.out.println("\nEntrez votre choix (1, 2 ou 3): ");
+        System.out.println("[3] : Supprimer mon compte");
+        System.out.println("[4] : Quitter JavaPass");
+        System.out.println("\nEntrez votre choix (1, 2, 3 ou 4): ");
         String option = scanner.nextLine();
 
         if(option.equals("1")) {
@@ -186,6 +187,29 @@ public class Interface {
         } else if(option.equals("2")) {
             ajouterMDP();
         } else if(option.equals("3")) {
+            boolean choice = true;
+            while(choice) {
+                System.out.println("Toutes vos données et vos mots de passe seront définitivement perdus");
+                System.out.println("Êtes vous sûr(e) de vouloir supprimer votre compte ? [O/N]");
+                String confirm = scanner.nextLine();
+                if(confirm.equals("O")) {
+                    choice = false;
+                    String resultat = services.deleteAccount();
+                    if(!resultat.equals("Done")) {
+                        scanner.close();
+                        erreur(resultat);
+                    }
+                    System.out.println("Compte suprimé avec succès");
+                    services.wait(2000);
+                    afficherBienvenue();
+                } else if(confirm.equals("N")) {
+                    choice = false;
+                    accueil();
+                } else {
+                    System.out.println("Veuillez faire une entrée valide");
+                }
+            }
+        } else if(option.equals("4")) {
             System.out.println("Passez une bonne journée :D");
             scanner.close();
             services.wait(3000);

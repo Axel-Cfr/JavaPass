@@ -18,8 +18,8 @@ Ce projet a été réalisé dans le cadre du cours de programmation Java en prem
 - Accès à vos identifiants via un mot de passe maître dérivé avec Argon2d/id
     - Ni votre mot de passe maître, ni la clé dérivée ne sont stockés
 - Génération des mots de passes sûrs
-- Analyse la robustesse d'un mot de passe
-- Renforcement un mot de passe existant
+- Analyse de la robustesse d'un mot de passe
+- Renforcement d'un mot de passe existant
 - Recherche rapide de vos identifiants
 
 ## Requirements

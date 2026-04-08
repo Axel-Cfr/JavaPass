@@ -13,14 +13,17 @@ import javax.crypto.spec.SecretKeySpec;
 import javapass.SQLite.UserValues;
 
 public class Services {
+    // Instanciation d'objets des classes SQLite et User
     SQLite sqlite = new SQLite();
     User user;
 
+    // Variables de caractères disponibles
     private static final String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
     private static final String MAJUSCULES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String CHIFFRES = "0123456789";
     private static final String SPECIAUX = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
+    // Fonction qui crée la connection à la base de données SQLite
     public String connectionDB() {
         try {
             sqlite.initialisationDB();
@@ -30,19 +33,29 @@ public class Services {
         }
     }
 
+    // Fonction qui vérifie que les identifiants entrés sont valides et appartiennent à un compte
     public String authentification(String username, String password) {
         try {
             UserValues uservalue = sqlite.get_user(username);
+
+            // Si le nom d'utilisateur saisi ne correspond à aucun utilisateur
+            // Renvoie que la saisie est invalide
+            if(uservalue.getUsername() == null) {
+                return "Wrong";
+            }
             
+            // Dérivation du mot de passe maître
             byte[] salt = uservalue.getSalt();
             byte[] hash = Argon2.derivePassword(password, salt, uservalue.getArgon2Type());
     	    
+            // Déchiffrement du nom d'utilisateur chiffré
             SecretKey key = new SecretKeySpec(hash, "AES");
             byte[] iv = uservalue.getIv_verify();
     	    GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
     	    String algorithm = "AES/GCM/NoPadding";
             String decryptedText = AES.decrypt(algorithm, uservalue.getEncrypted_textAndTag_verify(), key, gcmParameterSpec);
 
+            // Comparaison entre le nom d'utilisateur entré et le nom d'utilisateur déchiffré
             if(decryptedText.equals(username)) {
                 int userID = uservalue.getUser_id();
                 ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(uservalue.getUser_id());
@@ -57,8 +70,10 @@ public class Services {
         }
     }
 
+    // Fonction permettant de créer un compte
     public String inscription(String username, String password, String passwordverif, String option) {
         try {
+            // Création d'un sel et dérivation du mot de passe maître
             if(password.equals(passwordverif)) {
                 int argon2Type;
                 if(option.equals("1")) {
@@ -69,16 +84,19 @@ public class Services {
                 byte[] salt = Argon2.generateSalt();
                 byte[] hash = Argon2.derivePassword(password, salt, argon2Type);
 
-                //byte[] byteArgon2Type = hashAndSalt[2];
+            // Chiffrement du nom d'utilisateur pour authentification ultérieure
     	        SecretKey key = new SecretKeySpec(hash, "AES");
                 byte[] iv = AES.generateIv();
     	        GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
     	        String algorithm = "AES/GCM/NoPadding";
     	        String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
 
+            // Défintion de la date de création du compte
                 LocalDate localDate = LocalDate.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 String formattedString = localDate.format(formatter);
+
+            // Création de l'utilisateur
                 sqlite.ajout_utilisateur(username, cipherText, iv, salt, argon2Type, formattedString);
 
                 return "Done";
@@ -98,11 +116,13 @@ public class Services {
 
     // Fonction de recherche des noms de sites enregistré par l'utilisateur
     public ArrayList<String> researchWebsiteName(String input) {
+        // Si la saisie est nulle, renvoie la liste complète des mots de passe
         ArrayList<String> websiteNameList = returnWebsiteName();
         if(input == null || input.isBlank()) {
             return websiteNameList;
         }
 
+        // Sinon, renvoie la liste où les noms des sites contiennent la saisie
         ArrayList<String> newWebsiteNameList = new ArrayList<>();
         for(int i = 0; i < websiteNameList.size(); i++) {
             if(websiteNameList.get(i).contains(input)) {
@@ -116,7 +136,7 @@ public class Services {
     public String[] givePasswordInfos(String websiteName) {
         try {
             String[] passwordInfos = new String[4];
-            int indPassword = user.getPasswordValues(websiteName);
+            int indPassword = user.getPasswordIndice(websiteName);
 
             // Dechiffre le nom d'utilisateur et le mot de passe
             SecretKey key = new SecretKeySpec(user.getKey(), "AES");
@@ -199,6 +219,19 @@ public class Services {
 
             return "Done";
         } catch(Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    // Fonction qui supprime le compte
+    public String deleteAccount() {
+        try {
+            // Supression des informations dans la base de données
+            // Les mots de passes affiliés à l'utilisateur sont aussi supprimés grâce au 'DELETE ON CASCADE'
+            sqlite.suppr_utilisateur(user.getUsername());
+            user = new User(0, null, null, null, null);
+            return "Done";
+        } catch (Exception e) {
             return e.getMessage();
         }
     }
@@ -340,6 +373,7 @@ public class Services {
         return newPassword.toString();
     }
 
+    // Fonction qui met le programme en pause pendant le nombre de millisecondes
     public String wait(int millisecond) {
         try {
             Thread.sleep(millisecond);
