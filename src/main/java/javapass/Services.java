@@ -344,6 +344,33 @@ public class Services {
         return newPassword.toString();
     }
 
+    // Fonction qui récupère les noms des sites qui utilisent exactement le même mot de passe
+    public ArrayList<String> samePassword(String password, String actualWebsite) {
+        ArrayList<String> websites = new ArrayList<>();
+        ArrayList<String> allWebsites = returnWebsiteName();
+        
+        if (allWebsites != null) {
+            for (int i = 0; i < allWebsites.size(); i++) {
+                String currentWebsite = allWebsites.get(i);
+                
+                if (currentWebsite.equals(actualWebsite) == false) {
+                    String[] infos = givePasswordInfos(currentWebsite);
+                    
+                    if (infos != null) {
+                        if (infos.length == 4) {
+                            String passwordOfCurrentWebsite = infos[3];
+                            
+                            if (password.equals(passwordOfCurrentWebsite)) {
+                                websites.add(currentWebsite);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return websites;
+    }
+    
     // Fonction qui met le programme en pause pendant le nombre de millisecondes
     public String wait(int millisecond) {
         try {
