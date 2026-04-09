@@ -296,7 +296,8 @@ public class Interface {
             System.out.println("[1] Retour a la liste");
             System.out.println("[2] Supprimer ce mot de passe");
             System.out.println("[3] Modifier ce mot de passe");
-            System.out.println("\nEntrez votre choix (1, 2 ou 3): ");
+            System.out.println("[4] Analyser ce mot de passe");
+            System.out.println("\nEntrez votre choix (1, 2, 3 ou 4): ");
 
             String option = scanner.nextLine();
             if(option.equals("1")) {
@@ -326,10 +327,68 @@ public class Interface {
                     }
                 }
             } else if(option.equals("3")) {
-                System.out.println("\nPas encore disponible.");
+                System.out.println("\nLa mise à jour du mot de passe n'est pas encore implémentée.");
                 services.wait(2000);
-            } else {
-                System.out.println("\nVeuillez faire une entrée valide");
+            } else if(option.equals("4")) {
+                clearScreen();
+                bandeau();
+                System.out.println("Nom du site : "+websiteName);
+                if(!(url == null || url.isBlank())) {
+                    System.out.println("\nUrl du site : "+url);
+                }
+                System.out.println("\nNom d'utilisateur : "+username);
+                System.out.println("\nMot de passe : "+password + "\n");
+
+                System.out.println(services.analysePassword(password));
+                
+                ArrayList<String> reusedWebsites = services.samePassword(password, websiteName);
+                if (reusedWebsites.size() > 0) {
+                    System.out.print(YELLOW + "\nATTENTION : Ce mot de passe est réutilisé sur le(s) site(s) suivant(s) : ");
+                    for (int i = 0; i < reusedWebsites.size(); i++) {
+                        System.out.print(reusedWebsites.get(i));
+                        if (i < reusedWebsites.size() - 1) {
+                            System.out.print(", ");
+                        }
+                    }
+                    System.out.println(". Nous vous recommandons de les modifier." + GREEN);
+                } else {
+                    System.out.println("\nCe mot de passe n'est pas réutilisé.");
+                }
+
+                if (services.estFaible(password)) {
+                    System.out.println(YELLOW + "\nCe mot de passe est considéré comme faible." + GREEN);
+                    System.out.println("\nVoulez-vous le modifier ?");
+                    System.out.println("[1] L'améliorer");
+                    System.out.println("[2] En générer un nouveau");
+                    System.out.println(RED + "[3] Ne rien faire" + GREEN);
+                    System.out.print("\nEntrez votre choix (1, 2 ou 3): ");
+                    
+                    String choice = scanner.nextLine();
+                    String newPassword = null;
+                    if (choice.equals("1")) {
+                        newPassword = services.enhancePassword(password);
+                        System.out.println("\nNouveau mot de passe amélioré : " + newPassword);
+                    } else if (choice.equals("2")) {
+                        newPassword = services.generatePassword(20, true, true, true, true);
+                        System.out.println("\nNouveau mot de passe généré : " + newPassword);
+                    }
+                    
+                    if (newPassword != null) {
+                        System.out.println("\nVoulez-vous remplacer l'ancien mot de passe par celui-ci ? [O/N]");
+                        String confirmUpdate = scanner.nextLine();
+                        if (confirmUpdate.equals("O") || confirmUpdate.equals("o")) {
+                            System.out.println("\nLa mise à jour du mot de passe n'est pas encore implémentée.");
+                        } else {
+                            System.out.println("\nMise à jour annulée. L'ancien mot de passe est conservé.");
+                        }
+                    }
+                }
+                
+                System.out.println("\nAppuyez sur Entrée pour continuer...");
+                scanner.nextLine();
+            }
+            else {
+                System.out.println(RED + "\nVeuillez faire une entrée valide" + GREEN);
                 services.wait(1500);
             }
         }
