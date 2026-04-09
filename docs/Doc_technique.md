@@ -73,5 +73,8 @@ L'algorithme de chiffrement utilisé dans JavaPass est l'AES-256-GCM.
     - https://maven.apache.org/download.cgi
     - https://www.youtube.com/watch?v=Aaq3FaadNQo
     - https://objis.com/tutoriel-maven-n1-installation-et-phases/
+    - https://www.baeldung.com/executable-jar-with-maven
+    - https://maven.apache.org/plugins/maven-jar-plugin/jar-mojo.html
+    - https://maven.apache.org/plugins/maven-assembly-plugin/single-mojo.html
 
 

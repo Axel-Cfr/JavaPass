@@ -9,4 +9,36 @@ Si vous n'avez pas configuré Maven, cliquez ici pour voir le [guide de configur
 
 ## Installation et Mise en place
 
+1. Ouvrez l'invite de commande et rendez-vous dans le répertoire où vous voulez que le dépôt soit cloné
+```
+cd chemin/où_je_veux/installer/JavaPass
+```
+
+2. Téléchargez le dépôt
+```
+git clone https://github.com/Axel-Cfr/JavaPass.git
+```
+
+3. Rendez-vous dans le répertoire racine de JavaPass
+```
+cd JavaPass
+```
+
+4. Nettoyez les potentiels fichiers générés par Maven, compilez et installez les fichiers du projet 
+```
+mvn clean install
+```
+
+5. Lancez JavaPass
+```
+java -jar target/JavaPass.jar
+```
+
+6. Optionnel : Vous pouvez créer un fichier JavaPass.bat cliquable en y écrivant ceci dans un fichier texte et l'enregistrant sous forme de fichier .bat :
+```
+cd C:/Users/votre_user/hemin/vers/JavaPass/target
+java -jar JavaPass.jar
+```
+
+
 ## Utilisation de Javapass
