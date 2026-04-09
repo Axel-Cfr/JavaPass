@@ -46,7 +46,7 @@ L'algorithme de chiffrement utilisé dans JavaPass est l'AES-256-GCM.
 ## Sources
 
 - Architecture
-    - https://www.redhat.com/fr/topics/cloud-native-apps/what-is-an-application-architecture#architecture-monolithique
+    - https://www.redhat.com/fr/topics/cloud-native-apps/what-is-an-application-architecture
 - AES
     - https://www.youtube.com/watch?v=5ZEYKk8BHcE
     - https://www.developpez.net/forums/blogs/863457-autran/b1016/chiffrement-aes-java/
