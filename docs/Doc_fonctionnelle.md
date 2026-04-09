@@ -36,8 +36,8 @@ java -jar target/JavaPass.jar
 
 6. Optionnel : Vous pouvez créer un fichier JavaPass.bat cliquable en y écrivant ceci dans un fichier texte et l'enregistrant sous forme de fichier .bat :
 ```
-cd C:/Users/votre_user/hemin/vers/JavaPass/target
-java -jar JavaPass.jar
+cd C:/Users/votre_user/chemin/vers/JavaPass
+java -jar target/JavaPass.jar
 ```
 
 
