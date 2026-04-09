@@ -372,6 +372,18 @@ public class Services {
         }
     }
 
+    // Fonction qui vérifie si un mot de passe est considéré comme trop faible
+    public boolean estFaible(String password) {
+        boolean[] typesPresents = check(password);
+        if (password == null || password.length() < 12) {
+            return true;
+        } else if (!typesPresents[0] || !typesPresents[1] || !typesPresents[2] || !typesPresents[3]) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Fonction qui récupère les noms des sites qui utilisent exactement le même mot de passe
     public ArrayList<String> samePassword(String password, String actualWebsite) {
         ArrayList<String> websites = new ArrayList<>();
