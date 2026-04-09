@@ -21,7 +21,7 @@ public class Services {
     private static final String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
     private static final String MAJUSCULES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String CHIFFRES = "0123456789";
-    private static final String SPECIAUX = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+    private static final String SPECIAUX = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
     // Fonction qui crée la connection à la base de données SQLite
     public String connectionDB() {
@@ -310,39 +310,10 @@ public class Services {
                 if (MINUSCULES.contains(lettre)) hasMinuscule = true;
                 else if (MAJUSCULES.contains(lettre)) hasMajuscule = true;
                 else if (CHIFFRES.contains(lettre)) hasChiffre = true;
-                else if (SPECIAUX.contains(lettre)) hasSpecial = true;
+                else hasSpecial = true;
             }
         }
         return new boolean[] {hasMinuscule, hasMajuscule, hasChiffre, hasSpecial};
-    }
-
-    // Fonction qui vérifie si un mot de passe est valide et retourne les erreurs
-    public String verifyPassword(String password) {
-        if (password == null || password.length() < 12) {
-            return "Le mot de passe doit faire au moins 12 caractères";
-        }
-
-        // Vérifie la présence de minuscule, majuscule, chiffre et caractère spécial avec la méthode check
-        boolean[] results = check(password);
-        boolean hasMinuscule = results[0];
-        boolean hasMajuscule = results[1];
-        boolean hasChiffre = results[2];
-        boolean hasSpecial = results[3];
-
-        // Stockage des erreurs grâce à la méthode check
-        StringBuilder errors = new StringBuilder();
-        if (!hasMinuscule) errors.append("- Il manque une minuscule.\n");
-        if (!hasMajuscule) errors.append("- Il manque une majuscule.\n");
-        if (!hasChiffre) errors.append("- Il manque un chiffre.\n");
-        if (!hasSpecial) errors.append("- Il manque un caractère spécial.\n");
-
-        // retourne les erreurs en transformant le StringBuilder en String
-        if (errors.length() > 0) {
-            return errors.toString();
-        }
-
-        // Si aucune erreur alors le mot de passe est valide
-        return "Le mot de passe est valide.";
     }
 
     // Fonction qui améliore un mot de passe en lui ajoutant les éléments manquants
