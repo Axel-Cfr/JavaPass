@@ -21,7 +21,7 @@ public class Services {
     private static final String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
     private static final String MAJUSCULES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String CHIFFRES = "0123456789";
-    private static final String SPECIAUX = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+    private static final String SPECIAUX = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
     // Fonction qui crée la connection à la base de données SQLite
     public String connectionDB() {
@@ -310,39 +310,10 @@ public class Services {
                 if (MINUSCULES.contains(lettre)) hasMinuscule = true;
                 else if (MAJUSCULES.contains(lettre)) hasMajuscule = true;
                 else if (CHIFFRES.contains(lettre)) hasChiffre = true;
-                else if (SPECIAUX.contains(lettre)) hasSpecial = true;
+                else hasSpecial = true;
             }
         }
         return new boolean[] {hasMinuscule, hasMajuscule, hasChiffre, hasSpecial};
-    }
-
-    // Fonction qui vérifie si un mot de passe est valide et retourne les erreurs
-    public String verifyPassword(String password) {
-        if (password == null || password.length() < 12) {
-            return "Le mot de passe doit faire au moins 12 caractères";
-        }
-
-        // Vérifie la présence de minuscule, majuscule, chiffre et caractère spécial avec la méthode check
-        boolean[] results = check(password);
-        boolean hasMinuscule = results[0];
-        boolean hasMajuscule = results[1];
-        boolean hasChiffre = results[2];
-        boolean hasSpecial = results[3];
-
-        // Stockage des erreurs grâce à la méthode check
-        StringBuilder errors = new StringBuilder();
-        if (!hasMinuscule) errors.append("- Il manque une minuscule.\n");
-        if (!hasMajuscule) errors.append("- Il manque une majuscule.\n");
-        if (!hasChiffre) errors.append("- Il manque un chiffre.\n");
-        if (!hasSpecial) errors.append("- Il manque un caractère spécial.\n");
-
-        // retourne les erreurs en transformant le StringBuilder en String
-        if (errors.length() > 0) {
-            return errors.toString();
-        }
-
-        // Si aucune erreur alors le mot de passe est valide
-        return "Le mot de passe est valide.";
     }
 
     // Fonction qui améliore un mot de passe en lui ajoutant les éléments manquants
@@ -373,6 +344,141 @@ public class Services {
         return newPassword.toString();
     }
 
+    // Fonction d'analyse d'un mot de passe (Longueur, types, temps de bruteforce)
+    public String analysePassword(String password) {
+        StringBuilder resultat = new StringBuilder();
+        resultat.append("=================================\n");
+        resultat.append("    Analyse du mot de passe\n");
+        resultat.append("=================================\n");
+        resultat.append("Longueur : ").append(password.length()).append(" caractères\n");
+        
+        boolean[] typesPresents = check(password);
+        
+        if (typesPresents[0]) {
+            resultat.append("Minuscules : Oui\n");
+        } else {
+            resultat.append("Minuscules : Non\n");
+        }
+        
+        if (typesPresents[1]) {
+            resultat.append("Majuscules : Oui\n");
+        } else {
+            resultat.append("Majuscules : Non\n");
+        }
+        
+        if (typesPresents[2]) {
+            resultat.append("Chiffres : Oui\n");
+        } else {
+            resultat.append("Chiffres : Non\n");
+        }
+        
+        if (typesPresents[3]) {
+            resultat.append("Spéciaux : Oui\n");
+        } else {
+            resultat.append("Spéciaux : Non\n");
+        }
+
+        int charsetSize = 0;
+        if (typesPresents[0]) {
+            charsetSize += MINUSCULES.length();
+        }
+        if (typesPresents[1]) {
+            charsetSize += MAJUSCULES.length();
+        }
+        if (typesPresents[2]) {
+            charsetSize += CHIFFRES.length();
+        }
+        if (typesPresents[3]) {
+            charsetSize += SPECIAUX.length();
+        }
+        
+        if (charsetSize == 0) {
+            charsetSize = 1; // Eviter log(0) dans le calcul de l'entropie
+        }
+        
+        // Entropie en bits
+        double entropy = password.length() * (Math.log(charsetSize) / Math.log(2));
+        long entropyArrondie = Math.round(entropy * 100) / 100;
+        resultat.append("Entropie : ").append(entropyArrondie).append(" bits\n");
+
+        // Estimation du temps de craquage par bruteforce à ~10 milliards de hashs/sec
+        double combinations = Math.pow(charsetSize, password.length());
+        double seconds = combinations / 10000000000.0; 
+
+        resultat.append("Temps estimé de craquage (Bruteforce à 10 milliards d'essais/s) : ");
+        resultat.append(convertirDuree(seconds));
+
+        return resultat.toString();
+    }
+
+    /*
+    Fonction qui rend l'affichage des durées plus lisible en les convertissant.
+    String.format("%.0f", valeur) arrondi à l'entier
+    */
+    private String convertirDuree(double seconds) {
+        double minutes = seconds / 60;
+        double hours = minutes / 60;
+        double days = hours / 24;
+        double years = days / 365;
+
+        if (seconds < 1) {
+            return "Moins d'une seconde";
+        } else if (seconds < 60) {
+            return String.format("%.0f secondes", seconds);
+        } else if (minutes < 60) {
+            return String.format("%.0f minutes", minutes);
+        } else if (hours < 24) {
+            return String.format("%.0f heures", hours);
+        } else if (days < 365) {
+            return String.format("%.0f jours", days);
+        } else if (years < 1000000) {
+            return String.format("%.0f années", years);
+        } else if (years < 1000000000) {
+            return String.format("%.0f millions d'années", years / 1000000);
+        } else {
+            return String.format("%.0f milliards d'années", years / 1000000000);
+        }
+    }
+
+    // Fonction qui vérifie si un mot de passe est considéré comme trop faible
+    public boolean estFaible(String password) {
+        boolean[] typesPresents = check(password);
+        if (password == null || password.length() < 12) {
+            return true;
+        } else if (!typesPresents[0] || !typesPresents[1] || !typesPresents[2] || !typesPresents[3]) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Fonction qui récupère les noms des sites qui utilisent exactement le même mot de passe
+    public ArrayList<String> samePassword(String password, String actualWebsite) {
+        ArrayList<String> websites = new ArrayList<>();
+        ArrayList<String> allWebsites = returnWebsiteName();
+        
+        if (allWebsites != null) {
+            for (int i = 0; i < allWebsites.size(); i++) {
+                String currentWebsite = allWebsites.get(i);
+                
+                if (currentWebsite.equals(actualWebsite) == false) {
+                    String[] infos = givePasswordInfos(currentWebsite);
+                    
+                    if (infos != null) {
+                        if (infos.length == 4) {
+                            String passwordOfCurrentWebsite = infos[3];
+                            
+                            if (password.equals(passwordOfCurrentWebsite)) {
+                                websites.add(currentWebsite);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return websites;
+    }
+    
     // Fonction qui met le programme en pause pendant le nombre de millisecondes
     public String wait(int millisecond) {
         try {
