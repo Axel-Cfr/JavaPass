@@ -343,6 +343,74 @@ public class Services {
 
         return newPassword.toString();
     }
+
+    // Fonction d'analyse d'un mot de passe (Longueur, types, temps de bruteforce)
+    public String analysePassword(String password) {
+        StringBuilder resultat = new StringBuilder();
+        resultat.append("=================================\n");
+        resultat.append("    Analyse du mot de passe\n");
+        resultat.append("=================================\n");
+        resultat.append("Longueur : ").append(password.length()).append(" caractères\n");
+        
+        boolean[] typesPresents = check(password);
+        
+        if (typesPresents[0]) {
+            resultat.append("Minuscules : Oui\n");
+        } else {
+            resultat.append("Minuscules : Non\n");
+        }
+        
+        if (typesPresents[1]) {
+            resultat.append("Majuscules : Oui\n");
+        } else {
+            resultat.append("Majuscules : Non\n");
+        }
+        
+        if (typesPresents[2]) {
+            resultat.append("Chiffres : Oui\n");
+        } else {
+            resultat.append("Chiffres : Non\n");
+        }
+        
+        if (typesPresents[3]) {
+            resultat.append("Spéciaux : Oui\n");
+        } else {
+            resultat.append("Spéciaux : Non\n");
+        }
+
+        int charsetSize = 0;
+        if (typesPresents[0]) {
+            charsetSize += MINUSCULES.length();
+        }
+        if (typesPresents[1]) {
+            charsetSize += MAJUSCULES.length();
+        }
+        if (typesPresents[2]) {
+            charsetSize += CHIFFRES.length();
+        }
+        if (typesPresents[3]) {
+            charsetSize += SPECIAUX.length();
+        }
+        
+        if (charsetSize == 0) {
+            charsetSize = 1; // Eviter log(0) dans le calcul de l'entropie
+        }
+        
+        // Entropie en bits
+        double entropy = password.length() * (Math.log(charsetSize) / Math.log(2));
+        long entropyArrondie = Math.round(entropy * 100) / 100;
+        resultat.append("Entropie : ").append(entropyArrondie).append(" bits\n");
+
+        // Estimation du temps de craquage par bruteforce à ~10 milliards de hashs/sec
+        double combinations = Math.pow(charsetSize, password.length());
+        double seconds = combinations / 10000000000.0; 
+
+        resultat.append("Temps estimé de craquage (Bruteforce à 10 milliards d'essais/s) : ");
+        resultat.append(convertirDuree(seconds));
+
+        return resultat.toString();
+    }
+
     /*
     Fonction qui rend l'affichage des durées plus lisible en les convertissant.
     String.format("%.0f", valeur) arrondi à l'entier
