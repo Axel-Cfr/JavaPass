@@ -343,6 +343,34 @@ public class Services {
 
         return newPassword.toString();
     }
+    /*
+    Fonction qui rend l'affichage des durées plus lisible en les convertissant.
+    String.format("%.0f", valeur) arrondi à l'entier
+    */
+    private String convertirDuree(double seconds) {
+        double minutes = seconds / 60;
+        double hours = minutes / 60;
+        double days = hours / 24;
+        double years = days / 365;
+
+        if (seconds < 1) {
+            return "Moins d'une seconde";
+        } else if (seconds < 60) {
+            return String.format("%.0f secondes", seconds);
+        } else if (minutes < 60) {
+            return String.format("%.0f minutes", minutes);
+        } else if (hours < 24) {
+            return String.format("%.0f heures", hours);
+        } else if (days < 365) {
+            return String.format("%.0f jours", days);
+        } else if (years < 1000000) {
+            return String.format("%.0f années", years);
+        } else if (years < 1000000000) {
+            return String.format("%.0f millions d'années", years / 1000000);
+        } else {
+            return String.format("%.0f milliards d'années", years / 1000000000);
+        }
+    }
 
     // Fonction qui récupère les noms des sites qui utilisent exactement le même mot de passe
     public ArrayList<String> samePassword(String password, String actualWebsite) {
