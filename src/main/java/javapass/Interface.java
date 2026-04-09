@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 public class Interface {
     public final String GREEN = "\033[0;32m"; //Green
+    public final String RED = "\033[0;31m";
+    public final String YELLOW = "\033[0;33m";
     Services services;
 
     public Interface(Services services) {
@@ -13,6 +15,7 @@ public class Interface {
     }
 
     public void afficherBienvenue() {
+        clearScreen();
         String result = services.connectionDB();
         if(!result.equals("Done")) {
             erreur(result);
@@ -35,18 +38,18 @@ public class Interface {
         "                   .`:_trt?              ╚█████╔╝██║  ██║ ╚████╔╝ ██║  ██║██║     ██║  ██║███████║███████║",
         "                         Irf'             ╚════╝ ╚═╝  ╚═╝  ╚═══╝  ╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝",
         "                     '{tfrj)                                 ",
-        "                    '{                   Created by Axel Chabot, Morgann Morvan and Octave Girault",
+        "                    '{                   Créé par Axel Chabot, Morgann Morvan et Octave Girault",
         "             .'';I!<_]{1((){]~l,'                             ",
         "           >\\+I`              ^>))                           ",
-        "           fj/}+l,`'.      ''I<](rI      Press [L] to log in  ",
+        "           fj/}+l,`'.      ''I<](rI      Tapez [L] pour vous connecter",
         "           \\:   .^,:;IllII;:''`   )^                          ",
-        "    .]/f/1^)I_~                  \\       Press [S] to sign up ",
+        "    .]/f/1^)I_~                  \\       Tapez [S] pour vous inscrire ",
         "   It'.~+.iri<]    ;-1)){+''      /.                          ",
         "   (><\\' [\\t<l1  [         '+    /'                          ",
-        "  .f'\\l   ~r>;(  ]   [)|i  `+    /'      Press any other key to quit",
+        "  .f'\\l   ~r>;(  ]   [)|i  `+    /'      Tapez une autre touche pour quitter",
         "  ./'|>    /!:\\  ]  +t||t, `+    /                           ",
         "   ]1,/;   tII|  ]  [rrrrl ,<    t                           ",
-        "    {}.<\\/jjIi(  ,|'.```` :(.   .t       Then press [enter]   ",
+        "    {}.<\\/jjIi(  ,|'.```` :(.   .t       Puis appuyez sur [Entrée]        ",
         "     ;\\(]1jj;<}    !1]<~}},     '\\                           ",
         "          `f,+_                 :(                           ",
         "           /<                  '/]                           ",
@@ -106,8 +109,8 @@ public class Interface {
     public void erreur(String e) {
         clearScreen();
         bandeau();
-        System.err.println("Une erreur s'est produite, veuillez redémarrer JavaPass");
-        System.err.println("Détail de l'erreur :\n"+e);
+        System.err.println(RED + "Une erreur s'est produite, veuillez redémarrer JavaPass");
+        System.err.println("Détail de l'erreur :\n"+e + GREEN);
         System.exit(0);
     }
 
@@ -158,7 +161,7 @@ public class Interface {
             services.wait(2000);
             afficherBienvenue();
         } else if(result.equals("Different")) {
-            System.out.println("\nVeuillez entrer le même mot de passe");
+            System.out.println(RED + "\nVeuillez entrer le même mot de passe" + GREEN);
             services.wait(3000);
             inscription();
         } else {
@@ -192,7 +195,7 @@ public class Interface {
                 System.out.println("Toutes vos données et vos mots de passe seront définitivement perdus");
                 System.out.println("Êtes vous sûr(e) de vouloir supprimer votre compte ? [O/N]");
                 String confirm = scanner.nextLine();
-                if(confirm.equals("O")) {
+                if(confirm.equals("O") || confirm.equals("o")) {
                     choice = false;
                     String resultat = services.deleteAccount();
                     if(!resultat.equals("Done")) {
@@ -202,7 +205,7 @@ public class Interface {
                     System.out.println("Compte suprimé avec succès");
                     services.wait(2000);
                     afficherBienvenue();
-                } else if(confirm.equals("N")) {
+                } else if(confirm.equals("N") || confirm.equals("n")) {
                     choice = false;
                     accueil();
                 } else {
@@ -255,12 +258,12 @@ public class Interface {
                             voirMDP(passwordInfos);
                         }
                     } else {
-                        System.out.println("\nVeuillez faire une entrée valide");
+                        System.out.println(RED + "\nVeuillez faire une entrée valide" + GREEN);
                         services.wait(3000);
                     }
                 
                 } catch (Exception e) {
-                    System.out.println("\nVeuillez faire une entrée valide");
+                    System.out.println(RED + "\nVeuillez faire une entrée valide" + GREEN);
                     services.wait(3000);
                 }
             }
@@ -307,7 +310,7 @@ public class Interface {
                     if(confirm.equals("O") || confirm.equals("o")) {
                         String result = services.deletePassword(websiteName);
                         if(result.equals("Done")) {
-                            System.out.println("\nMot de passe supprime avec succes.");
+                            System.out.println("\nMot de passe supprimé avec succés.");
                             services.wait(2000);
                             done = true;
                             voirListeMDP();
@@ -318,7 +321,7 @@ public class Interface {
                     } else if(confirm.equals("N") || confirm.equals("n")) {
                         break;
                     } else {
-                        System.out.println("Veuillez repondre par O ou N.");
+                        System.out.println(RED + "Veuillez répondre par O ou N." + GREEN);
                         services.wait(1200);
                     }
                 }
@@ -372,7 +375,7 @@ public class Interface {
                     erreur(retour);
                 }
             } else {
-                System.out.println("\nMerci de faire des entrées valides");
+                System.out.println(RED + "\nMerci de faire des entrées valides" + GREEN);
                 services.wait(3000);
             }
         }
