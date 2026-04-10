@@ -157,7 +157,7 @@ public class SQLite
     Cette méthode permet simplement à l'aide d'une requete SQLite de récuperer
     toutes les valeurs stockées en BDD d'un utilisateur
     */
-    public UserValues get_user(String username) throws SQLException 
+    public UserValues get_user(String usernameTyped) throws SQLException
     {
         Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         String sql = "SELECT * FROM users WHERE username = ?";
