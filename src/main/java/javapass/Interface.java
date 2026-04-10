@@ -182,9 +182,10 @@ public class Interface {
         System.out.println("\nQue voulez vous faire ?");
         System.out.println("[1] : Consulter mes mots de passe");
         System.out.println("[2] : Ajouter un nouveau mot de passe");
-        System.out.println("[3] : Supprimer mon compte");
-        System.out.println("[4] : Quitter JavaPass");
-        System.out.println("\nEntrez votre choix (1, 2, 3 ou 4): ");
+        System.out.println("[3] : Modifier mon mot de passe maître");
+        System.out.println("[4] : Supprimer mon compte");
+        System.out.println("[5] : Quitter JavaPass");
+        System.out.println("\nEntrez votre choix (1, 2, 3, 4 ou 5): ");
         String option = scanner.nextLine();
 
         if(option.equals("1")) {
@@ -192,6 +193,10 @@ public class Interface {
         } else if(option.equals("2")) {
             ajouterMDP();
         } else if(option.equals("3")) {
+            System.out.println("\nLa mise à jour du mot de passe maître n'est pas encore implémentée.");
+            services.wait(2000);
+            accueil();
+        } else if(option.equals("4")) {
             boolean choice = true;
             while(choice) {
                 System.out.println("Toutes vos données et vos mots de passe seront définitivement perdus");
@@ -213,8 +218,9 @@ public class Interface {
                     System.out.println("Veuillez faire une entrée valide");
                 }
             }
-        } else if(option.equals("4")) {
-            System.out.println("\nPassez une bonne journée :D");
+        } else if(option.equals("5")) {
+            System.out.println("Passez une bonne journée :D");
+            scanner.close();
             services.wait(3000);
             quit();
         } else {
@@ -271,23 +277,25 @@ public class Interface {
     // Fonction qui affiche les informations du mot de passe choisi
     // (Nom du site, url, nom d'utilisateur ou email, mot de passe)
     public void voirMDP(String[] passwordInfos) {
-        clearScreen();
-        bandeau();
-
-        String websiteName = passwordInfos[0];
-        String url = passwordInfos[1];
-        String username = passwordInfos[2];
-        String password = passwordInfos[3];
-
-        System.out.println("Nom du site : "+websiteName);
-        if(!(url == null || url.isBlank())) {
-            System.out.println("\nUrl du site : "+url);
-        }
-        System.out.println("\nNom d'utilisateur : "+username);
-        System.out.println("\nMot de passe : "+password);
+        Scanner scanner = new Scanner(System.in);
 
         boolean done = false;
         while(!done) {
+            clearScreen();
+            bandeau();
+
+            String websiteName = passwordInfos[0];
+            String url = passwordInfos[1];
+            String username = passwordInfos[2];
+            String password = passwordInfos[3];
+
+            System.out.println("Nom du site : "+websiteName);
+            if(!(url == null || url.isBlank())) {
+                System.out.println("\nUrl du site : "+url);
+            }
+            System.out.println("\nNom d'utilisateur : "+username);
+            System.out.println("\nMot de passe : "+password);
+
             System.out.println("\n\nActions disponibles :");
             System.out.println("[1] Retour a la liste");
             System.out.println("[2] Supprimer ce mot de passe");
@@ -394,11 +402,11 @@ public class Interface {
 
     // Fonction permettant d'ajouter un mot de passe et ses informations complémentaires
     public void ajouterMDP() {
-        clearScreen();
-        bandeau();
         boolean sortie = false;
         
         while(!sortie) {
+            clearScreen();
+            bandeau();
             System.out.println("Ajout d'un nouveau mot de passe\n");
             System.out.println("\nEntrez le nom du site");
             String websiteName = scanner.nextLine();

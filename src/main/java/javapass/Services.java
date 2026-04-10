@@ -337,7 +337,7 @@ public class Services {
         if (!hasSpecial) newPassword.append(SPECIAUX.charAt(random.nextInt(SPECIAUX.length())));
 
         String caracteresDisponibles = MINUSCULES + MAJUSCULES + CHIFFRES + SPECIAUX;
-        while (newPassword.length() < 12) {
+        while (newPassword.length() < 20) {
             newPassword.append(caracteresDisponibles.charAt(random.nextInt(caracteresDisponibles.length())));
         }
 
@@ -407,6 +407,39 @@ public class Services {
 
         resultat.append("Temps estimé de craquage (Bruteforce à 10 milliards d'essais/s) : ");
         resultat.append(convertirDuree(seconds));
+        
+        // Force du mot de passe
+        String RED = "\033[0;31m";
+        String YELLOW = "\033[0;33m";
+        String GREEN = "\033[0;32m";
+        
+        int score;
+        String color;
+        String force;
+        
+        if (estFaible(password) || entropy < 50) {
+            score = 3;  // 3/10
+            color = RED;
+            force = "Faible";
+        } else if (entropy < 80) {
+            score = 6;  // 6/10
+            color = YELLOW;
+            force = "Moyen";
+        } else {
+            score = 10; // 10/10
+            color = GREEN;
+            force = "Fort";
+        }
+        
+        // Affichage de la barre en ASCI
+        resultat.append("\nForce : ").append(color).append("[");
+        for (int i = 0; i < score; i++) {
+            resultat.append("█");
+        }
+        for (int i = 0; i < 10 - score; i++) {
+            resultat.append("░");
+        }
+        resultat.append("] ").append(force).append(GREEN).append("\n");
 
         return resultat.toString();
     }
