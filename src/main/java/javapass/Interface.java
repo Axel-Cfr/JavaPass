@@ -9,10 +9,23 @@ public class Interface {
     public final String RED = "\033[0;31m";    // code couleur ANSI pour du rouge
     public final String YELLOW = "\033[0;33m"; // code couleur ANSI pour du jaune
     Services services;
-    Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
+    private String osName;
 
     public Interface(Services services) {
         this.services =  services;
+
+        String os = System.getProperty("os.name").toLowerCase();
+        System.out.println(os);
+        if(os.contains("win")) {
+            osName = "Windows";
+        } else if(os.contains("nux") || os.contains("nix")) {
+            osName = "Linux/Unix";
+        } else {
+            System.out.println("Votre Système d'exploitation n'est pas pris en charge");
+            services.wait(3000);
+            quit();
+        }
     }
 
     public void afficherBienvenue() {
@@ -78,14 +91,18 @@ public class Interface {
         }
     }
 
-    public void quit() {
+    private void quit() {
         scanner.close();
         System.exit(0);
     }
 
     public void clearScreen() {
         try {
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            if(osName.equals("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                new ProcessBuilder("clear").inheritIO().start().waitFor();
+            }
         } catch(IOException | InterruptedException e) {
             erreur(e.getMessage());
         }

@@ -125,7 +125,8 @@ public class Services {
         // Sinon, renvoie la liste où les noms des sites contiennent la saisie
         ArrayList<String> newWebsiteNameList = new ArrayList<>();
         for(int i = 0; i < websiteNameList.size(); i++) {
-            if(websiteNameList.get(i).contains(input)) {
+            // toLowerCase() sert à tout mettre en minuscule rendant la recherche résistante à la casse
+            if(websiteNameList.get(i).toLowerCase().contains(input.toLowerCase())) {
                 newWebsiteNameList.add(websiteNameList.get(i));
             }
         }
