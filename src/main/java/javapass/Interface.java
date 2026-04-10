@@ -255,7 +255,7 @@ public class Interface {
             System.out.println("Quel mot de passe voulez-vous afficher ?");
             System.out.println("Entrez le numéro du site");
             System.out.println("Ou entrez [s*] puis votre saisie pour rechercher un mot de passe");
-            System.out.println("Entrez [Q] pour quitter\n");
+            System.out.println("Entrez [Q] retourner à l'accueil\n");
 
             for(int i = 0; i < websiteNameList.size(); i++) {
                 System.out.println("["+(i+1)+"] "+websiteNameList.get(i));
@@ -312,17 +312,19 @@ public class Interface {
             System.out.println("\nMot de passe : "+password);
 
             System.out.println("\n\nActions disponibles :");
-            System.out.println("[1] Retour a la liste");
-            System.out.println("[2] Supprimer ce mot de passe");
-            System.out.println("[3] Modifier ce mot de passe");
-            System.out.println("[4] Analyser ce mot de passe");
+            System.out.println("[1] Analyser ce mot de passe");
+            System.out.println("[2] Modifier ce mot de passe");
+            System.out.println("[3] Supprimer ce mot de passe");
+            System.out.println("[4] Retour a la liste");
             System.out.println("\nEntrez votre choix (1, 2, 3 ou 4): ");
 
             String option = scanner.nextLine();
             if(option.equals("1")) {
-                done = true;
-                voirListeMDP();
+                analyserMDP(websiteName, url, username, password);
             } else if(option.equals("2")) {
+                System.out.println("\nLa mise à jour du mot de passe n'est pas encore implémentée.");
+                services.wait(2000);
+            } else if(option.equals("3")) {
                 while(true) {
                     System.out.println("\nConfirmer la suppression ? [O/N]");
                     String confirm = scanner.nextLine();
@@ -345,11 +347,9 @@ public class Interface {
                         services.wait(1200);
                     }
                 }
-            } else if(option.equals("3")) {
-                System.out.println("\nLa mise à jour du mot de passe n'est pas encore implémentée.");
-                services.wait(2000);
             } else if(option.equals("4")) {
-                analyserMDP(websiteName, url, username, password);
+                done = true;
+                voirListeMDP();
             }
             else {
                 System.out.println(RED + "\nVeuillez faire une entrée valide" + GREEN);
