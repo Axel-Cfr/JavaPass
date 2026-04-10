@@ -220,7 +220,6 @@ public class Interface {
             }
         } else if(option.equals("5")) {
             System.out.println("Passez une bonne journée :D");
-            scanner.close();
             services.wait(3000);
             quit();
         } else {
@@ -277,7 +276,6 @@ public class Interface {
     // Fonction qui affiche les informations du mot de passe choisi
     // (Nom du site, url, nom d'utilisateur ou email, mot de passe)
     public void voirMDP(String[] passwordInfos) {
-        Scanner scanner = new Scanner(System.in);
 
         boolean done = false;
         while(!done) {
@@ -397,7 +395,6 @@ public class Interface {
                 services.wait(1500);
             }
         }
-        scanner.close();
     }
 
     // Fonction permettant d'ajouter un mot de passe et ses informations complémentaires
@@ -434,7 +431,6 @@ public class Interface {
                 if(retour.equals("Done")) {
                     accueil();
                 } else {
-                    scanner.close();
                     erreur(retour);
                 }
             } else {
