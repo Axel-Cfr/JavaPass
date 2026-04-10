@@ -157,7 +157,7 @@ public class SQLite
     Cette méthode permet simplement à l'aide d'une requete SQLite de récuperer
     toutes les valeurs stockées en BDD d'un utilisateur
     */
-    public UserValues get_user(String usernameTyped) throws SQLException
+    public UserValues get_user(String usernameTyped) throws SQLException 
     {
         Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         String sql = "SELECT * FROM users WHERE username = ?";
@@ -276,6 +276,9 @@ public class SQLite
         return rv;
     }
 
+    /*
+    commenter la méthode utilisé
+    */
     public final class MdpValues 
     {
         private final int password_id;
@@ -377,4 +380,48 @@ public class SQLite
         co.close();
         System.out.println("utilisateur supprimé avec succès");
     }
+
+    /*
+    commenter cette méthode
+    */
+    public ArrayList<UsernameList> get_usernameList() throws SQLException 
+    {
+        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        String sql = "SELECT * FROM users;";
+        Statement stmt = co.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        ArrayList<UsernameList> rv = new ArrayList<>();
+
+        while(rs.next())
+        {
+            String username = rs.getString("username");
+            rv.add(new UsernameList(username));
+        }
+        
+        stmt.close();
+        co.close();
+        return rv;
+    }
+
+    /*
+    commenter la méthode utilisé
+    */
+    public final class UsernameList 
+    {
+        private final String username;
+
+        public UsernameList(String username)
+        {
+            this.username = username;
+        }
+
+        public String getUsername() 
+        {
+            return username;
+        }
+    }
 }
+/* 
+
+update pour le mot de passe principal et pour les mot de passe des sites
+*/
