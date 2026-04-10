@@ -180,9 +180,10 @@ public class Interface {
         System.out.println("\nQue voulez vous faire ?");
         System.out.println("[1] : Consulter mes mots de passe");
         System.out.println("[2] : Ajouter un nouveau mot de passe");
-        System.out.println("[3] : Supprimer mon compte");
-        System.out.println("[4] : Quitter JavaPass");
-        System.out.println("\nEntrez votre choix (1, 2, 3 ou 4): ");
+        System.out.println("[3] : Modifier mon mot de passe maître");
+        System.out.println("[4] : Supprimer mon compte");
+        System.out.println("[5] : Quitter JavaPass");
+        System.out.println("\nEntrez votre choix (1, 2, 3, 4 ou 5): ");
         String option = scanner.nextLine();
 
         if(option.equals("1")) {
@@ -190,6 +191,10 @@ public class Interface {
         } else if(option.equals("2")) {
             ajouterMDP();
         } else if(option.equals("3")) {
+            System.out.println("\nLa mise à jour du mot de passe maître n'est pas encore implémentée.");
+            services.wait(2000);
+            accueil();
+        } else if(option.equals("4")) {
             boolean choice = true;
             while(choice) {
                 System.out.println("Toutes vos données et vos mots de passe seront définitivement perdus");
@@ -212,7 +217,7 @@ public class Interface {
                     System.out.println("Veuillez faire une entrée valide");
                 }
             }
-        } else if(option.equals("4")) {
+        } else if(option.equals("5")) {
             System.out.println("Passez une bonne journée :D");
             scanner.close();
             services.wait(3000);
