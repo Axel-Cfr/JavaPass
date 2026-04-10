@@ -40,5 +40,6 @@ cd C:/Users/votre_user/chemin/vers/JavaPass
 java -jar target/JavaPass.jar
 ```
 
+7. Optionnel : Vous pouvez créer un raccourci de JavaPass.bat et lui attribuer l'icône de JavaPass. Le fichier Javapass.ico se trouve dans `C:/Users/votre_user/chemin/vers/JavaPass/docs/img`
 
 ## Utilisation de Javapass

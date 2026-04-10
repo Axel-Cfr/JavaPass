@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Interface {
-    public final String GREEN = "\033[0;32m"; //Green
-    public final String RED = "\033[0;31m";
-    public final String YELLOW = "\033[0;33m";
+    public final String GREEN = "\033[0;32m";  // code couleur ANSI pour du vert
+    public final String RED = "\033[0;31m";    // code couleur ANSI pour du rouge
+    public final String YELLOW = "\033[0;33m"; // code couleur ANSI pour du jaune
     Services services;
+    Scanner scanner = new Scanner(System.in);
 
     public Interface(Services services) {
         this.services =  services;
@@ -61,7 +62,6 @@ public class Interface {
             System.out.println(GREEN + lines);
         }
         try {
-            Scanner scanner = new Scanner(System.in);
             String action = scanner.nextLine();
 
             if(action.equals("L") || action.equals("l")) {
@@ -71,12 +71,16 @@ public class Interface {
                 bandeau();
 		    	inscription();
 		    } else {
-                scanner.close();
-		    	System.exit(0);
+                quit();
 		    }
         } catch(Exception e) {
             erreur(e.getMessage());
         }
+    }
+
+    public void quit() {
+        scanner.close();
+        System.exit(0);
     }
 
     public void clearScreen() {
@@ -87,6 +91,7 @@ public class Interface {
         }
     }
 
+    // Fonction qui affiche le bandeau de présentation JavaPass
     public void bandeau() {
         String[] lines = {
             "===========================================================================================================",
@@ -106,12 +111,14 @@ public class Interface {
         System.out.println("\n\n");
     }
 
+    // Fonction qui affiche le message d'erreur si une erreur se produit et ferme l'application
     public void erreur(String e) {
         clearScreen();
         bandeau();
         System.err.println(RED + "Une erreur s'est produite, veuillez redémarrer JavaPass");
         System.err.println("Détail de l'erreur :\n"+e + GREEN);
-        System.exit(0);
+        services.wait(10000);
+        quit();
     }
 
     public void connection() {
@@ -119,7 +126,6 @@ public class Interface {
         bandeau();
 
         System.out.print("Identifiant : ");
-        Scanner scanner = new Scanner(System.in);
         String username = scanner.nextLine();
         System.out.print("\n\nMot de passe : ");
         String password = scanner.nextLine();
@@ -132,7 +138,6 @@ public class Interface {
             services.wait(3000);
             connection();
         } else {
-            scanner.close();
             erreur(result);
         }
     }
@@ -142,7 +147,6 @@ public class Interface {
         bandeau();
 
         System.out.println("Identifiant: ");
-        Scanner scanner = new Scanner(System.in);
         String username = scanner.nextLine();
         System.out.println("\nMot de passe : ");
         String password = scanner.nextLine();
@@ -165,7 +169,6 @@ public class Interface {
             services.wait(3000);
             inscription();
         } else {
-            scanner.close();
             erreur(result);
         }
     }
@@ -174,7 +177,6 @@ public class Interface {
         clearScreen();
         bandeau();
 
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Bonjour "+services.user.getUsername());
         System.out.println("Dernière connexion "+services.user.getLast_login());
         System.out.println("\nQue voulez vous faire ?");
@@ -199,7 +201,6 @@ public class Interface {
                     choice = false;
                     String resultat = services.deleteAccount();
                     if(!resultat.equals("Done")) {
-                        scanner.close();
                         erreur(resultat);
                     }
                     System.out.println("Compte suprimé avec succès");
@@ -213,10 +214,9 @@ public class Interface {
                 }
             }
         } else if(option.equals("4")) {
-            System.out.println("Passez une bonne journée :D");
-            scanner.close();
+            System.out.println("\nPassez une bonne journée :D");
             services.wait(3000);
-            System.exit(0);
+            quit();
         } else {
             accueil();
         }
@@ -225,7 +225,6 @@ public class Interface {
     public void voirListeMDP() {
         ArrayList<String> websiteNameList = services.returnWebsiteName();
         String resultatRecherche = "In progress";
-        Scanner scanner = new Scanner(System.in);
 
         while(!resultatRecherche.equals("Done")) {
             clearScreen();
@@ -251,7 +250,6 @@ public class Interface {
                     if(intOption >= 1 && intOption <= websiteNameList.size()) {
                         String[] passwordInfos = services.givePasswordInfos(websiteNameList.get(intOption-1));
                         if(passwordInfos.length == 1) {
-                            scanner.close();
                             erreur(passwordInfos[0]);
                         } else {
                             resultatRecherche = "Done";
@@ -275,8 +273,6 @@ public class Interface {
     public void voirMDP(String[] passwordInfos) {
         clearScreen();
         bandeau();
-
-        Scanner scanner = new Scanner(System.in);
 
         String websiteName = passwordInfos[0];
         String url = passwordInfos[1];
@@ -332,6 +328,7 @@ public class Interface {
             } else if(option.equals("4")) {
                 clearScreen();
                 bandeau();
+
                 System.out.println("Nom du site : "+websiteName);
                 if(!(url == null || url.isBlank())) {
                     System.out.println("\nUrl du site : "+url);
@@ -403,7 +400,6 @@ public class Interface {
         
         while(!sortie) {
             System.out.println("Ajout d'un nouveau mot de passe\n");
-            Scanner scanner = new Scanner(System.in);
             System.out.println("\nEntrez le nom du site");
             String websiteName = scanner.nextLine();
             System.out.println("\nEntrez l'url du site (optionnel)");
