@@ -120,7 +120,15 @@ public class SQLite
 
 
     /* 
-    Cette méthode ajoute à la base de données
+    Cette méthode ajoute un mot de passe dans la table passwords
+    pour ce faire il faut renseigner :
+        - un id utilisateur en temps que cle étrangère
+        - un nom pour le website concerné
+        - un url pour lier au website
+        - un nom d'utilisateur encrypté                                 ═╗
+        - un mot de passe encrypté                                       ║
+        - un vecteur d'initialisation du nom                             ╠═> géré de façon automatique
+        - un vecteur d'initialisation du password                       ═╝ 
     */
     public void ajout_mdp(int user_id, String website_name, 
                                 String url, String encrypted_username, 
@@ -145,6 +153,10 @@ public class SQLite
         System.out.println("Mot de passe ajouté avec succès");
     }
 
+    /*
+    Cette méthode permet simplement à l'aide d'une requete SQLite de récuperer
+    toutes les valeurs stockées en BDD d'un utilisateur
+    */
     public UserValues get_user(String username) throws SQLException 
     {
         Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
@@ -169,6 +181,9 @@ public class SQLite
         return rv;
     }
 
+    /*
+    commenter la méthode utilisé
+    */
     public final class UserValues 
     {
         private final int user_id;
@@ -231,6 +246,9 @@ public class SQLite
         
         }
 
+    /*
+    commenter la méthode utilisé
+    */
     public ArrayList<MdpValues> get_mdp(int user_id) throws SQLException 
     {
         Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
@@ -327,7 +345,9 @@ public class SQLite
 
 
 
-
+    /*
+    commenter la méthode utilisé
+    */
     //On supprime un utilisateur via son username
     public void suppr_utilisateur(String username) throws SQLException 
     { 
