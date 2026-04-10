@@ -273,25 +273,25 @@ public class Interface {
     // Fonction qui affiche les informations du mot de passe choisi
     // (Nom du site, url, nom d'utilisateur ou email, mot de passe)
     public void voirMDP(String[] passwordInfos) {
-        clearScreen();
-        bandeau();
-
         Scanner scanner = new Scanner(System.in);
-
-        String websiteName = passwordInfos[0];
-        String url = passwordInfos[1];
-        String username = passwordInfos[2];
-        String password = passwordInfos[3];
-
-        System.out.println("Nom du site : "+websiteName);
-        if(!(url == null || url.isBlank())) {
-            System.out.println("\nUrl du site : "+url);
-        }
-        System.out.println("\nNom d'utilisateur : "+username);
-        System.out.println("\nMot de passe : "+password);
 
         boolean done = false;
         while(!done) {
+            clearScreen();
+            bandeau();
+
+            String websiteName = passwordInfos[0];
+            String url = passwordInfos[1];
+            String username = passwordInfos[2];
+            String password = passwordInfos[3];
+
+            System.out.println("Nom du site : "+websiteName);
+            if(!(url == null || url.isBlank())) {
+                System.out.println("\nUrl du site : "+url);
+            }
+            System.out.println("\nNom d'utilisateur : "+username);
+            System.out.println("\nMot de passe : "+password);
+
             System.out.println("\n\nActions disponibles :");
             System.out.println("[1] Retour a la liste");
             System.out.println("[2] Supprimer ce mot de passe");
@@ -397,11 +397,11 @@ public class Interface {
 
     // Fonction permettant d'ajouter un mot de passe et ses informations complémentaires
     public void ajouterMDP() {
-        clearScreen();
-        bandeau();
         boolean sortie = false;
         
         while(!sortie) {
+            clearScreen();
+            bandeau();
             System.out.println("Ajout d'un nouveau mot de passe\n");
             Scanner scanner = new Scanner(System.in);
             System.out.println("\nEntrez le nom du site");

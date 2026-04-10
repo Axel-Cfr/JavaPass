@@ -337,7 +337,7 @@ public class Services {
         if (!hasSpecial) newPassword.append(SPECIAUX.charAt(random.nextInt(SPECIAUX.length())));
 
         String caracteresDisponibles = MINUSCULES + MAJUSCULES + CHIFFRES + SPECIAUX;
-        while (newPassword.length() < 12) {
+        while (newPassword.length() < 20) {
             newPassword.append(caracteresDisponibles.charAt(random.nextInt(caracteresDisponibles.length())));
         }
 
