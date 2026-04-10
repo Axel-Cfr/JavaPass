@@ -13,14 +13,17 @@ import javax.crypto.spec.SecretKeySpec;
 import javapass.SQLite.UserValues;
 
 public class Services {
+    // Instanciation d'objets des classes SQLite et User
     SQLite sqlite = new SQLite();
     User user;
 
+    // Variables de caractères disponibles
     private static final String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
     private static final String MAJUSCULES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String CHIFFRES = "0123456789";
-    private static final String SPECIAUX = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+    private static final String SPECIAUX = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
+    // Fonction qui crée la connection à la base de données SQLite
     public String connectionDB() {
         try {
             sqlite.initialisationDB();
@@ -30,19 +33,29 @@ public class Services {
         }
     }
 
+    // Fonction qui vérifie que les identifiants entrés sont valides et appartiennent à un compte
     public String authentification(String username, String password) {
         try {
             UserValues uservalue = sqlite.get_user(username);
+
+            // Si le nom d'utilisateur saisi ne correspond à aucun utilisateur
+            // Renvoie que la saisie est invalide
+            if(uservalue.getUsername() == null) {
+                return "Wrong";
+            }
             
+            // Dérivation du mot de passe maître
             byte[] salt = uservalue.getSalt();
             byte[] hash = Argon2.derivePassword(password, salt, uservalue.getArgon2Type());
     	    
+            // Déchiffrement du nom d'utilisateur chiffré
             SecretKey key = new SecretKeySpec(hash, "AES");
             byte[] iv = uservalue.getIv_verify();
     	    GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
     	    String algorithm = "AES/GCM/NoPadding";
             String decryptedText = AES.decrypt(algorithm, uservalue.getEncrypted_textAndTag_verify(), key, gcmParameterSpec);
 
+            // Comparaison entre le nom d'utilisateur entré et le nom d'utilisateur déchiffré
             if(decryptedText.equals(username)) {
                 int userID = uservalue.getUser_id();
                 ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(uservalue.getUser_id());
@@ -57,8 +70,10 @@ public class Services {
         }
     }
 
+    // Fonction permettant de créer un compte
     public String inscription(String username, String password, String passwordverif, String option) {
         try {
+            // Création d'un sel et dérivation du mot de passe maître
             if(password.equals(passwordverif)) {
                 int argon2Type;
                 if(option.equals("1")) {
@@ -69,16 +84,19 @@ public class Services {
                 byte[] salt = Argon2.generateSalt();
                 byte[] hash = Argon2.derivePassword(password, salt, argon2Type);
 
-                //byte[] byteArgon2Type = hashAndSalt[2];
+            // Chiffrement du nom d'utilisateur pour authentification ultérieure
     	        SecretKey key = new SecretKeySpec(hash, "AES");
                 byte[] iv = AES.generateIv();
     	        GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
     	        String algorithm = "AES/GCM/NoPadding";
     	        String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
 
+            // Défintion de la date de création du compte
                 LocalDate localDate = LocalDate.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 String formattedString = localDate.format(formatter);
+
+            // Création de l'utilisateur
                 sqlite.ajout_utilisateur(username, cipherText, iv, salt, argon2Type, formattedString);
 
                 return "Done";
@@ -98,11 +116,13 @@ public class Services {
 
     // Fonction de recherche des noms de sites enregistré par l'utilisateur
     public ArrayList<String> researchWebsiteName(String input) {
+        // Si la saisie est nulle, renvoie la liste complète des mots de passe
         ArrayList<String> websiteNameList = returnWebsiteName();
         if(input == null || input.isBlank()) {
             return websiteNameList;
         }
 
+        // Sinon, renvoie la liste où les noms des sites contiennent la saisie
         ArrayList<String> newWebsiteNameList = new ArrayList<>();
         for(int i = 0; i < websiteNameList.size(); i++) {
             if(websiteNameList.get(i).contains(input)) {
@@ -116,7 +136,7 @@ public class Services {
     public String[] givePasswordInfos(String websiteName) {
         try {
             String[] passwordInfos = new String[4];
-            int indPassword = user.getPasswordValues(websiteName);
+            int indPassword = user.getPasswordIndice(websiteName);
 
             // Dechiffre le nom d'utilisateur et le mot de passe
             SecretKey key = new SecretKeySpec(user.getKey(), "AES");
@@ -159,7 +179,7 @@ public class Services {
     	    String encryptedUsername = AES.encrypt(algorithm, username, key, gcmParameterSpecU);
             byte[] ivPassword = AES.generateIv();
     	    GCMParameterSpec gcmParameterSpecP = AES.generateGCMParameterSpec(ivPassword);
-    	    String encryptedPassword = AES.encrypt(algorithm, username, key, gcmParameterSpecP);
+    	    String encryptedPassword = AES.encrypt(algorithm, password, key, gcmParameterSpecP);
 
             // Ajout du mot de passe dans la base de données
             sqlite.ajout_mdp(userID, websiteName, url, encryptedUsername, encryptedPassword, ivUsername, ivPassword);
@@ -173,6 +193,45 @@ public class Services {
             
             return "Done";
         } catch(Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    //Fonction qui modifie un mot de passe
+    /*public String updatePassword(String[] PasswordInfos) {
+
+    }*/
+
+    // Fonction qui supprime un mot de passe
+    public String deletePassword(String websiteName) {
+        try {
+            int userID = user.getUserID();
+            byte[] hash = user.getKey();
+            String usernameAccount = user.getUsername();
+            String last_login = user.getLast_login();
+
+            // Suppression du mot de passe dans la base de données
+            sqlite.suppr_mdp(userID, websiteName);
+
+            // Recréation du user actualisé
+            ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userID);
+            user = new User(userID, usernameAccount, hash, last_login, mdpValues);
+
+            return "Done";
+        } catch(Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    // Fonction qui supprime le compte
+    public String deleteAccount() {
+        try {
+            // Supression des informations dans la base de données
+            // Les mots de passes affiliés à l'utilisateur sont aussi supprimés grâce au 'DELETE ON CASCADE'
+            sqlite.suppr_utilisateur(user.getUsername());
+            user = new User(0, null, null, null, null);
+            return "Done";
+        } catch (Exception e) {
             return e.getMessage();
         }
     }
@@ -251,39 +310,10 @@ public class Services {
                 if (MINUSCULES.contains(lettre)) hasMinuscule = true;
                 else if (MAJUSCULES.contains(lettre)) hasMajuscule = true;
                 else if (CHIFFRES.contains(lettre)) hasChiffre = true;
-                else if (SPECIAUX.contains(lettre)) hasSpecial = true;
+                else hasSpecial = true;
             }
         }
         return new boolean[] {hasMinuscule, hasMajuscule, hasChiffre, hasSpecial};
-    }
-
-    // Fonction qui vérifie si un mot de passe est valide et retourne les erreurs
-    public String verifyPassword(String password) {
-        if (password == null || password.length() < 12) {
-            return "Le mot de passe doit faire au moins 12 caractères";
-        }
-
-        // Vérifie la présence de minuscule, majuscule, chiffre et caractère spécial avec la méthode check
-        boolean[] results = check(password);
-        boolean hasMinuscule = results[0];
-        boolean hasMajuscule = results[1];
-        boolean hasChiffre = results[2];
-        boolean hasSpecial = results[3];
-
-        // Stockage des erreurs grâce à la méthode check
-        StringBuilder errors = new StringBuilder();
-        if (!hasMinuscule) errors.append("- Il manque une minuscule.\n");
-        if (!hasMajuscule) errors.append("- Il manque une majuscule.\n");
-        if (!hasChiffre) errors.append("- Il manque un chiffre.\n");
-        if (!hasSpecial) errors.append("- Il manque un caractère spécial.\n");
-
-        // retourne les erreurs en transformant le StringBuilder en String
-        if (errors.length() > 0) {
-            return errors.toString();
-        }
-
-        // Si aucune erreur alors le mot de passe est valide
-        return "Le mot de passe est valide.";
     }
 
     // Fonction qui améliore un mot de passe en lui ajoutant les éléments manquants
@@ -307,13 +337,182 @@ public class Services {
         if (!hasSpecial) newPassword.append(SPECIAUX.charAt(random.nextInt(SPECIAUX.length())));
 
         String caracteresDisponibles = MINUSCULES + MAJUSCULES + CHIFFRES + SPECIAUX;
-        while (newPassword.length() < 12) {
+        while (newPassword.length() < 20) {
             newPassword.append(caracteresDisponibles.charAt(random.nextInt(caracteresDisponibles.length())));
         }
 
         return newPassword.toString();
     }
 
+    // Fonction d'analyse d'un mot de passe (Longueur, types, temps de bruteforce)
+    public String analysePassword(String password) {
+        StringBuilder resultat = new StringBuilder();
+        resultat.append("=================================\n");
+        resultat.append("    Analyse du mot de passe\n");
+        resultat.append("=================================\n");
+        resultat.append("Longueur : ").append(password.length()).append(" caractères\n");
+        
+        boolean[] typesPresents = check(password);
+        
+        if (typesPresents[0]) {
+            resultat.append("Minuscules : Oui\n");
+        } else {
+            resultat.append("Minuscules : Non\n");
+        }
+        
+        if (typesPresents[1]) {
+            resultat.append("Majuscules : Oui\n");
+        } else {
+            resultat.append("Majuscules : Non\n");
+        }
+        
+        if (typesPresents[2]) {
+            resultat.append("Chiffres : Oui\n");
+        } else {
+            resultat.append("Chiffres : Non\n");
+        }
+        
+        if (typesPresents[3]) {
+            resultat.append("Spéciaux : Oui\n");
+        } else {
+            resultat.append("Spéciaux : Non\n");
+        }
+
+        int charsetSize = 0;
+        if (typesPresents[0]) {
+            charsetSize += MINUSCULES.length();
+        }
+        if (typesPresents[1]) {
+            charsetSize += MAJUSCULES.length();
+        }
+        if (typesPresents[2]) {
+            charsetSize += CHIFFRES.length();
+        }
+        if (typesPresents[3]) {
+            charsetSize += SPECIAUX.length();
+        }
+        
+        if (charsetSize == 0) {
+            charsetSize = 1; // Eviter log(0) dans le calcul de l'entropie
+        }
+        
+        // Entropie en bits
+        double entropy = password.length() * (Math.log(charsetSize) / Math.log(2));
+        long entropyArrondie = Math.round(entropy * 100) / 100;
+        resultat.append("Entropie : ").append(entropyArrondie).append(" bits\n");
+
+        // Estimation du temps de craquage par bruteforce à ~10 milliards de hashs/sec
+        double combinations = Math.pow(charsetSize, password.length());
+        double seconds = combinations / 10000000000.0; 
+
+        resultat.append("Temps estimé de craquage (Bruteforce à 10 milliards d'essais/s) : ");
+        resultat.append(convertirDuree(seconds));
+        
+        // Force du mot de passe
+        String RED = "\033[0;31m";
+        String YELLOW = "\033[0;33m";
+        String GREEN = "\033[0;32m";
+        
+        int score;
+        String color;
+        String force;
+        
+        if (estFaible(password) || entropy < 50) {
+            score = 3;  // 3/10
+            color = RED;
+            force = "Faible";
+        } else if (entropy < 80) {
+            score = 6;  // 6/10
+            color = YELLOW;
+            force = "Moyen";
+        } else {
+            score = 10; // 10/10
+            color = GREEN;
+            force = "Fort";
+        }
+        
+        // Affichage de la barre en ASCI
+        resultat.append("\nForce : ").append(color).append("[");
+        for (int i = 0; i < score; i++) {
+            resultat.append("█");
+        }
+        for (int i = 0; i < 10 - score; i++) {
+            resultat.append("░");
+        }
+        resultat.append("] ").append(force).append(GREEN).append("\n");
+
+        return resultat.toString();
+    }
+
+    /*
+    Fonction qui rend l'affichage des durées plus lisible en les convertissant.
+    String.format("%.0f", valeur) arrondi à l'entier
+    */
+    private String convertirDuree(double seconds) {
+        double minutes = seconds / 60;
+        double hours = minutes / 60;
+        double days = hours / 24;
+        double years = days / 365;
+
+        if (seconds < 1) {
+            return "Moins d'une seconde";
+        } else if (seconds < 60) {
+            return String.format("%.0f secondes", seconds);
+        } else if (minutes < 60) {
+            return String.format("%.0f minutes", minutes);
+        } else if (hours < 24) {
+            return String.format("%.0f heures", hours);
+        } else if (days < 365) {
+            return String.format("%.0f jours", days);
+        } else if (years < 1000000) {
+            return String.format("%.0f années", years);
+        } else if (years < 1000000000) {
+            return String.format("%.0f millions d'années", years / 1000000);
+        } else {
+            return String.format("%.0f milliards d'années", years / 1000000000);
+        }
+    }
+
+    // Fonction qui vérifie si un mot de passe est considéré comme trop faible
+    public boolean estFaible(String password) {
+        boolean[] typesPresents = check(password);
+        if (password == null || password.length() < 12) {
+            return true;
+        } else if (!typesPresents[0] || !typesPresents[1] || !typesPresents[2] || !typesPresents[3]) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Fonction qui récupère les noms des sites qui utilisent exactement le même mot de passe
+    public ArrayList<String> samePassword(String password, String actualWebsite) {
+        ArrayList<String> websites = new ArrayList<>();
+        ArrayList<String> allWebsites = returnWebsiteName();
+        
+        if (allWebsites != null) {
+            for (int i = 0; i < allWebsites.size(); i++) {
+                String currentWebsite = allWebsites.get(i);
+                
+                if (currentWebsite.equals(actualWebsite) == false) {
+                    String[] infos = givePasswordInfos(currentWebsite);
+                    
+                    if (infos != null) {
+                        if (infos.length == 4) {
+                            String passwordOfCurrentWebsite = infos[3];
+                            
+                            if (password.equals(passwordOfCurrentWebsite)) {
+                                websites.add(currentWebsite);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return websites;
+    }
+    
+    // Fonction qui met le programme en pause pendant le nombre de millisecondes
     public String wait(int millisecond) {
         try {
             Thread.sleep(millisecond);

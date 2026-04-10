@@ -162,12 +162,12 @@ public class SQLite
         Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         String sql = "SELECT * FROM users WHERE username = ?";
         PreparedStatement pstmt = co.prepareStatement(sql);
-        pstmt.setString(1,username);
+        pstmt.setString(1,usernameTyped);
         ResultSet rs = pstmt.executeQuery();
 
         //while(rs.next()) est utilisé dans certain cas, mais pas ici au cas ou je le laisse
         int user_id = rs.getInt("user_id");
-        //on a deja username en parametre
+        String username = rs.getString("username");
         String  encrypted_textAndTag_verify = rs.getString("encrypted_textAndTag_verify");
         byte[] iv_verify = rs.getBytes("iv_verify");
         byte[] salt = rs.getBytes("salt");
@@ -359,7 +359,6 @@ public class SQLite
         pstmt.executeUpdate();
         pstmt.close();
         co.close();
-        //System.out.println("utilisateur supprimé avec succès");
     }
 
 
