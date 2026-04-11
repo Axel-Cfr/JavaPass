@@ -7,7 +7,7 @@ public class Main {
             Interface interface_utilisateur = new Interface(services);
             interface_utilisateur.afficherBienvenue();
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 }

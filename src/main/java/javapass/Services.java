@@ -14,8 +14,8 @@ import javapass.SQLite.UserValues;
 
 public class Services {
     // Instanciation d'objets des classes SQLite et User
-    SQLite sqlite = new SQLite();
-    User user;
+    private SQLite sqlite = new SQLite();
+    public User user;
 
     // Variables de caractères disponibles
     private static final String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
@@ -29,6 +29,16 @@ public class Services {
             sqlite.initialisationDB();
             return "Done";
         } catch(SQLException e) {
+            return e.getMessage();
+        }
+    }
+
+    // Fonction qui ferme la connexion à la base de données
+    public String deconnectionDB() {
+        try {
+            sqlite.deconnexion();
+            return "Done";
+        } catch (Exception e) {
             return e.getMessage();
         }
     }
@@ -103,6 +113,22 @@ public class Services {
             } else {
                 return  "Different";
             }
+        } catch(Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    // Fonction qui vérifie si le nom d'utilisateur est déjà pris
+    public String isUsernameAvailable(String username) {
+        try {
+            ArrayList<String> userNameList = sqlite.get_usernameList();
+            String available = "Yes";
+            for (int i = 0; i < userNameList.size(); i++) {
+                if(username.equals(userNameList.get(i))) {
+                    available = "No";
+                }
+            }
+            return available;
         } catch(Exception e) {
             return e.getMessage();
         }

@@ -93,6 +93,7 @@ public class Interface {
 
     private void quit() {
         scanner.close();
+        services.deconnectionDB();
         System.exit(0);
     }
 
@@ -176,17 +177,28 @@ public class Interface {
         System.out.println("\nEntrez votre choix (1, 2 ou 3): ");
         String option = scanner.nextLine();
 
-        String result = services.inscription(username, password, passwordverif, option);
-        if(result.equals("Done")) {
-            System.out.println("Utilisateur crée avec succès");
-            services.wait(2000);
-            afficherBienvenue();
-        } else if(result.equals("Different")) {
-            System.out.println(RED + "\nVeuillez entrer le même mot de passe" + GREEN);
+        String isAvailable = services.isUsernameAvailable(username);
+        if(isAvailable.equals("Yes")) {
+
+            String result = services.inscription(username, password, passwordverif, option);
+            if(result.equals("Done")) {
+                System.out.println("Utilisateur crée avec succès");
+                services.wait(2000);
+                afficherBienvenue();
+            } else if(result.equals("Different")) {
+                System.out.println(RED + "\nVeuillez entrer le même mot de passe" + GREEN);
+                services.wait(3000);
+                inscription();
+            } else {
+                erreur(result);
+            }
+
+        } else if(isAvailable.equals("No")) {
+            System.out.println(RED + "\nLe nom d'utilisateur est déjà pris" + GREEN);
             services.wait(3000);
             inscription();
         } else {
-            erreur(result);
+            erreur(isAvailable);
         }
     }
 
@@ -236,7 +248,7 @@ public class Interface {
                 }
             }
         } else if(option.equals("5")) {
-            System.out.println("Passez une bonne journée :D");
+            System.out.println("\nPassez une bonne journée :D");
             services.wait(3000);
             quit();
         } else {
