@@ -30,14 +30,15 @@ Des chiffrements AES et ARGON2 sont implémentés afin que toutes les données s
 
 public class SQLite 
 {
+    private Connection co;
     /* 
-    On établis la connection avec la base de données
+    On établis la connexion avec la base de données
     et lui ajoute les tables users et passwords
     si elles n'existent pas. 
     */
     public void initialisationDB() throws SQLException 
     { 
-        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        co = DriverManager.getConnection("jdbc:sqlite:base.db");
         System.out.println("Connexion a la base de donnees etablie");
         ajoutTable_base();
     }
@@ -49,7 +50,6 @@ public class SQLite
     */
     public void ajoutTable_base() throws SQLException 
     {
-        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         Statement stmt = co.createStatement();
         String sql = "CREATE TABLE IF NOT EXISTS users (" +
                         "user_id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -82,8 +82,14 @@ public class SQLite
                     
         stmt.executeUpdate(sql);
         stmt.close();
-        co.close();
         System.out.println("Tables créées avec succès");
+    }
+
+    /*
+    Cette méthode ferme la connexion avec la base de données
+    */
+    public void deconnexion() throws SQLException {
+        co.close();
     }
 
     /* 
@@ -100,7 +106,6 @@ public class SQLite
                                 byte[] iv_verify, byte[] salt, int argon2Type, 
                                 String last_login) throws SQLException 
     {
-        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         String sql = "INSERT INTO users VALUES (null,?,?,?,?,?,?)";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, username);
@@ -112,7 +117,6 @@ public class SQLite
         
         pstmt.executeUpdate();
         pstmt.close();
-        co.close();
         //System.out.println("utilisateur ajouté avec succès");
     }
 
@@ -136,7 +140,6 @@ public class SQLite
                                 byte[] iv_password) throws SQLException 
         {
         
-        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         String sql = "INSERT INTO passwords VALUES (null,?,?,?,?,?,?,?)";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setInt(1, user_id);
@@ -149,7 +152,6 @@ public class SQLite
             
         pstmt.executeUpdate();
         pstmt.close();
-        co.close();
         System.out.println("Mot de passe ajouté avec succès");
     }
 
@@ -159,7 +161,6 @@ public class SQLite
     */
     public UserValues get_user(String usernameTyped) throws SQLException 
     {
-        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         String sql = "SELECT * FROM users WHERE username = ?";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1,usernameTyped);
@@ -177,7 +178,6 @@ public class SQLite
         UserValues rv = new UserValues(user_id, username, encrypted_textAndTag_verify, iv_verify, salt, argon2Type, last_login);
             
         pstmt.close();
-        co.close();
         return rv;
     }
 
@@ -251,7 +251,6 @@ public class SQLite
     */
     public ArrayList<MdpValues> get_mdp(int user_id) throws SQLException 
     {
-        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         String sql = "SELECT * FROM passwords WHERE user_id = ?";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setInt(1,user_id);
@@ -272,7 +271,6 @@ public class SQLite
             rv.add(new MdpValues(password_id, user_id, website_name, url, encrypted_username, encrypted_password, iv_username, iv_password));
         }     
         pstmt.close();
-        co.close();
         return rv;
     }
 
@@ -353,23 +351,20 @@ public class SQLite
     */
     //On supprime un utilisateur via son username
     public void suppr_utilisateur(String username) throws SQLException 
-    { 
-        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+    {
         String sql = "DELETE FROM users WHERE username = ?";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, username);
         
         pstmt.executeUpdate();
         pstmt.close();
-        co.close();
     }
 
 
     //enlever static
     //On supprime un utilisateur via son username
     public void suppr_mdp(int user_id,String website_name) throws SQLException 
-    { 
-        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+    {
         ///String sql = "DELETE FROM passwords AS p JOIN users AS u ON u.user_id = p.user_id AND p.website_name = ?";
         String sql = "DELETE FROM passwords WHERE website_name = ? AND user_id = ?;";
         PreparedStatement pstmt = co.prepareStatement(sql);
@@ -377,56 +372,36 @@ public class SQLite
         pstmt.setInt(2, user_id);
         pstmt.executeUpdate();
         pstmt.close();
-        co.close();
         System.out.println("utilisateur supprimé avec succès");
     }
 
     /*
     commenter cette méthode
     */
-    public ArrayList<UsernameList> get_usernameList() throws SQLException 
+    public ArrayList<String> get_usernameList() throws SQLException 
     {
-        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
         String sql = "SELECT * FROM users;";
         Statement stmt = co.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
-        ArrayList<UsernameList> rv = new ArrayList<>();
+        ArrayList<String> rv = new ArrayList<>();
 
         while(rs.next())
         {
             String username = rs.getString("username");
-            rv.add(new UsernameList(username));
+            rv.add(username);
         }
         
         stmt.close();
-        co.close();
         return rv;
     }
 
-    /*
-    commenter la méthode utilisé
-    */
-    public final class UsernameList 
-    {
-        private final String username;
-
-        public UsernameList(String username)
-        {
-            this.username = username;
-        }
-
-        public String getUsername() 
-        {
-            return username;
-        }
-    }
     /*
     Cette méthode va simplement update le mot de passe d'un site
     pour le moment il n'y a pas trop de sécurité avec simplement oldpassword en verif
     */
     public void update_sitemdp(String oldpassword, String newpassword, byte[] newivpassword) throws SQLException 
     {
-        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        
         String sql = "UPDATE users SET encrypted_password = ?, iv_password = ? WHERE encrypted_password = ? ";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, newpassword);
@@ -434,7 +409,6 @@ public class SQLite
         pstmt.setString(3, oldpassword);
         pstmt.executeUpdate();
         pstmt.close();
-        co.close();
     }
 
     /*
@@ -459,6 +433,7 @@ public class SQLite
     }*/
 }
 /* 
+- voir pourquoi lorsque l'on supprime l'utilisateur, ça ne supprime pas les mots de passes associés <3
 
-update pour le mot de passe principal
+- update pour le mot de passe principal et pour les mot de passe des sites
 */
