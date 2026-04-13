@@ -420,8 +420,45 @@ public class SQLite
             return username;
         }
     }
+    /*
+    Cette méthode va simplement update le mot de passe d'un site
+    pour le moment il n'y a pas trop de sécurité avec simplement oldpassword en verif
+    */
+    public void update_sitemdp(String oldpassword, String newpassword, byte[] newivpassword) throws SQLException 
+    {
+        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        String sql = "UPDATE users SET encrypted_password = ?, iv_password = ? WHERE encrypted_password = ? ";
+        PreparedStatement pstmt = co.prepareStatement(sql);
+        pstmt.setString(1, newpassword);
+        pstmt.setBytes(2,  newivpassword);
+        pstmt.setString(3, oldpassword);
+        pstmt.executeUpdate();
+        pstmt.close();
+        co.close();
+    }
+
+    /*
+    Faire update_usermdp, pour le moment je laisse sur le cote */
+    /*
+    public void update_usermdp(String username, String oldpassword, String newpassword) throws SQLException 
+    {
+        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
+        String sql = "UPDATE users SET  ";
+        PreparedStatement pstmt = co.prepareStatement(sql);
+        pstmt.setString(1, username);
+        pstmt.setString(2, encrypted_textAndTag_verify);
+        pstmt.setBytes(3, iv_verify);
+        pstmt.setBytes(4, salt);
+        pstmt.setInt(5, argon2Type);
+        pstmt.setString(6, last_login);
+        
+        pstmt.executeUpdate();
+        pstmt.close();
+        co.close();
+        //System.out.println("utilisateur ajouté avec succès");
+    }*/
 }
 /* 
 
-update pour le mot de passe principal et pour les mot de passe des sites
+update pour le mot de passe principal
 */
