@@ -402,7 +402,7 @@ public class SQLite
     public void update_sitemdp(String oldpassword, String newpassword, byte[] newivpassword) throws SQLException 
     {
         
-        String sql = "UPDATE users SET encrypted_password = ?, iv_password = ? WHERE encrypted_password = ? ";
+        String sql = "UPDATE passwords SET encrypted_password = ?, iv_password = ? WHERE encrypted_password = ? ";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, newpassword);
         pstmt.setBytes(2,  newivpassword);
