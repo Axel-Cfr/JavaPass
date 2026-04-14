@@ -306,15 +306,15 @@ public class Interface {
     // (Nom du site, url, nom d'utilisateur ou email, mot de passe)
     public void voirMDP(String[] passwordInfos) {
 
+        String websiteName = passwordInfos[0];
+        String url = passwordInfos[1];
+        String username = passwordInfos[2];
+        String password = passwordInfos[3];
         boolean done = false;
+        
         while(!done) {
             clearScreen();
             bandeau();
-
-            String websiteName = passwordInfos[0];
-            String url = passwordInfos[1];
-            String username = passwordInfos[2];
-            String password = passwordInfos[3];
 
             System.out.println("Nom du site : "+websiteName);
             if(!(url == null || url.isBlank())) {
@@ -333,9 +333,20 @@ public class Interface {
             String option = scanner.nextLine();
             if(option.equals("1")) {
                 analyserMDP(websiteName, url, username, password);
+                String[] newPassword = services.givePassword(websiteName);
+                if(newPassword[0].equals("Done")) {
+                    password = newPassword[1];
+                } else {
+                    erreur(newPassword[1]);
+                }
             } else if(option.equals("2")) {
-                System.out.println("\nLa mise à jour du mot de passe n'est pas encore implémentée.");
-                services.wait(2000);
+                modifierMDP(websiteName);
+                String[] newPassword = services.givePassword(websiteName);
+                if(newPassword[0].equals("Done")) {
+                    password = newPassword[1];
+                } else {
+                    erreur(newPassword[1]);
+                }
             } else if(option.equals("3")) {
                 while(true) {
                     System.out.println("\nConfirmer la suppression ? [O/N]");
@@ -367,6 +378,30 @@ public class Interface {
                 System.out.println(RED + "\nVeuillez faire une entrée valide" + GREEN);
                 services.wait(1500);
             }
+        }
+    }
+
+    public void modifierMDP(String websiteName) {
+        String password;
+        String confirm;
+
+        do {
+            clearScreen();
+            bandeau();
+
+            System.out.println("Modification du mot de passe de "+websiteName);
+            System.out.println("\nEntrez un nouveau mot de passe");
+            password = scanner.nextLine();
+            System.out.println("\nConfirmez votre nouveau mot de passe");
+            confirm = scanner.nextLine();
+        } while(!password.equals(confirm));
+
+        String result = services.updatePassword(websiteName, password);
+        if(result.equals("Done")) {
+            System.out.println("\nVotre mot de passe a été mis à jour");
+            services.wait(2000);
+        } else {
+            erreur(result);
         }
     }
 
@@ -419,7 +454,7 @@ public class Interface {
                 System.out.println("\nVoulez-vous remplacer l'ancien mot de passe par celui-ci ? [O/N]");
                 String confirmUpdate = scanner.nextLine();
                 if (confirmUpdate.equals("O") || confirmUpdate.equals("o")) {
-                    System.out.println("\nLa mise à jour du mot de passe n'est pas encore implémentée.");
+                    services.updatePassword(websiteName, newPassword);
                 } else {
                     System.out.println("\nMise à jour annulée. L'ancien mot de passe est conservé.");
                 }

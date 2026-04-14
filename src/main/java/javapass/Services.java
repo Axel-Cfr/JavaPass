@@ -159,6 +159,29 @@ public class Services {
         return newWebsiteNameList;
     }
 
+    // Fonction qui retourne le mot de passe en clair d'un site
+    public String[] givePassword(String websiteName) {
+        String[] password = new String[2];
+        try {
+            int indPassword = user.getPasswordIndice(websiteName);
+
+            // Dechiffre le mot de passe
+            SecretKey key = new SecretKeySpec(user.getKey(), "AES");
+            byte[] ivPassword = user.getIvPassword(indPassword);
+            GCMParameterSpec gcmParameterSpecP = AES.generateGCMParameterSpec(ivPassword);
+    	    String algorithm = "AES/GCM/NoPadding";
+            String decryptedPassword = AES.decrypt(algorithm, user.getEncryptedPassword(indPassword), key, gcmParameterSpecP);
+
+            password[0] = "Done";
+            password[1] = decryptedPassword;
+            return password;
+        } catch(Exception e) {
+            password[0] = "Error";
+            password[1] = e.getMessage();
+            return password;
+        }
+    }
+
     // Fonction qui retourne les informations dechiffrées du mots de passe choisi
     public String[] givePasswordInfos(String websiteName) {
         try {
@@ -224,10 +247,37 @@ public class Services {
         }
     }
 
-    //Fonction qui modifie un mot de passe
-    /*public String updatePassword(String[] PasswordInfos) {
+    // Fonction qui modifie un mot de passe
+    public String updatePassword(String websiteName, String password) {
+        try {
+            int passwordInd = user.getPasswordIndice(websiteName);
+            int passwordId = user.getPasswordId(passwordInd);
 
-    }*/
+            byte[] hash = user.getKey();
+            SecretKey key = new SecretKeySpec(hash, "AES");
+
+            // Chiffrement du mot de passe
+            String algorithm = "AES/GCM/NoPadding";
+            byte[] iv = AES.generateIv();
+    	    GCMParameterSpec gcmParameterSpecP = AES.generateGCMParameterSpec(iv);
+    	    String encryptedPassword = AES.encrypt(algorithm, password, key, gcmParameterSpecP);
+
+            // Mise à jour du mot de passe dans la BDD
+            sqlite.update_sitemdp(passwordId, encryptedPassword, iv);
+
+            // Recréation du user actualisé
+            UserValues uservalue = sqlite.get_user(user.getUsername());
+            int userId = user.getUserID();
+            String usernameAccount = user.getUsername();
+            String last_login = user.getLast_login();
+            ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userId);
+            user = new User(userId, usernameAccount, hash, last_login, mdpValues);
+            
+            return "Done";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
 
     // Fonction qui supprime un mot de passe
     public String deletePassword(String websiteName) {
