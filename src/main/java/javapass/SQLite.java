@@ -399,14 +399,14 @@ public class SQLite
     Cette méthode va simplement update le mot de passe d'un site
     pour le moment il n'y a pas trop de sécurité avec simplement oldpassword en verif
     */
-    public void update_sitemdp(String oldpassword, String newpassword, byte[] newivpassword) throws SQLException 
+    public void update_sitemdp(int password_id, String newEncryptedPassword, byte[] newIvPassword) throws SQLException 
     {
         
-        String sql = "UPDATE passwords SET encrypted_password = ?, iv_password = ? WHERE encrypted_password = ? ";
+        String sql = "UPDATE passwords SET encrypted_password = ?, iv_password = ? WHERE password_id = ? ";
         PreparedStatement pstmt = co.prepareStatement(sql);
-        pstmt.setString(1, newpassword);
-        pstmt.setBytes(2,  newivpassword);
-        pstmt.setString(3, oldpassword);
+        pstmt.setString(1, newEncryptedPassword);
+        pstmt.setBytes(2, newIvPassword);
+        pstmt.setInt(3, password_id);
         pstmt.executeUpdate();
         pstmt.close();
     }

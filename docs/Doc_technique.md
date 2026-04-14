@@ -6,7 +6,7 @@
 - [Sécurité](#sécurité)
     - [Chiffrement](#chiffrement)
     - [Hachage](#hachage)
-    - [Bonnes pratqies](#bonnes-pratiques)
+    - [Bonnes pratiques](#bonnes-pratiques)
 - [Base de données](#base-de-données)
 - [Fonctionnalités](#fonctionnalités)
 - [Gestion des Dépendances](#gestion-des-dépendances)
@@ -63,6 +63,8 @@ L'algorithme de chiffrement utilisé dans JavaPass est l'AES-256-GCM.
     - https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
     - https://app.itsasync.fr/post/async-article-1010
     - https://tuta.com/fr/blog/best-encryption-with-kdf
+- Robustesse d'un mot de passe
+    - https://proton.me/fr/blog/what-is-password-entropy
 - SQLite pour Java
     - https://sqlite.fr/languages/java/
     - https://www.sqlitetutorial.net/sqlite-java/jdbc-read-write-blob/

@@ -458,7 +458,7 @@ public class Services {
             force = "Fort";
         }
         
-        // Affichage de la barre en ASCI
+        // Affichage de la barre en ASCII
         resultat.append("\nForce : ").append(color).append("[");
         for (int i = 0; i < score; i++) {
             resultat.append("█");

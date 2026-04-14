@@ -7,6 +7,7 @@ public class User {
     private String username;
     private byte[] key;
     private String last_login;
+    private String now_login;
     private ArrayList<SQLite.MdpValues> passwordList;
 
     User(int userID, String username, byte[] key, String last_login, ArrayList<SQLite.MdpValues> passwordList) {
@@ -42,6 +43,10 @@ public class User {
             }
         }
         return -1;
+    }
+
+    public int getPasswordId(int i) {
+        return passwordList.get(i).getPassword_id();
     }
 
     public String getWebsiteName(int i) {
