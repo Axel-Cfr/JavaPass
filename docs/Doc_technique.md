@@ -66,11 +66,14 @@ L'algorithme de chiffrement utilisé dans JavaPass est l'AES-256-GCM.
 - Robustesse d'un mot de passe
     - https://proton.me/fr/blog/what-is-password-entropy
 - SQLite pour Java
+    - https://www.youtube.com/watch?v=TN_xTjbrzzc
+    - https://sqlite.org/docs.html
     - https://sqlite.fr/languages/java/
     - https://www.sqlitetutorial.net/sqlite-java/jdbc-read-write-blob/
     - https://sqlite.org/datatype3.html
     - https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md
     - https://www.datacamp.com/fr/tutorial/sqlite-data-types
+    - https://sqlite.org/foreignkeys.html
 - Maven
     - https://maven.apache.org/download.cgi
     - https://www.youtube.com/watch?v=Aaq3FaadNQo

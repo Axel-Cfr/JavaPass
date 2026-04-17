@@ -40,7 +40,7 @@ public class SQLite
     { 
         co = DriverManager.getConnection("jdbc:sqlite:base.db");
         System.out.println("Connexion a la base de donnees etablie");
-        
+
         // Active les foreign keys (elles sont désactivées par défaut dans SQLite)
         Statement stmt = co.createStatement();
         String sql = "PRAGMA foreign_keys = ON";
@@ -419,7 +419,7 @@ public class SQLite
 
     public void update_last_login(String last_login, int user_id) throws SQLException 
     {
-        String sql = "UPDATE users SET last_login = ? WHERE password_id = ? ";
+        String sql = "UPDATE users SET last_login = ? WHERE user_id = ? ";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, last_login);
         pstmt.setInt(2, user_id);

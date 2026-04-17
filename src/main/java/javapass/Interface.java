@@ -29,8 +29,8 @@ public class Interface {
     }
 
     public void afficherBienvenue() {
-        clearScreen();
         String result = services.connectionDB();
+        clearScreen();
         if(!result.equals("Done")) {
             erreur(result);
         }
@@ -134,7 +134,7 @@ public class Interface {
         clearScreen();
         bandeau();
         System.err.println(RED + "Une erreur s'est produite, veuillez redémarrer JavaPass");
-        System.err.println("Détail de l'erreur :\n"+e + GREEN);
+        System.err.println("Détail de l'erreur :\n"+ e + GREEN);
         services.wait(10000);
         quit();
     }
@@ -152,9 +152,9 @@ public class Interface {
         if(result.equals("Done")) {
             accueil();
         } else if(result.equals("Wrong")) {
-            System.out.println("\n Veuillez entrer des identifiants valides");
+            System.out.println("\nVeuillez entrer des identifiants valides");
             services.wait(3000);
-            accueil();
+            afficherBienvenue();
         } else {
             erreur(result);
         }
@@ -207,7 +207,7 @@ public class Interface {
         bandeau();
 
         System.out.println("Bonjour "+services.user.getUsername());
-        System.out.println("Dernière connexion "+services.user.getLast_login());
+        System.out.println("Dernière connexion le "+services.user.getLast_login());
         System.out.println("\nQue voulez vous faire ?");
         System.out.println("[1] : Consulter mes mots de passe");
         System.out.println("[2] : Ajouter un nouveau mot de passe");

@@ -2,7 +2,7 @@ package javapass;
 
 import java.security.SecureRandom;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ import javapass.SQLite.UserValues;
 
 public class Services {
     // Instanciation d'objets des classes SQLite et User
-    private SQLite sqlite = new SQLite();
+    private final SQLite sqlite = new SQLite();
     public User user;
 
     // Variables de caractères disponibles
@@ -68,9 +68,10 @@ public class Services {
             // Comparaison entre le nom d'utilisateur entré et le nom d'utilisateur déchiffré
             if(decryptedText.equals(username)) {
                 int userID = uservalue.getUser_id();
-                ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(uservalue.getUser_id());
+                ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userID);
                 user = new User(userID, username, hash, uservalue.getLast_login(), mdpValues);
-                
+
+                updateLastLogin();
                 return "Done";
             } else {
                 return "Wrong";
@@ -101,10 +102,14 @@ public class Services {
     	        String algorithm = "AES/GCM/NoPadding";
     	        String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
 
-            // Défintion de la date de création du compte
-                LocalDate localDate = LocalDate.now();
+            // Défintion de la date et de l'heure de création du compte
+                /*LocalDate localDate = LocalDate.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                String formattedString = localDate.format(formatter);
+                String formattedString = localDate.format(formatter);*/
+
+                LocalDateTime localDateTime = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm");
+                String formattedString = localDateTime.format(formatter);
 
             // Création de l'utilisateur
                 sqlite.ajout_utilisateur(username, cipherText, iv, salt, argon2Type, formattedString);
@@ -309,6 +314,16 @@ public class Services {
         } catch (Exception e) {
             return e.getMessage();
         }
+    }
+
+    // Fonction qui met à jour la varaible last_login dans la BDD
+    public void updateLastLogin() throws Exception {
+        // Défintion de la date et de l'heure de connexion
+        LocalDateTime localDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm");
+        String formattedString = localDateTime.format(formatter);
+
+        sqlite.update_last_login(formattedString, user.getUserID());
     }
 
     // Fonction qui génère un nombre flottant réellement aléatoire
