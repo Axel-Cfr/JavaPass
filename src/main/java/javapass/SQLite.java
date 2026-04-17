@@ -40,6 +40,13 @@ public class SQLite
     { 
         co = DriverManager.getConnection("jdbc:sqlite:base.db");
         System.out.println("Connexion a la base de donnees etablie");
+        
+        // Active les foreign keys (elles sont désactivées par défaut dans SQLite)
+        Statement stmt = co.createStatement();
+        String sql = "PRAGMA foreign_keys = ON";
+        stmt.executeUpdate(sql);
+        stmt.close();
+
         ajoutTable_base();
     }
 
@@ -401,12 +408,21 @@ public class SQLite
     */
     public void update_sitemdp(int password_id, String newEncryptedPassword, byte[] newIvPassword) throws SQLException 
     {
-        
         String sql = "UPDATE passwords SET encrypted_password = ?, iv_password = ? WHERE password_id = ? ";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, newEncryptedPassword);
         pstmt.setBytes(2, newIvPassword);
         pstmt.setInt(3, password_id);
+        pstmt.executeUpdate();
+        pstmt.close();
+    }
+
+    public void update_last_login(String last_login, int user_id) throws SQLException 
+    {
+        String sql = "UPDATE users SET last_login = ? WHERE password_id = ? ";
+        PreparedStatement pstmt = co.prepareStatement(sql);
+        pstmt.setString(1, last_login);
+        pstmt.setInt(2, user_id);
         pstmt.executeUpdate();
         pstmt.close();
     }

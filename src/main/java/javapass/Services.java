@@ -235,7 +235,6 @@ public class Services {
             sqlite.ajout_mdp(userID, websiteName, url, encryptedUsername, encryptedPassword, ivUsername, ivPassword);
             
             // Recréation du user actualisé
-            UserValues uservalue = sqlite.get_user(user.getUsername());
             String usernameAccount = user.getUsername();
             String last_login = user.getLast_login();
             ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userID);
@@ -266,7 +265,6 @@ public class Services {
             sqlite.update_sitemdp(passwordId, encryptedPassword, iv);
 
             // Recréation du user actualisé
-            UserValues uservalue = sqlite.get_user(user.getUsername());
             int userId = user.getUserID();
             String usernameAccount = user.getUsername();
             String last_login = user.getLast_login();
