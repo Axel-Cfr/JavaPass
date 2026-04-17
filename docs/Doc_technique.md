@@ -41,6 +41,15 @@ L'algorithme de chiffrement utilisé dans JavaPass est l'AES-256-GCM.
 
 ## Fonctionnalités
 
+
+- **`generatePassword`** : Génère un mot de passe aléatoire et robuste en fonction de critères définis (longueur, majuscules, chiffres et caractères spéciaux).
+- **`check`** : Permet de vérifier si un mot de passe respecte bien certains critères.
+- **`enhancePassword`** : Améliore un mot de passe jugé trop faible en le complexifiant (par exemple, en ajoutant des caractères manquants ou en augmentant sa longueur) pour atteindre un niveau de sécurité convenable, tout en gardant la base.
+- **`analysePassword`** : Évalue la force d'un mot de passe (calcul d'entropie), calcule une estimation de durée de craquage par bruteforce et retourne un rapport détaillé. 
+- **`convertirDuree`** : Méthode interne servant à transformer un grand nombre de secondes en une unité plus lisible (secondes, jours, années, siècles, etc.).
+- **`estFaible`** : Retourne un booléen évaluant si le mot de passe est considéré comme faible ou non.
+- **`samePassword`** : Vérifie dans la base de données si le mot de passe fourni est déjà réutilisé pour d'autres sites.
+
 ## Gestion des dépendances
 
 ## Sources
