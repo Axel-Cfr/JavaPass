@@ -90,5 +90,7 @@ L'algorithme de chiffrement utilisé dans JavaPass est l'AES-256-GCM.
     - https://www.baeldung.com/executable-jar-with-maven
     - https://maven.apache.org/plugins/maven-jar-plugin/jar-mojo.html
     - https://maven.apache.org/plugins/maven-assembly-plugin/single-mojo.html
-
-
+- Encodage
+    - https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Scanner.html#%3Cinit%3E(java.io.InputStream,java.lang.String)
+    - https://medium.com/@andbin/jdk-18-and-the-utf-8-as-default-charset-8451df737f90
+    - https://northcoder.com/post/java-console-output-with-utf-8/

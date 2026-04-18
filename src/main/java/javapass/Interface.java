@@ -9,7 +9,8 @@ public class Interface {
     public final String RED = "\033[0;31m";    // code couleur ANSI pour du rouge
     public final String YELLOW = "\033[0;33m"; // code couleur ANSI pour du jaune
     Services services;
-    private Scanner scanner = new Scanner(System.in);
+    // Le scanner encode le texte saisi en UTF-8
+    private Scanner scanner = new Scanner(System.in, "UTF-8");
     private String osName;
 
     public Interface(Services services) {
