@@ -124,7 +124,6 @@ public class SQLite
         
         pstmt.executeUpdate();
         pstmt.close();
-        //System.out.println("utilisateur ajouté avec succès");
     }
 
 
@@ -173,7 +172,7 @@ public class SQLite
         pstmt.setString(1,usernameTyped);
         ResultSet rs = pstmt.executeQuery();
 
-        //while(rs.next()) est utilisé dans certain cas, mais pas ici au cas ou je le laisse
+        //while(rs.next()) est utilisé dans certain cas, mais pas ici au cas ou je le laisse pour le reutiliser plus tard
         int user_id = rs.getInt("user_id");
         String username = rs.getString("username");
         String  encrypted_textAndTag_verify = rs.getString("encrypted_textAndTag_verify");
@@ -189,7 +188,9 @@ public class SQLite
     }
 
     /*
-    commenter la méthode utilisé
+    Afin de retourner efficacement plusieurs types de variables,
+    je retourne un objet qui encapsule en son sein plusieurs variables.
+    C'est le manière la plus propre que j'ai trouvé
     */
     public final class UserValues 
     {
@@ -282,7 +283,9 @@ public class SQLite
     }
 
     /*
-    commenter la méthode utilisé
+    Afin de retourner efficacement plusieurs types de variables,
+    je retourne un objet qui encapsule en son sein plusieurs variables.
+    C'est le manière la plus propre que j'ai trouvé
     */
     public final class MdpValues 
     {
@@ -354,9 +357,9 @@ public class SQLite
 
 
     /*
-    commenter la méthode utilisé
+    Cette méthode permet de supprimer un utilisateur via son username
     */
-    //On supprime un utilisateur via son username
+
     public void suppr_utilisateur(String username) throws SQLException 
     {
         String sql = "DELETE FROM users WHERE username = ?";
@@ -368,22 +371,22 @@ public class SQLite
     }
 
 
-    //enlever static
-    //On supprime un utilisateur via son username
+    /*
+    Cette méthode permet de supprimer le mot de passe d'un site renseigné
+    via son website_name et le user_id
+    */
     public void suppr_mdp(int user_id,String website_name) throws SQLException 
     {
-        ///String sql = "DELETE FROM passwords AS p JOIN users AS u ON u.user_id = p.user_id AND p.website_name = ?";
         String sql = "DELETE FROM passwords WHERE website_name = ? AND user_id = ?;";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, website_name);
         pstmt.setInt(2, user_id);
         pstmt.executeUpdate();
         pstmt.close();
-        System.out.println("utilisateur supprimé avec succès");
     }
 
     /*
-    commenter cette méthode
+    Cette méthode permet de return la liste des usernames.
     */
     public ArrayList<String> get_usernameList() throws SQLException 
     {
@@ -417,6 +420,9 @@ public class SQLite
         pstmt.close();
     }
 
+    /*
+    Cette méthode update le last login de la BDD pour un user_id renseigné
+    */
     public void update_last_login(String last_login, int user_id) throws SQLException 
     {
         String sql = "UPDATE users SET last_login = ? WHERE user_id = ? ";
@@ -448,8 +454,4 @@ public class SQLite
         //System.out.println("utilisateur ajouté avec succès");
     }*/
 }
-/* 
-- voir pourquoi lorsque l'on supprime l'utilisateur, ça ne supprime pas les mots de passes associés <3
 
-- update pour le mot de passe principal et pour les mot de passe des sites
-*/

@@ -39,6 +39,23 @@ L'algorithme de chiffrement utilisé dans JavaPass est l'AES-256-GCM.
 
 ![Image de la BDD](img/DBdiagram.png)
 
+La classe `SQLite` contient plusieurs méthodes permettant d'envoyer et de récupérer de façon sécurisée les données utilisateurs via notre base de données relationnelle.
+
+Elle utilise l'API `JDBC` qui permet de se conneter à une base données et d'interagir avec elle, notamment en exécutant des rêquetes SQL du type :
+ - CREATE TABLE ...
+ - INSERT INTO ... VALUES ...
+ - SELECT ... FROM ...
+ - DELETE ... FROM ...
+ - UPDATE ... SET ...
+
+
+`L'achitecture de la Base de données` est simple, mais elle fourni un niveau de sécurité suffisant pour décourager <u>**quiconque**</u> de s'y introduire ([voir Chiffrement](#chiffrement)).
+
+Elle est organisée en deux tables : 
+- `users` : qui stocke un id (clé primaire), un nom d'utilisateur, les données nécessaires au chiffrement et déchiffrement, ainsi que la date de dernières
+- `passwords` : qui 
+
+
 ## Fonctionnalités
 
 
@@ -83,6 +100,7 @@ L'algorithme de chiffrement utilisé dans JavaPass est l'AES-256-GCM.
     - https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md
     - https://www.datacamp.com/fr/tutorial/sqlite-data-types
     - https://sqlite.org/foreignkeys.html
+    - https://stackoverflow.com/questions/457629/how-to-return-multiple-objects-from-a-java-method
 - Maven
     - https://maven.apache.org/download.cgi
     - https://www.youtube.com/watch?v=Aaq3FaadNQo
