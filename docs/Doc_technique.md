@@ -27,11 +27,20 @@ L'architecture en couches est une architecture très classique pour créer des a
 
 ## Sécurité
 
+### Hachage
+
 ### Chiffrement
 
 L'algorithme de chiffrement utilisé dans JavaPass est l'AES-256-GCM.
 
-### Hachage
+L'AES, pour Advanced Encryption Standard, est un algorithme de chiffrement symétrique, c'est à dire un algorithme qui peut chiffrer et déchiffrer des données à partir d'un même mot de passe.  
+AES est recommandé et adopté par le NIST (National Institute of Standards and Technologies) depuis 2001 et approuvé par la NSA.  
+C'est l'algorithme de chiffrement le plus utilisé au monde et l'un des plus robuste. En effet avec une clé de 256 bits (longueur utilisée pour JavaPass), il existe 2<sup>256</sup> clés possibles. Même pour le superclaculateur le plus puissant du monde qui peut atteindre un peu moins de 3 milliards de milliards de calculs par seconde, il faudrait environ 1,2×10<sup>51</sup> années pour tester toute les clés possibles, soit 8,6×10<sup>40</sup> fois l'âge de l'univers.
+
+- Comment marche AES ?
+
+
+![Schéma d'AES-256-GCM](img/Doc_technique/Schéma%20AES-256-GCM.png)
 
 ### Bonnes pratiques
 
