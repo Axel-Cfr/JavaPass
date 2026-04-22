@@ -58,7 +58,7 @@ Elle utilise l'API `JDBC` qui permet de se conneter à une base données et d'in
  - UPDATE ... SET ...
 
 
-`L'achitecture de la Base de données` est simple, mais elle fourni un niveau de sécurité suffisant pour décourager <u>**quiconque**</u> de s'y introduire ([voir Chiffrement](#chiffrement)).
+`L'achitecture de la Base de données` est simple, mais elle fourni un niveau de sécurité suffisant pour décourager <u>**quiconque**</u> d'essayer de déchiffrer ses données ([voir Chiffrement](#chiffrement)).
 
 Elle est organisée en deux tables : 
 - `users` : qui stocke un id (clé primaire), un nom d'utilisateur, les données nécessaires au chiffrement et déchiffrement, ainsi que la date de dernières
