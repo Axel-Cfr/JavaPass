@@ -49,7 +49,7 @@ mvn clean install
 ```
 
 3. Indiquez à la console d'afficher les caractères avec l'encodage UTF-8
-- **Vous pouvez passer cette étape si vous utilisez un système Linus/Unix**
+- **Vous pouvez passer cette étape si vous utilisez un système Linux/Unix**
 ```
 C:\Windows\System32\chcp.com 65001
 ```
