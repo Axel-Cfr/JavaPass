@@ -44,7 +44,7 @@ Pour vérifier que tout est en place, exécuter mvn --version dans un terminal
 
 ## Etape 7
 
-Enfin exécuter cd le chemin du répertoire où se trouve JavaPass, puis mvn clean install
+Enfin exécuter cd le/chemin/du/répertoire/où/se/trouve/JavaPass, puis mvn clean install
 
 ![9_Maven](img/Maven/9_Maven.png)
 
