@@ -16,10 +16,10 @@ Ce projet a été réalisé dans le cadre du cours de programmation Java en prem
 
 ## Features
 
-- Stockage sécurisé vos identifiants et mots de passe en les chiffrant avec **AES-256-GCM**
-- Accès à vos identifiants via un mot de passe maître dérivé avnec **Argon2d/id**
+- Stockage sécurisé de vos identifiants et mots de passe par chiffrage avec **AES-256-GCM**
+- Accès à vos identifiants via un mot de passe maître dérivé avec **Argon2d/id**
     - Ni votre mot de passe maître, ni la clé dérivée ne sont stockés
-- Génération des mots de passes sûrs
+- Génération de mots de passes sûrs
 - Analyse de la robustesse d'un mot de passe
 - Renforcement d'un mot de passe existant
 - Recherche rapide de vos identifiants
