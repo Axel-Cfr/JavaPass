@@ -10,7 +10,7 @@ Si vous n'avez pas configuré Maven, cliquez ici pour voir le [guide de configur
 
 ## Installation et Mise en place
 
-1. Ouvrez l'invite de commande et rendez-vous dans le répertoire où vous voulez que le dépôt soit cloné
+1. Ouvrez l'invite de commandes et rendez-vous dans le répertoire où vous voulez que le dépôt soit cloné
 ```
 cd chemin/où_je_veux/installer/JavaPass
 ```
@@ -30,8 +30,8 @@ cd JavaPass
 mvn clean install
 ```
 
-5. Indiquez à la console d'afficher les caractères avec l'encodage UTF-8 (sinon certains caractères spéciaux s'affichent mal).
-- **Vous pouvez passer cette étape si vous utilisez un système Linus/Unix**
+5. Indiquez à la console d'afficher les caractères avec l'encodage UTF-8 (sinon certains caractères spéciaux s'afficheront mal).
+- **Vous pouvez passer cette étape si vous utilisez un système Linux/Unix**
 ```
 C:\Windows\System32\chcp.com 65001
 ```
@@ -41,14 +41,14 @@ C:\Windows\System32\chcp.com 65001
 java -jar target/JavaPass.jar
 ```
 
-7. Optionnel pour **Windows**: Vous pouvez créer un fichier JavaPass.bat cliquable en y écrivant ceci dans un fichier texte et l'enregistrant sous forme de fichier .bat :
+7. Optionnel pour **Windows**: Vous pouvez créer un fichier JavaPass.bat cliquable en y écrivant ceci dans un fichier texte et en l'enregistrant sous forme de fichier .bat :
 ```
 C:\Windows\System32\chcp.com 65001
 cd C:/Users/votre_user/chemin/vers/JavaPass
 java -jar target/JavaPass.jar
 ```
 
-7. Optionnel pour **Linux/Unix**: Vous pouvez créer un fichier JavaPass.sh cliquable en y écrivant ceci dans un fichier texte et l'enregistrant sous forme de fichier .sh :
+7. Optionnel pour **Linux/Unix**: Vous pouvez créer un fichier JavaPass.sh cliquable en y écrivant ceci dans un fichier texte et en l'enregistrant sous forme de fichier .sh :
 ```
 cd C:/home/votre_user/chemin/vers/JavaPass
 java -jar target/JavaPass.jar
@@ -56,7 +56,7 @@ java -jar target/JavaPass.jar
 
 8. Optionnel : Vous pouvez créer un raccourci de JavaPass.bat et lui attribuer l'icône de JavaPass. Le fichier Javapass.ico se trouve dans `C:/Users/votre_user/chemin/vers/JavaPass/docs/img`.
 
-**Attention**, si vous lancez JavaPass depuis un IDE sans passer par le .jar, veillez à exécuter `C:\Windows\System32\chcp.com 65001` avant. Sinon, certains caractères spéciaux s'afficheront mal.
+**Attention**, si vous lancez JavaPass depuis un IDE sans passer par le .jar, veillez à exécuter `C:\Windows\System32\chcp.com 65001` avant. Autrement, certains caractères spéciaux s'afficheront mal.
 
 ## Utilisation de Javapass
 
@@ -88,7 +88,7 @@ Une fois connecté(e), tapez simplement le numéro de l'action souhaitée puis "
 Avec l'option **[2]**, enregistrez les identifiants d'un nouveau site (nom, URL, identifiant).
 Pour le mot de passe, vous avez le choix :
 - Le taper vous-même.
-- Laissez JavaPass en **générer un automatiquement**.
+- Laisser JavaPass en **générer un automatiquement**.
 
 ![Ex_5](img/Exemples/5_ex.png)
 
@@ -98,7 +98,7 @@ Avec l'option **[1]**, JavaPass liste vos sites enregistrés :
 
     ![Ex_8](img/Exemples/8_ex.png)
 
-- Recherchez un site précis en tapant `s*` suivi du nom (ex: `s*google`). La recherche affichera tout les sites contenant la votre recherche et est résistante à la casse.
+- Recherchez un site précis en tapant `s*` suivi du nom (ex: `s*google`). La recherche, résistante à la casse, affichera tous les sites contenant votre recherche.
     - Avant recherche :
     
     ![Ex_6](img/Exemples/6_ex.png)
@@ -107,13 +107,13 @@ Avec l'option **[1]**, JavaPass liste vos sites enregistrés :
 
     ![Ex_7](img/Exemples/7_ex.png)
 
-    - **Astuce** : Pour faire en sorte que tout vos mots de passe s'affichent après une recherche, entrez seulement `s*`
+    - **Astuce** : Pour faire en sorte que tous vos mots de passe s'affichent après une recherche, entrez seulement `s*`
 
 - Tapez **[Q]** pour revenir à l'accueil.
 
 ### 5. Gérer un mot de passe
 En consultant les détails d'un mot de passe, plusieurs actions s'offrent à vous :
-- **[1] Analyser :** Vérifie la robustesse du mot de passe et son temps de piratage estimé. Alerte en cas de réutilisation sur d'autres sites, et propose de l'améliorer s'il est jugé trop faible.
+- **[1] Analyser :** Vérifie la robustesse du mot de passe et son temps de piratage estimé, alerte l'utilisateur en cas de réutilisation sur d'autres sites et propose de l'améliorer s'il est jugé trop faible.
     - Cas d'un mot de passe fort :
 
     ![Ex_9](img/Exemples/9_ex.png)

@@ -10,16 +10,16 @@
 JavaPass est un gestionnaire de mots de passe local et open source entièrement développé en Java.  
 Il fonctionne dans le terminal et stocke vos mots de passe chiffrés dans une base de données SQLite.  
 Vos données restent sur votre ordinateur et votre mot de passe maître n'est stocké nulle part, pas même sur votre machine.  
-Ce projet a été réalisé dans le cadre du cours de programmation Java en première année du cycle préparatoire integré de 3iL.
+Ce projet a été réalisé dans le cadre du cours de programmation Java en première année du cycle préparatoire intégré de 3iL.
 
 **Plus d'informations dans la [documentation technique](docs/Doc_technique.md)**
 
 ## Features
 
-- Stockage sécurisé vos identifiants et mots de passe en les chiffrant avec **AES-256-GCM**
+- Stockage sécurisé de vos identifiants et mots de passe par chiffrage avec **AES-256-GCM**
 - Accès à vos identifiants via un mot de passe maître dérivé avec **Argon2d/id**
     - Ni votre mot de passe maître, ni la clé dérivée ne sont stockés
-- Génération des mots de passes sûrs
+- Génération de mots de passes sûrs
 - Analyse de la robustesse d'un mot de passe
 - Renforcement d'un mot de passe existant
 - Recherche rapide de vos identifiants
@@ -49,7 +49,7 @@ mvn clean install
 ```
 
 3. Indiquez à la console d'afficher les caractères avec l'encodage UTF-8
-- **Vous pouvez passer cette étape si vous utilisez un système Linus/Unix**
+- **Vous pouvez passer cette étape si vous utilisez un système Linux/Unix**
 ```
 C:\Windows\System32\chcp.com 65001
 ```
