@@ -16,14 +16,14 @@
 
 ![Image de l'architecture du projet](img/plantUML.png)
 
-Ce projet possède une architecture en couches qui se distingue en 3 couches :
-- Interface utilisateur : gérée par la classe `Interface`, responsable de l'affichage et les interactions avec utilisateur
-- Logique métier : gérée par la classe `Services`, qui assure les différentes fonctionnalités du gestionnaire de mot de passe, délègue le chiffrement à la classe `AES`, le hachage à `Argon2`, la communication avec la base de données à `SQLite`, instancie et utilise un objet de la classe `User` et gère les erreurs (sauf les erreurs de scanners qui sont gérées par `Interface`)
-- Base de données : gérée par la classe `SQLite`, qui communique avec la base de donnée et renvoie les informations demandées
+Ce projet possède une architecture en couches qui se divise en 3 couches :
+- Interface utilisateur : gérée par la classe `Interface`, responsable de l'affichage et des interactions avec l'utilisateur
+- Logique métier : gérée par la classe `Services`, qui assure les différentes fonctionnalités du gestionnaire de mots de passe, délègue le chiffrement à la classe `AES`, le hachage à `Argon2`, la communication avec la base de données à `SQLite`, instancie et utilise un objet de la classe `User` et gère les erreurs (sauf les erreurs de scanners qui sont gérées par `Interface`)
+- Base de données : gérée par la classe `SQLite`, qui communique avec la base de données et renvoie les informations demandées
 
 La classe Main instancie un objet de la classe `Services` et un de la classe `Interface`  
 
-L'architecture en couches est une architecture très classique pour créer des applications de bureaux. Elle permet de séparer les responsabilités; chaque couche ne peut communiquer qu'avec celle qui se trouve directement en dessous. Cela assure une certaine évolutivité et la lisibilité du code tout en restant une architecture adaptée à un projet académique (utiliser des architectures plus complexes ne serait d'aucune utilité dans ce cas de figure).
+L'architecture en couches est une architecture très classique pour créer des applications de bureau. Elle permet de séparer les responsabilités; chaque couche ne peut communiquer qu'avec celle qui se trouve directement en dessous. Cela assure une certaine évolutivité et la lisibilité du code tout en restant une architecture adaptée à un projet académique (utiliser des architectures plus complexes ne serait d'aucune utilité dans ce cas de figure).
 
 ## Sécurité
 
@@ -35,7 +35,7 @@ L'algorithme de chiffrement utilisé dans JavaPass est l'AES-256-GCM.
 
 L'AES, pour Advanced Encryption Standard, est un algorithme de chiffrement symétrique, c'est à dire un algorithme qui peut chiffrer et déchiffrer des données à partir d'un même mot de passe.  
 AES est recommandé et adopté par le NIST (National Institute of Standards and Technologies) depuis 2001 et approuvé par la NSA.  
-C'est l'algorithme de chiffrement le plus utilisé au monde et l'un des plus robuste. En effet avec une clé de 256 bits (longueur utilisée pour JavaPass), il existe 2<sup>256</sup> clés possibles. Même pour le superclaculateur le plus puissant du monde qui peut atteindre un peu moins de 3 milliards de milliards de calculs par seconde, il faudrait environ 1,2×10<sup>51</sup> années pour tester toute les clés possibles, soit 8,6×10<sup>40</sup> fois l'âge de l'univers.
+C'est l'algorithme de chiffrement le plus utilisé au monde et l'un des plus robuste. En effet, à partir d'une clé de 256 bits (longueur utilisée pour JavaPass) il existe 2<sup>256</sup> clés possibles. Même pour le supercalculateur le plus puissant du monde qui peut atteindre un peu moins de 3 milliards de milliards de calculs par seconde, il faudrait environ 1,2×10<sup>51</sup> années pour tester toute les clés possibles, soit 8,6×10<sup>40</sup> fois l'âge de l'univers.
 
 - Comment marche AES ?
 
@@ -58,10 +58,10 @@ Elle utilise l'API `JDBC` qui permet de se conneter à une base données et d'in
  - UPDATE ... SET ...
 
 
-`L'achitecture de la Base de données` est simple, mais elle fourni un niveau de sécurité suffisant pour décourager <u>**quiconque**</u> d'essayer de déchiffrer ses données ([voir Chiffrement](#chiffrement)).
+`L'architecture de la base de données` est simple, mais elle fournit un niveau de sécurité suffisant pour décourager <u>**quiconque**</u> d'essayer de déchiffrer ses données ([voir Chiffrement](#chiffrement)).
 
 Elle est organisée en deux tables : 
-- `users` : qui stocke un id (clé primaire), un nom d'utilisateur, les données nécessaires au chiffrement et déchiffrement, ainsi que la date de dernières
+- `users` : qui stocke un id (clé primaire), un nom d'utilisateur, les données nécessaires au chiffrement et déchiffrement, ainsi que la date de la dernière connexion
 - `passwords` : qui 
 
 
@@ -71,10 +71,10 @@ Elle est organisée en deux tables :
 - **`generatePassword`** : Génère un mot de passe aléatoire et robuste en fonction de critères définis (longueur, majuscules, chiffres et caractères spéciaux).
 - **`check`** : Permet de vérifier si un mot de passe respecte bien certains critères.
 - **`enhancePassword`** : Améliore un mot de passe jugé trop faible en le complexifiant (par exemple, en ajoutant des caractères manquants ou en augmentant sa longueur) pour atteindre un niveau de sécurité convenable, tout en gardant la base.
-- **`analysePassword`** : Évalue la force d'un mot de passe (calcul d'entropie), calcule une estimation de durée de craquage par bruteforce et retourne un rapport détaillé. 
+- **`analysePassword`** : Évalue la force d'un mot de passe (calcul d'entropie), calcule une estimation de durée de craquage par bruteforce et renvoie un rapport détaillé. 
 - **`convertirDuree`** : Méthode interne servant à transformer un grand nombre de secondes en une unité plus lisible (secondes, jours, années, siècles, etc.).
-- **`estFaible`** : Retourne un booléen évaluant si le mot de passe est considéré comme faible ou non.
-- **`samePassword`** : Vérifie dans la base de données si le mot de passe fourni est déjà réutilisé pour d'autres sites.
+- **`estFaible`** : Retourne un booléen en évaluant si le mot de passe est considéré comme faible ou non.
+- **`samePassword`** : Vérifie dans la base de données si le mot de passe fourni est déjà utilisé pour d'autres sites.
 
 ## Gestion des dépendances
 
