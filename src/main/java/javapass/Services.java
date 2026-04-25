@@ -77,6 +77,10 @@ public class Services {
                 return "Wrong";
             }
         } catch(Exception e) {
+            // Si le mot de passe est erroné
+            if(e.getMessage().equals("Tag mismatch")) {
+                return "Wrong";
+            }
             return e.getMessage();
         }
     }

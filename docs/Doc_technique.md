@@ -39,6 +39,7 @@ C'est l'algorithme de chiffrement le plus utilisé au monde et l'un des plus rob
 
 - Comment marche AES ?
 
+![Schéma d'AES](img/Doc_technique/Schéma%20AES.png)
 
 ![Schéma d'AES-256-GCM](img/Doc_technique/Schéma%20AES-256-GCM.png)
 
