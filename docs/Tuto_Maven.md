@@ -50,4 +50,4 @@ Enfin exécuter cd le\chemin\du\répertoire\où\se\trouve\JavaPass, puis mvn cle
 
 ## Etape 8
 
-Profitez pleinement de votre Maven configuré !
+Profiter pleinement de son Maven configuré !
