@@ -88,6 +88,11 @@ public class Services {
     // Fonction permettant de créer un compte
     public String inscription(String username, String password, String passwordverif, String option) {
         try {
+            // Vérifie que la saisie n'est pas nulle
+            if(username.isBlank() || password.isBlank() || passwordverif.isBlank()) {
+                return "Empty";
+            }
+
             // Création d'un sel et dérivation du mot de passe maître
             if(password.equals(passwordverif)) {
                 int argon2Type;
