@@ -193,6 +193,10 @@ public class Interface {
                 System.out.println(RED + "\nVeuillez entrer le même mot de passe" + GREEN);
                 services.wait(3000);
                 inscription();
+            } else if (result.equals("Empty")) {
+                System.out.println(RED + "\nVeuillez entrer des identifiants corrects" + GREEN);
+                services.wait(3000);
+                inscription();
             } else {
                 erreur(result);
             }
@@ -407,7 +411,7 @@ public class Interface {
             password = scanner.nextLine();
             System.out.println("\nConfirmez votre nouveau mot de passe");
             confirm = scanner.nextLine();
-        } while(!password.equals(confirm));
+        } while(!password.equals(confirm) || password.isBlank());
 
         String result = services.updatePassword(websiteName, password);
         if(result.equals("Done")) {
