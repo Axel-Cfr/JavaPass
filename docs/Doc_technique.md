@@ -29,19 +29,57 @@ L'architecture en couches est une architecture très classique pour créer des a
 
 ### Hachage
 
+La fonction de dérivation utilisée dans JavaPass est **Argon2**.
+
+Argon2 est une fonction de dérivation recommandé par l'OWASP (Open Worldwide Application Security Project) et vainqueur du Password Hashing Competition de 2015. Une fonction de dérivation permet d'obtenir une suite de caractères pseudo-aléatoire ou d'étirer une clé afin qu'elle corresponde aux standards d'une clé de chiffrement. Dans notre cas, nous étirons le mot de passe maître afin qu'il serve de clé pour l'algorithme de chiffrement implémenté.
+
+![Schéma d'Argon2](img/Doc_technique/Schéma%20Argon2.png)
+
+#### Pourquoi Argon2 ?
+
+Nous avons choisi d'utiliser Argon2 car il est volontairement lent et coûteux en ressources matérielles, ce qui le rend beaucoup plus résistant aux attaques par force brute que la plupart des autres fonctions telles que PBKDF2 ou bcrypt (moins résistante au attaques par GPU ou ASIC).  
+Il nécessite un sel aléatoire en plus de la donnée à hacher afin de limiter les attaques par rainbow table (table de hashes précalculée).  
+Il est très flexible avec trois variantes différentes en fonction de la situation et des paramètres mémoires configurables.  
+- **Argon2d**, conçue pour résister aux attaques par GPU/ASIC
+- **Argon2i**, conçue pour résister aux attaques par canaux axiliaires
+- **Argon2id**, est un mélange des deux premiers, conçue pour résister aux attaques par GPU/ASIC et par canaux axiliaires, mais qui est légèrement moins résistant qu'Argon2d pour les attaques par GPU/ASIC et légèrement moins résistant qu'Argon2i pour les attaques par canaux axiliaires. C'est l'option **recommandée par défaut**  
+
+#### Utilisation dans JavaPass
+
+Lors de la création d'un compte, il est demandé sur quel type d'appareil est utilisé JavaPass.  
+Si c'est un pc puissant et strictement personnel, la variante **Argon2d** avec les paramètres de la norme RFC_9106_HIGH_MEMORY sera appliquée, garantissant une sécurité maximale contre les attaques par GPU/ASIC.  
+Si c'est un serveur, la variante **Argon2id** avec des paramètres des paramètres au-dessus de la norme RFC_9106_LOW_MEMORY sera appliquée (sauf au niveau du parallélisme afin de ne pas monopoliser les threads du serveur en cas de connexions simultanées), garantissant une protection équilibrée contre les attaques par GPU/ASIC et par canaux auxiliaires tout en préservant les ressources du serveur.  
+Si l'option par défaut est choisie, la variante **Argon2id** avec des paramètres des paramètres au-dessus de la norme RFC_9106_LOW_MEMORY sera appliquée, garantissant une protection équilibrée contre les attaques par GPU/ASIC et par canaux auxiliaires tout en préservant les ressources du la machine.  
+
+| | RFC_9106_HIGH_MEMORY | RFC_9106_LOW_MEMORY | PC puissant et strictement personnel | Serveur | Autres |
+|:--------: |:--------:|:--------:|:--------:|:--------:|:--------:|
+Itérations | 1 | 4 | 1 | 2 | 4 |
+Coût mémoire | 2 Gio (= 2.14 Go) | 64 mio (= 134 mo) | 2 mio | 128 mio | 128 mio |
+Parallélisme | 4 | 4 | 4 | 2 | 4 |
+Longueur du sel | 128 bits | 128 bits | 128 bits | 128 bits | 128 bits |
+Longueur du hash | 256 bits | 256 bits | 256 bits | 256 bits | 256 bits |  
+
+Pour en savoir plus, vous pouvez visualiser le code du fichier [Argon2.java](../src/main/java/javapass/Argon2.java).
+
 ### Chiffrement
 
-L'algorithme de chiffrement utilisé dans JavaPass est l'AES-256-GCM.
+L'algorithme de chiffrement utilisé dans JavaPass est l'**AES-256-GCM**.
 
 L'AES, pour Advanced Encryption Standard, est un algorithme de chiffrement symétrique, c'est à dire un algorithme qui peut chiffrer et déchiffrer des données à partir d'un même mot de passe.  
 AES est recommandé et adopté par le NIST (National Institute of Standards and Technologies) depuis 2001 et approuvé par la NSA.  
 C'est l'algorithme de chiffrement le plus utilisé au monde et l'un des plus robuste. En effet, à partir d'une clé de 256 bits (longueur utilisée pour JavaPass) il existe 2<sup>256</sup> clés possibles. Même pour le supercalculateur le plus puissant du monde qui peut atteindre un peu moins de 3 milliards de milliards de calculs par seconde, il faudrait environ 1,2×10<sup>51</sup> années pour tester toute les clés possibles, soit 8,6×10<sup>40</sup> fois l'âge de l'univers.
 
-- Comment marche AES ?
+#### Comment marche AES ?
 
 ![Schéma d'AES](img/Doc_technique/Schéma%20AES.png)
 
 ![Schéma d'AES-256-GCM](img/Doc_technique/Schéma%20AES-256-GCM.png)
+
+#### Pourquoi AES-GCM ?
+
+#### Utilisation d'AES-256-GCM dans JavaPass
+
+Pour en savoir plus, vous pouvez visualiser le code du fichier [Argon2.java](../src/main/java/javapass/AES.java).
 
 ### Bonnes pratiques
 
@@ -99,6 +137,7 @@ Elle est organisée en deux tables :
     - https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
     - https://app.itsasync.fr/post/async-article-1010
     - https://tuta.com/fr/blog/best-encryption-with-kdf
+    - https://guptadeepak.com/comparative-analysis-of-password-hashing-algorithms-argon2-bcrypt-scrypt-and-pbkdf2/
 - Robustesse d'un mot de passe
     - https://proton.me/fr/blog/what-is-password-entropy
 - SQLite pour Java
@@ -122,3 +161,7 @@ Elle est organisée en deux tables :
     - https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Scanner.html#%3Cinit%3E(java.io.InputStream,java.lang.String)
     - https://medium.com/@andbin/jdk-18-and-the-utf-8-as-default-charset-8451df737f90
     - https://northcoder.com/post/java-console-output-with-utf-8/
+- Markdown
+    - https://www.markdownguide.org/basic-syntax/
+    - https://docs.framasoft.org/fr/grav/markdown.html
+    - https://github.com/othneildrew/Best-README-Template

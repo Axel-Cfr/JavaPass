@@ -112,10 +112,6 @@ public class Services {
     	        String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
 
             // Défintion de la date et de l'heure de création du compte
-                /*LocalDate localDate = LocalDate.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                String formattedString = localDate.format(formatter);*/
-
                 LocalDateTime localDateTime = LocalDateTime.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm");
                 String formattedString = localDateTime.format(formatter);
