@@ -1,13 +1,12 @@
 package javapass;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Interface {
-    public final String GREEN = "\033[0;32m";  // code couleur ANSI pour du vert
-    public final String RED = "\033[0;31m";    // code couleur ANSI pour du rouge
-    public final String YELLOW = "\033[0;33m"; // code couleur ANSI pour du jaune
+    public static final String GREEN = "\033[0;32m";  // code couleur ANSI pour du vert
+    public static final String RED = "\033[0;31m";    // code couleur ANSI pour du rouge
+    public static final String YELLOW = "\033[0;33m"; // code couleur ANSI pour du jaune
     Services services;
     // Le scanner encode le texte saisi en UTF-8
     private Scanner scanner = new Scanner(System.in, "UTF-8");
@@ -15,7 +14,6 @@ public class Interface {
 
     public Interface(Services services) {
         this.services =  services;
-
         String os = System.getProperty("os.name").toLowerCase();
         System.out.println(os);
         if(os.contains("win")) {
@@ -32,6 +30,8 @@ public class Interface {
     public void afficherBienvenue() {
         String result = services.connectionDB();
         clearScreen();
+        // Reinitialise le compteur
+        InactivityCounter.resetTimer();
         if(!result.equals("Done")) {
             erreur(result);
         }
@@ -143,6 +143,8 @@ public class Interface {
     public void connection() {
         clearScreen();
         bandeau();
+        // Reinitialise le compteur
+        InactivityCounter.resetTimer();
 
         System.out.print("Identifiant : ");
         String username = scanner.nextLine();
@@ -164,7 +166,8 @@ public class Interface {
     public void inscription() {
         clearScreen();
         bandeau();
-
+        // Reinitialise le compteur
+        InactivityCounter.resetTimer();
         System.out.println("Identifiant: ");
         String username = scanner.nextLine();
         System.out.println("\nMot de passe : ");
@@ -210,6 +213,8 @@ public class Interface {
     public void accueil() {
         clearScreen();
         bandeau();
+        // Reinitialise le compteur
+        InactivityCounter.resetTimer();
 
         System.out.println("Bonjour "+services.user.getUsername());
         System.out.println("Dernière connexion le "+services.user.getLast_login());
@@ -262,9 +267,10 @@ public class Interface {
     }
 
     public void voirListeMDP() {
+        // Reinitialise le compteur
+        InactivityCounter.resetTimer();
         ArrayList<String> websiteNameList = services.returnWebsiteName();
         String resultatRecherche = "In progress";
-
         while(!resultatRecherche.equals("Done")) {
             clearScreen();
             bandeau();
@@ -316,7 +322,10 @@ public class Interface {
         String username = passwordInfos[2];
         String password = passwordInfos[3];
         boolean done = false;
-        
+
+        // Reinitialise le compteur
+        InactivityCounter.resetTimer();
+
         while(!done) {
             clearScreen();
             bandeau();
@@ -390,6 +399,9 @@ public class Interface {
         String password;
         String confirm;
 
+        // Reinitialise le compteur
+        InactivityCounter.resetTimer();
+
         do {
             clearScreen();
             bandeau();
@@ -413,6 +425,9 @@ public class Interface {
     public void analyserMDP(String websiteName, String url, String username, String password) {
         clearScreen();
         bandeau();
+
+        // Reinitialise le compteur
+        InactivityCounter.resetTimer();
 
         System.out.println("Nom du site : " + websiteName);
         if (!(url == null || url.isBlank())) {
@@ -473,6 +488,8 @@ public class Interface {
     // Fonction permettant d'ajouter un mot de passe et ses informations complémentaires
     public void ajouterMDP() {
         boolean sortie = false;
+        // Reinitialise le compteur
+        InactivityCounter.resetTimer();
         
         while(!sortie) {
             clearScreen();
@@ -492,6 +509,7 @@ public class Interface {
 
             String password = "";
             if(choice.equals("1")) {
+                //peut-etre un reset timer ici ??
                 System.out.println("\nEntrez le mot de passe pour ce site");
                 password = scanner.nextLine();
             } else if(choice.equals("2")) {
