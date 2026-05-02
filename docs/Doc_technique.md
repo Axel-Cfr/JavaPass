@@ -100,9 +100,38 @@ Elle utilise l'API `JDBC` qui permet de se conneter à une base données et d'in
 `L'architecture de la base de données` est simple, mais elle fournit un niveau de sécurité suffisant pour décourager <u>**quiconque**</u> d'essayer de déchiffrer ses données ([voir Chiffrement](#chiffrement)).
 
 Elle est organisée en deux tables : 
-- `users` : qui stocke un id (clé primaire), un nom d'utilisateur, les données nécessaires au chiffrement et déchiffrement, ainsi que la date de la dernière connexion
-- `passwords` : qui 
+- `users` : qui stocke un id (clé primaire), un nom d'utilisateur, les données nécessaires au chiffrement et déchiffrement, ainsi que la date de la dernière connexion.
 
+- `passwords` : qui stocke de manière chiffré les mots de passe et identifiants utilisateurs relatifs aux sites web ainsi que de la même façon les données nécessaires au chiffrement et déchiffrement.
+
+### 1. Détection d'inactivité
+ 
+#### Approche retenue : Thread + timestamp
+ 
+Deux threads tournent en parallèle pendant la session active :
+ 
+- **Thread principal** : lit les entrées utilisateur via `Scanner` et met à jour le timestamp à chaque saisie
+- **Thread watchdog** : via la classe `InactivityCounter`, il vérifie toutes les secondes le temps écoulé depuis la dernière activité et déclenche le verrouillage si le délai est dépassé
+
+##### Points importants
+ 
+- Le timestamp partagé est un `AtomicLong` pour garantir la thread-safety entre les deux threads
+- Le watchdog est déclaré en `setDaemon(true)` — il s'arrête automatiquement avec le thread principal
+- Le watchdog est démarré **uniquement après authentification réussie**, pas avant
+### Limite connue
+ 
+`scanner.nextLine()` est bloquant car il ne rend la main qu'à la pression d'Entrée. Si l'utilisateur tape des caractères sans valider, le watchdog peut déclencher le verrou avant que la saisie soit terminée. Pour `JavaPass`, ce n'est pas un véritable problème.
+
+[Remarque] :
+- `AtomicLong` est une classe du package java.util.concurrent.atomic qui permet de manipuler une variable de type long de manière atomique et thread-safe, sans nécessiter de verrous (locks) traditionnels.
+### 2. Protection contre les injections SQL
+ 
+#### Prepared Statements
+ 
+Toutes les requêtes adressées à la base de données utilisent des `PreparedStatement`. Cette approche empêche les injections SQL en séparant la requête de ses paramètres : la base de données reçoit la structure SQL d'un côté, et les données utilisateur de l'autre — ces dernières ne sont jamais interprétées comme du code SQL.
+
+ 
+**L'injection SQL n'est pas la menace principale dans une application à base de données locale ([voir Chiffrement](#chiffrement)).** 
 
 ## Fonctionnalités
 
