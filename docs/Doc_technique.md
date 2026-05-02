@@ -122,13 +122,13 @@ Deux threads tournent en parallèle pendant la session active :
  
 `scanner.nextLine()` est bloquant car il ne rend la main qu'à la pression d'Entrée. Si l'utilisateur tape des caractères sans valider, le watchdog peut déclencher le verrou avant que la saisie soit terminée. Pour `JavaPass`, ce n'est pas un véritable problème.
 
-[Remarque] :
+**Remarque** :
 - `AtomicLong` est une classe du package java.util.concurrent.atomic qui permet de manipuler une variable de type long de manière atomique et thread-safe, sans nécessiter de verrous (locks) traditionnels.
 ### 2. Protection contre les injections SQL
  
 #### Prepared Statements
  
-Toutes les requêtes adressées à la base de données utilisent des `PreparedStatement`. Cette approche empêche les injections SQL en séparant la requête de ses paramètres : la base de données reçoit la structure SQL d'un côté, et les données utilisateur de l'autre — ces dernières ne sont jamais interprétées comme du code SQL.
+Toutes les requêtes adressées à la base de données utilisent des `PreparedStatement`. Cette approche empêche les injections SQL en séparant la requête de ses paramètres : la base de données reçoit la structure SQL d'un côté, et les données utilisateur de l'autre, ces dernières ne sont jamais interprétées comme du code SQL.
 
  
 **L'injection SQL n'est pas la menace principale dans une application à base de données locale ([voir Chiffrement](#chiffrement)).** 
