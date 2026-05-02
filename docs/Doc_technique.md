@@ -4,8 +4,8 @@
 
 - [Architecture](#architecture)
 - [Sécurité](#sécurité)
-    - [Chiffrement](#chiffrement)
     - [Hachage](#hachage)
+    - [Chiffrement](#chiffrement)
     - [Bonnes pratiques](#bonnes-pratiques)
 - [Base de données](#base-de-données)
 - [Fonctionnalités](#fonctionnalités)
@@ -51,8 +51,8 @@ Si c'est un pc puissant et strictement personnel, la variante **Argon2d** avec l
 Si c'est un serveur, la variante **Argon2id** avec des paramètres des paramètres au-dessus de la norme RFC_9106_LOW_MEMORY sera appliquée (sauf au niveau du parallélisme afin de ne pas monopoliser les threads du serveur en cas de connexions simultanées), garantissant une protection équilibrée contre les attaques par GPU/ASIC et par canaux auxiliaires tout en préservant les ressources du serveur.  
 Si l'option par défaut est choisie, la variante **Argon2id** avec des paramètres des paramètres au-dessus de la norme RFC_9106_LOW_MEMORY sera appliquée, garantissant une protection équilibrée contre les attaques par GPU/ASIC et par canaux auxiliaires tout en préservant les ressources du la machine.  
 
-| | RFC_9106_HIGH_MEMORY | RFC_9106_LOW_MEMORY | PC puissant et strictement personnel | Serveur | Autres |
-|:--------: |:--------:|:--------:|:--------:|:--------:|:--------:|
+| | RFC_9106 HIGH_MEMORY | RFC_9106 LOW_MEMORY | PC puissant et strictement personnel | Serveur | Autres |
+|:---: |:---:|:---:|:---:|:---:|:---:|
 Itérations | 1 | 4 | 1 | 2 | 4 |
 Coût mémoire | 2 Gio (= 2.14 Go) | 64 mio (= 134 mo) | 2 mio | 128 mio | 128 mio |
 Parallélisme | 4 | 4 | 4 | 2 | 4 |
