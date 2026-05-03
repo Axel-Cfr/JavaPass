@@ -1,6 +1,8 @@
 package javapass;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Interface {
@@ -210,21 +212,27 @@ public class Interface {
     }
 
     public void accueil() {
-        clearScreen();
-        bandeau();
-        // Reinitialise le compteur
-        services.resetTimer();
+        String option;
+        String[] tab = {"1", "2", "3", "4", "5"};
+        List<String> inputs = Arrays.asList(tab);
 
-        System.out.println("Bonjour "+services.user.getUsername());
-        System.out.println("Dernière connexion le "+services.user.getLast_login());
-        System.out.println("\nQue voulez vous faire ?");
-        System.out.println("[1] : Consulter mes mots de passe");
-        System.out.println("[2] : Ajouter un nouveau mot de passe");
-        System.out.println("[3] : Modifier mon mot de passe maître");
-        System.out.println("[4] : Supprimer mon compte");
-        System.out.println("[5] : Quitter JavaPass");
-        System.out.println("\nEntrez votre choix (1, 2, 3, 4 ou 5): ");
-        String option = scanner.nextLine();
+        do {
+            clearScreen();
+            bandeau();
+            // Reinitialise le compteur
+            services.resetTimer();
+
+            System.out.println("Bonjour "+services.user.getUsername());
+            System.out.println("Dernière connexion le "+services.user.getLast_login());
+            System.out.println("\nQue voulez vous faire ?");
+            System.out.println("[1] : Consulter mes mots de passe");
+            System.out.println("[2] : Ajouter un nouveau mot de passe");
+            System.out.println("[3] : Modifier mon mot de passe maître");
+            System.out.println("[4] : Supprimer mon compte");
+            System.out.println("[5] : Quitter JavaPass");
+            System.out.println("\nEntrez votre choix (1, 2, 3, 4 ou 5): ");
+            option = scanner.nextLine();
+        } while(!inputs.contains(option));
 
         if(option.equals("1")) {
             voirListeMDP();
@@ -260,8 +268,6 @@ public class Interface {
             System.out.println("\nPassez une bonne journée :D");
             services.wait(3000);
             quit();
-        } else {
-            accueil();
         }
     }
 
@@ -284,10 +290,17 @@ public class Interface {
             }
 
             String option = scanner.nextLine();
+
+            // Si la saisie commence par "s*", on recherche quel site contient la chaîne de caractère recherchée
             if(option.startsWith("s*")) {
                 websiteNameList = services.researchWebsiteName(option.substring(2, option.length()));
+
+            // Si la saisie est "Q" ou "q", on revient à l'accueil
             } else if (option.equals("Q") || option.equals("q")) {
                 accueil();
+
+            // Sinon, on essaye de convertir la saisie en nombre pour afficher les 
+            // informations du mot de passe demandé
             } else {
                 try {   
                     int intOption = Integer.parseInt(option);
@@ -299,11 +312,14 @@ public class Interface {
                             resultatRecherche = "Done";
                             voirMDP(passwordInfos);
                         }
+                    
+                    // Le nombre saisi ne correspond à aucun mot de passe
                     } else {
                         System.out.println(RED + "\nVeuillez faire une entrée valide" + GREEN);
                         services.wait(3000);
                     }
                 
+                // La saisie n'est pas un nombre
                 } catch (Exception e) {
                     System.out.println(RED + "\nVeuillez faire une entrée valide" + GREEN);
                     services.wait(3000);
@@ -330,6 +346,7 @@ public class Interface {
             bandeau();
 
             System.out.println("Nom du site : "+websiteName);
+            // Affiche l'url seulement si il n'est pas vide
             if(!(url == null || url.isBlank())) {
                 System.out.println("\nUrl du site : "+url);
             }
@@ -456,8 +473,9 @@ public class Interface {
             System.out.println("\nVoulez-vous le modifier ?");
             System.out.println("[1] L'améliorer");
             System.out.println("[2] En générer un nouveau");
-            System.out.println(RED + "[3] Ne rien faire" + GREEN);
-            System.out.print("\nEntrez votre choix (1, 2 ou 3): ");
+            System.out.println("[3] En entrer un nouveau manuellement");
+            System.out.println(RED + "[4] Ne rien faire" + GREEN);
+            System.out.print("\nEntrez votre choix (1, 2, 3 ou 4): ");
             
             String choice = scanner.nextLine();
             String newPassword = null;
@@ -467,6 +485,8 @@ public class Interface {
             } else if (choice.equals("2")) {
                 newPassword = services.generatePassword(20, true, true, true, true);
                 System.out.println("\nNouveau mot de passe généré : " + newPassword);
+            } else if(choice.equals("3")) {
+                modifierMDP(websiteName);
             }
             
             if (newPassword != null) {
@@ -486,47 +506,56 @@ public class Interface {
 
     // Fonction permettant d'ajouter un mot de passe et ses informations complémentaires
     public void ajouterMDP() {
-        boolean sortie = false;
         // Reinitialise le compteur
         services.resetTimer();
         
-        while(!sortie) {
+        String websiteName;
+        String url;
+        String username;
+        String password = "";
+        String choice;
+        boolean alreadyPassed = false;
+
+        do {
+            if(alreadyPassed) {
+                System.out.println(RED + "\nMerci de faire des entrées valides" + GREEN);
+                services.wait(3000);
+            }
+
             clearScreen();
             bandeau();
             System.out.println("Ajout d'un nouveau mot de passe\n");
             System.out.println("\nEntrez le nom du site");
-            String websiteName = scanner.nextLine();
+            websiteName = scanner.nextLine();
             System.out.println("\nEntrez l'url du site (optionnel)");
-            String url = scanner.nextLine();
+            url = scanner.nextLine();
             System.out.println("\nEntrez le nom d'utilisateur ou l'email pour ce site");
-            String username = scanner.nextLine();
+            username = scanner.nextLine();
             System.out.println("\nQue voulez vous faire ?");
             System.out.println("[1] : Saisir votre mot de passe");
             System.out.println("[2] : Générer un mot de passe");
             System.out.println("\nEntrez votre choix (1 ou 2): ");
-            String choice = scanner.nextLine();
+            choice = scanner.nextLine();
 
-            String password = "";
             if(choice.equals("1")) {
                 //peut-etre un reset timer ici ??
-                System.out.println("\nEntrez le mot de passe pour ce site");
-                password = scanner.nextLine();
+                while(password.isBlank()) {
+                    System.out.println("\nEntrez le mot de passe pour ce site");
+                    password = scanner.nextLine();
+                }
             } else if(choice.equals("2")) {
                 password = services.generatePassword(20, true, true, true, true);
             }
 
-            if(!(websiteName.isBlank() || username.isBlank() || password.isBlank())) {
-                String[] passwordInfo = {websiteName, url, username, password};
-                String retour = services.addNewPassword(passwordInfo);
-                if(retour.equals("Done")) {
-                    accueil();
-                } else {
-                    erreur(retour);
-                }
-            } else {
-                System.out.println(RED + "\nMerci de faire des entrées valides" + GREEN);
-                services.wait(3000);
-            }
+            alreadyPassed = true;
+        } while(websiteName.isBlank() || username.isBlank() || password.isBlank());
+
+        String[] passwordInfo = {websiteName, url, username, password};
+        String retour = services.addNewPassword(passwordInfo);
+        if(retour.equals("Done")) {
+            accueil();
+        } else {
+            erreur(retour);
         }
     }
 }

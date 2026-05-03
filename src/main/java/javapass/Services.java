@@ -618,10 +618,12 @@ public class Services {
         }
     }
 
+    // Fonction qui initilise le compteur d'inactivité
     public void initializeTimer(Services services) {
         inactivityCounter.start(services);
     }
 
+    // Fonction qui reset le compteur d'inactivité
     public void resetTimer() {
         inactivityCounter.resetTimer();
     }
