@@ -6,13 +6,10 @@ public class Main {
             Services services = new Services();
             Interface interface_utilisateur = new Interface(services);
 
-            InactivityCounter compteurInactivite = new InactivityCounter();
-            compteurInactivite.start();
-
-            
+            services.initializeTimer(services);
             interface_utilisateur.afficherBienvenue();
         } catch(Exception e) {
             System.err.println(e.getMessage());
         }
     }
-} 
+}

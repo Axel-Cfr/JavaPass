@@ -15,7 +15,6 @@ public class Interface {
     public Interface(Services services) {
         this.services =  services;
         String os = System.getProperty("os.name").toLowerCase();
-        System.out.println(os);
         if(os.contains("win")) {
             osName = "Windows";
         } else if(os.contains("nux") || os.contains("nix")) {
@@ -31,7 +30,7 @@ public class Interface {
         String result = services.connectionDB();
         clearScreen();
         // Reinitialise le compteur
-        InactivityCounter.resetTimer();
+        services.resetTimer();
         if(!result.equals("Done")) {
             erreur(result);
         }
@@ -92,7 +91,7 @@ public class Interface {
         }
     }
 
-    private void quit() {
+    public void quit() {
         scanner.close();
         services.deconnectionDB();
         System.exit(0);
@@ -144,7 +143,7 @@ public class Interface {
         clearScreen();
         bandeau();
         // Reinitialise le compteur
-        InactivityCounter.resetTimer();
+        services.resetTimer();
 
         System.out.print("Identifiant : ");
         String username = scanner.nextLine();
@@ -167,7 +166,7 @@ public class Interface {
         clearScreen();
         bandeau();
         // Reinitialise le compteur
-        InactivityCounter.resetTimer();
+        services.resetTimer();
         System.out.println("Identifiant: ");
         String username = scanner.nextLine();
         System.out.println("\nMot de passe : ");
@@ -214,7 +213,7 @@ public class Interface {
         clearScreen();
         bandeau();
         // Reinitialise le compteur
-        InactivityCounter.resetTimer();
+        services.resetTimer();
 
         System.out.println("Bonjour "+services.user.getUsername());
         System.out.println("Dernière connexion le "+services.user.getLast_login());
@@ -268,7 +267,7 @@ public class Interface {
 
     public void voirListeMDP() {
         // Reinitialise le compteur
-        InactivityCounter.resetTimer();
+        services.resetTimer();
         ArrayList<String> websiteNameList = services.returnWebsiteName();
         String resultatRecherche = "In progress";
         while(!resultatRecherche.equals("Done")) {
@@ -324,7 +323,7 @@ public class Interface {
         boolean done = false;
 
         // Reinitialise le compteur
-        InactivityCounter.resetTimer();
+        services.resetTimer();
 
         while(!done) {
             clearScreen();
@@ -400,7 +399,7 @@ public class Interface {
         String confirm;
 
         // Reinitialise le compteur
-        InactivityCounter.resetTimer();
+        services.resetTimer();
 
         do {
             clearScreen();
@@ -427,7 +426,7 @@ public class Interface {
         bandeau();
 
         // Reinitialise le compteur
-        InactivityCounter.resetTimer();
+        services.resetTimer();
 
         System.out.println("Nom du site : " + websiteName);
         if (!(url == null || url.isBlank())) {
@@ -489,7 +488,7 @@ public class Interface {
     public void ajouterMDP() {
         boolean sortie = false;
         // Reinitialise le compteur
-        InactivityCounter.resetTimer();
+        services.resetTimer();
         
         while(!sortie) {
             clearScreen();

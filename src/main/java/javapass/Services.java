@@ -13,8 +13,9 @@ import javax.crypto.spec.SecretKeySpec;
 import javapass.SQLite.UserValues;
 
 public class Services {
-    // Instanciation d'objets des classes SQLite et User
+    // Instanciation d'objets des classes SQLite, InactivityCounter et User
     private final SQLite sqlite = new SQLite();
+    private final InactivityCounter inactivityCounter = new InactivityCounter();
     public User user;
 
     // Variables de caractères disponibles
@@ -615,5 +616,13 @@ public class Services {
         } catch(InterruptedException e) {
             return e.getMessage();
         }
+    }
+
+    public void initializeTimer(Services services) {
+        inactivityCounter.start(services);
+    }
+
+    public void resetTimer() {
+        inactivityCounter.resetTimer();
     }
 }
