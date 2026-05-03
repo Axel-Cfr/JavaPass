@@ -29,6 +29,8 @@ public class InactivityCounter {
                 System.out.print(Interface.RED + "\n[Securite] " + Interface.GREEN +
                     "5 minutes d'inactivité détectées. Fermeture de l'application ...");
                     //"10 secondes d'inactivité détectées. Fermeture de l'application ");
+                    "5 minutes d'inactivité détectées. Fermeture de l'application ...");
+                    //"10 secondes d'inactivité détectées. Fermeture de l'application ");
                 for (int k = 3; k != 0; k--) {
                     services.wait(2000);
                     System.out.print((" ... " + k ));
@@ -40,4 +42,15 @@ public class InactivityCounter {
 
         inactivityTimer.schedule(currentTask, INACTIVITY_DELAY);
     }
+
+    public static String waitMs(int millisecond) {
+        try {
+            Thread.sleep(millisecond);
+            return "Done";
+        } catch (InterruptedException e) {
+            return e.getMessage();
+        }
+    }
 }
+
+
