@@ -15,14 +15,17 @@ Lien pour connaître la syntaxe UML : https://plantuml.com/fr/class-diagram
 class Main
 class Interfaces
 class Services
-class SQLite
 class AES
 class Argon2
+class SQLite
 class User
+class InactivityCounter
 
 Main ..> Interfaces : crée
 Main ..> Services : crée
 Interfaces --> Services : utilise
+Services ..> InactivityCounter : crée
+Services <--> InactivityCounter : utilise
 Services --> AES : utilise
 Services --> Argon2 : utilise
 Services ..> SQLite : initialise
@@ -32,7 +35,9 @@ Services ..> User : crée
 
 Main : main()
 
+Interfaces : Interfaces()
 Interfaces : afficherBienvenue()
+Interfaces : quit()
 Interfaces : clearScreen()
 Interfaces : bandeau()
 Interfaces : erreur()
@@ -41,18 +46,24 @@ Interfaces : inscription()
 Interfaces : accueil()
 Interfaces : voirListeMDP()
 Interfaces : voirMDP()
-Interfaces : AjouterMDP()
-Interfaces : quitter()
+Interfaces : modifierMDP()
+Interfaces : analyserMDP()
+Interfaces : ajouterMDP()
 
 Services : connectionDB()
+Services : deconnectionDB()
 Services : authentification()
 Services : inscription()
-Services : returnWebsiteName()
+Services : isUsernameAvailable()
+Services : returnWebsitesNames()
 Services : researchWebsiteName()
+Services : givePassword()
 Services : givePasswordInfos()
 Services : addNewPassword()
+Services : updatePassword()
 Services : deletePassword()
 Services : deleteAccount()
+Services : updateLastLogin()
 Services : generateSecureRandom()
 Services : generatePassword()
 Services : check()
@@ -62,6 +73,8 @@ Services : convertirDuree()
 Services : estFaible()
 Services : samePassword()
 Services : wait()
+Services : initializeTimer()
+Services : resetTimer()
 
 SQLite : initialistionDB()
 SQLite : deconnexion()
@@ -99,5 +112,8 @@ User : getEncryptedPassword()
 User : getIvUsername()
 User : getIvPassword()
 User : getWebsiteNameList()
+
+InactivityCounter : start()
+InactivityCounter : resetTimer()
 @enduml
 ```

@@ -147,14 +147,14 @@ public class Services {
 
     // Fonction qui renvoie la liste de tout les noms de sites 
     // desquels l'utilisateur a enregistré son mot de passe
-    public ArrayList<String> returnWebsiteName() {
+    public ArrayList<String> returnWebsitesNames() {
         return user.getWebsiteNameList();
     }
 
     // Fonction de recherche des noms de sites enregistré par l'utilisateur
     public ArrayList<String> researchWebsiteName(String input) {
         // Si la saisie est nulle, renvoie la liste complète des mots de passe
-        ArrayList<String> websiteNameList = returnWebsiteName();
+        ArrayList<String> websiteNameList = returnWebsitesNames();
         if(input == null || input.isBlank()) {
             return websiteNameList;
         }
@@ -393,7 +393,7 @@ public class Services {
     }
 
     // Fonction qui vérifie la présence de minuscule, majuscule, chiffre et caractère spécial dans un mot de passe
-    public boolean[] check(String password) {
+    private boolean[] check(String password) {
         boolean hasMinuscule = false;
         boolean hasMajuscule = false;
         boolean hasChiffre = false;
@@ -584,7 +584,7 @@ public class Services {
     // Fonction qui récupère les noms des sites qui utilisent exactement le même mot de passe
     public ArrayList<String> samePassword(String password, String actualWebsite) {
         ArrayList<String> websites = new ArrayList<>();
-        ArrayList<String> allWebsites = returnWebsiteName();
+        ArrayList<String> allWebsites = returnWebsitesNames();
         
         if (allWebsites != null) {
             for (int i = 0; i < allWebsites.size(); i++) {

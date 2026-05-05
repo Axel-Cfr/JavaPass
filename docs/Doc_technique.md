@@ -20,7 +20,7 @@
 
 Ce projet possède une architecture en couches qui se distingue en 3 couches :
 - Interface utilisateur : gérée par la classe `Interface`, responsable de l'affichage et des interactions avec l'utilisateur
-- Logique métier : gérée par la classe `Services`, qui assure les différentes fonctionnalités du gestionnaire de mots de passe, délègue le chiffrement à la classe `AES`, le hachage à `Argon2`, la communication avec la base de données à `SQLite`, instancie et utilise un objet de la classe `User` et gère les erreurs (sauf les erreurs de scanners qui sont gérées par `Interface`)
+- Logique métier : gérée par la classe `Services`, qui assure les différentes fonctionnalités du gestionnaire de mots de passe, délègue le chiffrement à la classe `AES`, le hachage à `Argon2`, la communication avec la base de données à `SQLite`, instancie et utilise un objet de la classe `User` et gère les erreurs (sauf les erreurs de scanners qui sont gérées par `Interface`). `Services` instancie aussi un objet de la classe `InactivityCounter` qui ferme l'application au bout de 5 min sans saisie de la part de l'utilisateur
 - Base de données : gérée par la classe `SQLite`, qui communique avec la base de données et renvoie les informations demandées
 
 La classe Main instancie un objet de la classe `Services` et un de la classe `Interface`  

@@ -298,7 +298,7 @@ public class Interface {
     public void voirListeMDP() {
         // Reinitialise le compteur
         services.resetTimer();
-        ArrayList<String> websiteNameList = services.returnWebsiteName();
+        ArrayList<String> websiteNameList = services.returnWebsitesNames();
         String resultatRecherche = "In progress";
         while(!resultatRecherche.equals("Done")) {
             clearScreen();
