@@ -14,18 +14,19 @@ Ce projet a été réalisé dans le cadre du cours de programmation Java en prem
 
 **Plus d'informations dans la [documentation technique](docs/Doc_technique.md)**
 
-## Features
+## Fonctionnalités
 
-- Stockage sécurisé de vos identifiants et mots de passe par chiffrage avec **AES-256-GCM**
+- Stockage sécurisé de vos identifiants et mots de passe avec l'algorithme chiffrement **AES-256-GCM**
 - Accès à vos identifiants via un mot de passe maître dérivé avec **Argon2d/id**
     - Ni votre mot de passe maître, ni la clé dérivée ne sont stockés
 - Génération de mots de passes sûrs
 - Analyse de la robustesse d'un mot de passe
 - Renforcement d'un mot de passe existant
 - Recherche rapide de vos identifiants
+- Fermeture automatique du gestionnaire au bout de **5 min** d'inactivité
 - Interface soignée avec de l'ASCII et des codes couleurs ANSI
 
-## Requirements
+## Prérequis
 
 [Java](https://adoptium.net/fr/temurin/releases) == 25  
 [Git](https://git-scm.com/install) == 2.52.0  
@@ -61,19 +62,19 @@ java -jar target/JavaPass.jar
 
 **Plus d'informations dans la [documentation fonctionnelle](docs/Doc_fonctionnelle.md)**
 
-## Authors
+## Auteurs
 
 - [Axel](https://github.com/Axel-Cfr)
 - [Morgann](https://github.com/Morgannnnnnnn)
 - [Octave](https://github.com/O-glt)
 
-## Links
+## Liens
 
 - [GitHub](https://github.com/Axel-Cfr/JavaPass)
 - [Trello](https://trello.com/b/ZfCDiRwj/javapass)
 - [Technical Documentation](docs/Doc_technique.md)
 - [Functional Documentation](docs/Doc_fonctionnelle.md)
 
-## License
+## Licence
 
-JavaPass est sous license [GPL v3.0](LICENSE)
+JavaPass est sous licence [GPL v3.0](LICENSE)

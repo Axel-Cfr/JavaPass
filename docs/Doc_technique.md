@@ -10,7 +10,8 @@
 - [Base de données](#base-de-données)
 - [Fonctionnalités](#fonctionnalités)
 - [Gestion des Dépendances](#gestion-des-dépendances)
-- [Source]()
+- [Utilisation de l'Intelligence Artificielle](#utilisation-de-lintelligence-artificielle)
+- [Source](#sources)
 
 ## Architecture
 
@@ -77,11 +78,68 @@ C'est l'algorithme de chiffrement le plus utilisé au monde et l'un des plus rob
 
 #### Pourquoi AES-GCM ?
 
+Voici les différents modes d'AES :
+
+- **AES-ECB** : Les données en clair sont divisées en blocs de 128 bits, puis chacun des blocs est chiffré avec la même clé. Donc des blocs en clair identiques donneront des blocs chiffrés identiques. Il est nécessaire que chaque bloc fasse exactement 128 bits; si un bloc est trop court, on lui ajoute des bits arbitraires.  
+Vulnérabilités :
+    - Pas d'IV, possibilité pour l'attaquant de répérer des motifs dans les données chiffrées ou de se servir de rainbow tables
+    - Remplissage des blocs nécessaires, possibilités pour l'attaquant de déduire la taille des données ou déchiffrer le dernier bloc par attaque padding oracle
+    - Pas de tag d'authetification integré, aucune indication si les données chiffrées ont été modifiées ou corrompues
+
+- **AES-CBC** : Les données en clair sont divisées en blocs de 128 bits, puis le premier bloc est XORé avec un vecteur d'initialisation (IV) aléatoire de 128 bits. Le résulat est ensuite chiffré avec la clé. Ce premier bloc crypté est XORé avec le deuxième bloc en clair, puis le résultat est chiffré avec la clé. Les blocs nécessitent un remplissage si ils ne font pas exactement 128 bits.  
+Vulnérabilités :
+    - Remplissage des blocs nécessaires, possibilités pour l'attaquant de déduire la taille des données ou déchiffrer le dernier bloc par attaque padding oracle
+    - Si l'IV est réutilisé pour chiffrer d'autres données, l'attaquant peut déduire des informations sur le texte en clair
+    - Pas de tag d'authentification integré, aucune indication si les données chiffrées ont été modifiées ou corrompues
+
+- **AES-CFB** : Mode similaire à CBC, mais il transforme AES en chiffrement par flux. Le bloc chiffré précédent (ou l'IV pour le premier bloc) est chiffré avec la clé, puis le résultat est XORé avec le bloc en clair pour produire le bloc chiffré. Vu que le chiffrement est par flux, les blocs ne nécessitent pas de remplissage.  
+Vulnérabilités :
+    - Si l'IV est réutilisé pour chiffrer d'autres données, l'attaquant peut déduire des informations sur le texte en clair
+    - Pas de tag d'authentification integré, aucune indication si les données chiffrées ont été modifiées ou corrompues
+
+- **AES-OFB** : L'IV est chiffré avec la clé pour produire un premier bloc chiffreur, qui est XORé avec le bloc en clair. Ce bloc chiffreur est ensuite chiffré une deuxième fois pour être Xoré au deuxième bloc en clair. Il s'agit aussi d'un chiffrement par flux.  
+Vulnérabilités :
+    - Si l'IV est réutilisé, le flux de clés sera identique, permettant à l'attaquant de retrouver le XOR des deux textes en clair (attaque two-time pad)
+    - Pas de tag d'authentification integré, aucune indication si les données chiffrées ont été modifiées ou corrompues
+
+- **AES-CTR** : Un compteur de 32 bits combiné à un sel de 96bits est chiffré avec la clé pour générer un bloc chiffreur. Celui-ci est ensuite XORé avec un bloc de données en clair. Le compteur est incrémenté pour chaque bloc, ce qui permet le chiffrement et déchiffrement parallèles. Il s'agit aussi d'un chiffrement par flux.   
+Vulnérabilités :
+    - Si le nonce est réutilisé avec la même clé, le flux de clés sera identique, permettant la même attaque two-time pad qu'en OFB
+    - Pas de tag d'authentification integré, aucune indication si les données chiffrées ont été modifiées ou corrompues
+
+- **AES-GCM** : Il fonctionne exactement comme AES-CTR. En parallèle, un tag d'authentification est calculé sur les données chiffrées et les données associées. Si le tag ne correspond pas (si les données ont été altérées), une erreur est renvoyée vant même le déchiffrement. Il s'agit aussi d'un chiffrement par flux.   
+Vulnérabilités :
+    - Si le nonce est réutilisé avec la même clé, la sécurité est totalement compromise : l'attaquant peut retrouver la clé d'authentification et falsifier ou déchiffrer des messages
+
+
+
 #### Utilisation d'AES-256-GCM dans JavaPass
 
-Pour en savoir plus, vous pouvez visualiser le code du fichier [Argon2.java](../src/main/java/javapass/AES.java).
+Pour en savoir plus, vous pouvez visualiser le code du fichier [AES.java](../src/main/java/javapass/AES.java).
 
 ### Bonnes pratiques
+
+#### Détection d'inactivité
+ 
+##### Approche retenue : Thread + timestamp
+ 
+Deux threads tournent en parallèle pendant la session active :
+ 
+- **Thread principal** : lit les entrées utilisateur via `Scanner` et met à jour le timestamp à chaque saisie
+- **Thread watchdog** : via la classe `InactivityCounter`, il vérifie toutes les secondes le temps écoulé depuis la dernière activité et déclenche le verrouillage si le délai est dépassé
+
+##### Points importants
+ 
+- Le timestamp partagé est un `AtomicLong` pour garantir la thread-safety entre les deux threads
+- Le watchdog est déclaré en `setDaemon(true)` — il s'arrête automatiquement avec le thread principal
+- Le watchdog est démarré **uniquement après authentification réussie**, pas avant
+
+##### Limite connue
+ 
+`scanner.nextLine()` est bloquant car il ne rend la main qu'à la pression d'Entrée. Si l'utilisateur tape des caractères sans valider, le watchdog peut déclencher le verrou avant que la saisie soit terminée. Pour `JavaPass`, ce n'est pas un véritable problème.
+
+**Remarque** :
+- `AtomicLong` est une classe du package java.util.concurrent.atomic qui permet de manipuler une variable de type long de manière atomique et thread-safe, sans nécessiter de verrous (locks) traditionnels.
 
 ## Base de données
 
@@ -100,30 +158,10 @@ Elle utilise l'API `JDBC` qui permet de se conneter à une base données et d'in
 `L'architecture de la base de données` est simple, mais elle fournit un niveau de sécurité suffisant pour décourager <u>**quiconque**</u> d'essayer de déchiffrer ses données ([voir Chiffrement](#chiffrement)).
 
 Elle est organisée en deux tables : 
-- `users` : qui stocke un id (clé primaire), un nom d'utilisateur, les données nécessaires au chiffrement et déchiffrement, ainsi que la date de la dernière connexion.
+- `users` : qui stocke un id (clé primaire), un nom d'utilisateur, le nom d'utilisateur chiffré, nécessaire à l'authentification, ainsi que la date de la dernière connexion.
 
-- `passwords` : qui stocke de manière chiffré les mots de passe et identifiants utilisateurs relatifs aux sites web ainsi que de la même façon les données nécessaires au chiffrement et déchiffrement.
+- `passwords` : qui stocke de manière chiffré les mots de passe et identifiants utilisateurs relatifs aux sites web ainsi que les données nécessaires au chiffrement et déchiffrement des identifiants et mots de passe.
 
-### 1. Détection d'inactivité
- 
-#### Approche retenue : Thread + timestamp
- 
-Deux threads tournent en parallèle pendant la session active :
- 
-- **Thread principal** : lit les entrées utilisateur via `Scanner` et met à jour le timestamp à chaque saisie
-- **Thread watchdog** : via la classe `InactivityCounter`, il vérifie toutes les secondes le temps écoulé depuis la dernière activité et déclenche le verrouillage si le délai est dépassé
-
-##### Points importants
- 
-- Le timestamp partagé est un `AtomicLong` pour garantir la thread-safety entre les deux threads
-- Le watchdog est déclaré en `setDaemon(true)` — il s'arrête automatiquement avec le thread principal
-- Le watchdog est démarré **uniquement après authentification réussie**, pas avant
-### Limite connue
- 
-`scanner.nextLine()` est bloquant car il ne rend la main qu'à la pression d'Entrée. Si l'utilisateur tape des caractères sans valider, le watchdog peut déclencher le verrou avant que la saisie soit terminée. Pour `JavaPass`, ce n'est pas un véritable problème.
-
-**Remarque** :
-- `AtomicLong` est une classe du package java.util.concurrent.atomic qui permet de manipuler une variable de type long de manière atomique et thread-safe, sans nécessiter de verrous (locks) traditionnels.
 ### 2. Protection contre les injections SQL
  
 #### Prepared Statements
@@ -145,6 +183,12 @@ Toutes les requêtes adressées à la base de données utilisent des `PreparedSt
 - **`samePassword`** : Vérifie dans la base de données si le mot de passe fourni est déjà utilisé pour d'autres sites.
 
 ## Gestion des dépendances
+
+## Utilisation de l'Intelligence artificielle
+
+**Aucune** ligne de code de JavaPass n'a été écrite par une IA ou recopiée à partir de celle-ci.  
+Elle a été cependant été utilisée, mais seulement dans le but de trouver des informations (chaque source a été scrupuleusement **demandée** et **vérifiée**) lorsque nos propres recherches ne nous menaient à rien.  
+JavaPass est le fruit **exclusif** de nos idées, de nos refléxions et des connaissances acquises tout au long de ce projet.
 
 ## Sources
 

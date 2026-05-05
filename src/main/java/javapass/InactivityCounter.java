@@ -40,15 +40,6 @@ public class InactivityCounter {
 
         inactivityTimer.schedule(currentTask, INACTIVITY_DELAY);
     }
-
-    public static String waitMs(int millisecond) {
-        try {
-            Thread.sleep(millisecond);
-            return "Done";
-        } catch (InterruptedException e) {
-            return e.getMessage();
-        }
-    }
 }
 
 
