@@ -180,14 +180,39 @@ public class Interface {
         System.out.println("[2] : Serveur");
         System.out.println("[3] : Autres");
         System.out.println("\nEntrez votre choix (1, 2 ou 3): ");
+        
         String option = scanner.nextLine();
 
+        // Vérifie si le nom d'utilisateur est disponible
         String isAvailable = services.isUsernameAvailable(username);
         if(isAvailable.equals("Yes")) {
+            
+            // Vérifie si le mot de passe maître est sécurisé, sinon propose de le changer
+            boolean[] typeChar = {true, true, true, true};
+            boolean verifMDP = false;
 
+            while(!verifMDP) {
+                if(services.estFaible(password) || services.check(password) != typeChar) {
+                    System.out.println(RED + "\n[Sécurité] Votre mot de passe maître est faible");
+                    System.out.println("Voulez-vous saisir un mot de passe plus sécurisé ? [O/N]\n" + GREEN);
+                    String reponse = scanner.nextLine();
+                    if(reponse.equals("O") || reponse.equals("o")) {
+                        System.out.println("\nMot de passe sécurisé : ");
+                        password = scanner.nextLine();
+                        System.out.println("\nConfirmer votre mot de passe sécurisé : ");
+                        passwordverif = scanner.nextLine();
+                    } else if(reponse.equals("N") || reponse.equals("n")) {
+                        verifMDP = true;
+                    }
+                } else {
+                    verifMDP = true;
+                }
+            }
+
+            // Procède à l'inscription de l'utilisateur
             String result = services.inscription(username, password, passwordverif, option);
             if(result.equals("Done")) {
-                System.out.println("Utilisateur crée avec succès");
+                System.out.println("\nUtilisateur crée avec succès");
                 services.wait(2000);
                 afficherBienvenue();
             } else if(result.equals("Different")) {
@@ -468,7 +493,8 @@ public class Interface {
             System.out.println("\nCe mot de passe n'est pas réutilisé.");
         }
 
-        if (services.estFaible(password)) {
+        boolean[] typeChar = {true, true, true, true};
+        if (services.estFaible(password) || services.check(password) != typeChar) {
             System.out.println(YELLOW + "\nCe mot de passe est considéré comme faible." + GREEN);
             System.out.println("\nVoulez-vous le modifier ?");
             System.out.println("[1] L'améliorer");

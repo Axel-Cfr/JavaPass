@@ -393,7 +393,7 @@ public class Services {
     }
 
     // Fonction qui vérifie la présence de minuscule, majuscule, chiffre et caractère spécial dans un mot de passe
-    private boolean[] check(String password) {
+    public boolean[] check(String password) {
         boolean hasMinuscule = false;
         boolean hasMajuscule = false;
         boolean hasChiffre = false;
