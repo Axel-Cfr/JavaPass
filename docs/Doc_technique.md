@@ -43,20 +43,20 @@ Nous avons choisi d'utiliser Argon2 car il est volontairement lent et coûteux e
 Il nécessite un sel aléatoire en plus de la donnée à hacher afin de limiter les attaques par rainbow table (table de hashes précalculée).  
 Il est très flexible avec trois variantes différentes en fonction de la situation et des paramètres mémoires configurables.  
 - **Argon2d**, conçue pour résister aux attaques par GPU/ASIC
-- **Argon2i**, conçue pour résister aux attaques par canaux axiliaires
-- **Argon2id**, est un mélange des deux premiers, conçue pour résister aux attaques par GPU/ASIC et par canaux axiliaires, mais qui est légèrement moins résistant qu'Argon2d pour les attaques par GPU/ASIC et légèrement moins résistant qu'Argon2i pour les attaques par canaux axiliaires. C'est l'option **recommandée par défaut**  
+- **Argon2i**, conçue pour résister aux attaques par canaux auxiliaires
+- **Argon2id**, est un mélange des deux premiers, conçue pour résister aux attaques par GPU/ASIC et par canaux axiliaires, mais qui est légèrement moins résistant qu'Argon2d pour les attaques par GPU/ASIC et légèrement moins résistant qu'Argon2i pour les attaques par canaux auxiliaires. C'est l'option **recommandée par défaut**  
 
 #### Utilisation dans JavaPass
 
 Lors de la création d'un compte, il est demandé sur quel type d'appareil est utilisé JavaPass.  
 Si c'est un pc puissant et strictement personnel, la variante **Argon2d** avec les paramètres de la norme RFC_9106_HIGH_MEMORY sera appliquée, garantissant une sécurité maximale contre les attaques par GPU/ASIC.  
 Si c'est un serveur, la variante **Argon2id** avec des paramètres des paramètres au-dessus de la norme RFC_9106_LOW_MEMORY sera appliquée (sauf au niveau du parallélisme afin de ne pas monopoliser les threads du serveur en cas de connexions simultanées), garantissant une protection équilibrée contre les attaques par GPU/ASIC et par canaux auxiliaires tout en préservant les ressources du serveur.  
-Si l'option par défaut est choisie, la variante **Argon2id** avec des paramètres des paramètres au-dessus de la norme RFC_9106_LOW_MEMORY sera appliquée, garantissant une protection équilibrée contre les attaques par GPU/ASIC et par canaux auxiliaires tout en préservant les ressources du la machine.  
+Si l'option par défaut est choisie, la variante **Argon2id** avec des paramètres au-dessus de la norme RFC_9106_LOW_MEMORY sera appliquée, garantissant une protection équilibrée contre les attaques par GPU/ASIC et par canaux auxiliaires tout en préservant les ressources du la machine.  
 
 | | RFC_9106 HIGH_MEMORY | RFC_9106 LOW_MEMORY | PC puissant et strictement personnel | Serveur | Autres |
 |:---: |:---:|:---:|:---:|:---:|:---:|
 Itérations | 1 | 4 | 1 | 2 | 4 |
-Coût mémoire | 2 Gio (= 2.14 Go) | 64 mio (= 134 mo) | 2 mio | 128 mio | 128 mio |
+Coût mémoire | 2 Gio (= 2.14 Go) | 64 mio (= 134 mo) | 2 Gio | 128 mio | 128 mio |
 Parallélisme | 4 | 4 | 4 | 2 | 4 |
 Longueur du sel | 128 bits | 128 bits | 128 bits | 128 bits | 128 bits |
 Longueur du hash | 256 bits | 256 bits | 256 bits | 256 bits | 256 bits |  
@@ -136,25 +136,8 @@ Deux threads tournent en parallèle pendant la session active :
 `scanner.nextLine()` est bloquant car il ne rend la main qu'à la pression d'Entrée. Si l'utilisateur tape des caractères sans valider, le watchdog peut déclencher le verrou avant que la saisie soit terminée. Pour `JavaPass`, ce n'est pas un véritable problème.
 
 ### Détection réutilisation d'un mot de passe
-`JavaPass` fourni aux utilisateurs une protection **anti-effet Domino / anti flemmard** suggerant à toutes utilisateur de ne surtout pas réuitiliser plusieurs fois le même mot de passe, une fois celui-ci analysé ([voir samePassword](#Fonctionnalités)).
+`JavaPass` fourni aux utilisateurs une protection **anti-effet Domino / anti flemmard** suggerant à toutes utilisateur de ne surtout pas réuitiliser plusieurs fois le même mot de passe, une fois celui-ci analysé ([voir samePassword dans Fonctionnalités](#fonctionnalités)).
 
-#### Détection d'inactivité
- 
-##### Approche retenue : Thread
- 
-Deux threads tournent en parallèle pendant la session active :
- 
-- **Thread principal** : lit les entrées utilisateur via `Scanner` et met à jour le timestamp à chaque saisie
-- **Thread watchdog** : via la classe `InactivityCounter`, il vérifie toutes les secondes le temps écoulé depuis la dernière activité et déclenche le verrouillage si le délai est dépassé
-
-##### Points importants
- 
-- Le watchdog est déclaré en `setDaemon(true)` — il s'arrête automatiquement avec le thread principal
-- Le watchdog est démarré **uniquement après authentification réussie**, pas avant
-
-##### Limite connue
- 
-`scanner.nextLine()` est bloquant car il ne rend la main qu'à la pression d'Entrée. Si l'utilisateur tape des caractères sans valider, le watchdog peut déclencher le verrou avant que la saisie soit terminée. Pour `JavaPass`, ce n'est pas un véritable problème.
 
 ## Base de données
 
