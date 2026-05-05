@@ -6,7 +6,7 @@
 - [Sécurité](#sécurité)
     - [Hachage](#hachage)
     - [Chiffrement](#chiffrement)
-    - [Détection d'inactivité](#Détection-d'inactivité)
+    - [Détection d'inactivité](#détection-dinactivité)
 - [Base de données](#base-de-données)
     - [Protection contre les injections SQL](#Protection-contre-les-injections-SQL)
 - [Fonctionnalités](#fonctionnalités)
