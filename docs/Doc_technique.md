@@ -6,8 +6,9 @@
 - [Sécurité](#sécurité)
     - [Hachage](#hachage)
     - [Chiffrement](#chiffrement)
-    - [Bonnes pratiques](#bonnes-pratiques)
+    - [Détection d'inactivité](#Détection-d'inactivité)
 - [Base de données](#base-de-données)
+    - [Protection contre les injections SQL](#Protection-contre-les-injections-SQL)
 - [Fonctionnalités](#fonctionnalités)
 - [Gestion des Dépendances](#gestion-des-dépendances)
 - [Utilisation de l'Intelligence Artificielle](#utilisation-de-lintelligence-artificielle)
@@ -117,7 +118,25 @@ Vulnérabilités :
 
 Pour en savoir plus, vous pouvez visualiser le code du fichier [AES.java](../src/main/java/javapass/AES.java).
 
-### Bonnes pratiques
+### Détection d'inactivité
+ 
+#### Approche retenue : Thread 
+ 
+Deux threads tournent en parallèle pendant la session active :
+ 
+- **Thread principal** : lit les entrées utilisateur via `Scanner` et met à jour le timestamp à chaque saisie
+- **Thread watchdog** : via la classe `InactivityCounter`, il vérifie toutes les secondes le temps écoulé depuis la dernière activité et déclenche le verrouillage si le délai est dépassé
+
+##### Points importants
+
+- Le watchdog est déclaré en `setDaemon(true)` — il s'arrête automatiquement avec le thread principal
+- Le watchdog est démarré **uniquement après authentification réussie**, pas avant
+#### Limite connue
+ 
+`scanner.nextLine()` est bloquant car il ne rend la main qu'à la pression d'Entrée. Si l'utilisateur tape des caractères sans valider, le watchdog peut déclencher le verrou avant que la saisie soit terminée. Pour `JavaPass`, ce n'est pas un véritable problème.
+
+### Détection réutilisation d'un mot de passe
+`JavaPass` fourni aux utilisateurs une protection **anti-effet Domino / anti flemmard** empechant toute utilisateurs de reuitiliser plusieurs fois le même mot de passe.
 
 #### Détection d'inactivité
  
@@ -162,14 +181,19 @@ Elle est organisée en deux tables :
 
 - `passwords` : qui stocke de manière chiffré les mots de passe et identifiants utilisateurs relatifs aux sites web ainsi que les données nécessaires au chiffrement et déchiffrement des identifiants et mots de passe.
 
+<<<<<<< HEAD
 ### 2. Protection contre les injections SQL
+=======
+### Protection contre les injections SQL
+>>>>>>> ca3adfd4e0d095382b27fc8cf954842f098adebb
  
 #### Prepared Statements
  
 Toutes les requêtes adressées à la base de données utilisent des `PreparedStatement`. Cette approche empêche les injections SQL en séparant la requête de ses paramètres : la base de données reçoit la structure SQL d'un côté, et les données utilisateur de l'autre, ces dernières ne sont jamais interprétées comme du code SQL.
 
- 
-**L'injection SQL n'est pas la menace principale dans une application à base de données locale ([voir Chiffrement](#chiffrement)).** 
+
+**L'injection SQL n'est pas la menace principale dans une application à base de données locale :) ([voir Chiffrement](#chiffrement)).** 
+
 
 ## Fonctionnalités
 
