@@ -188,11 +188,10 @@ public class Interface {
         if(isAvailable.equals("Yes")) {
             
             // Vérifie si le mot de passe maître est sécurisé, sinon propose de le changer
-            boolean[] typeChar = {true, true, true, true};
             boolean verifMDP = false;
-
             while(!verifMDP) {
-                if(services.estFaible(password) || services.check(password) != typeChar) {
+                System.out.println(password);
+                if(services.estFaible(password)) {
                     System.out.println(RED + "\n[Sécurité] Votre mot de passe maître est faible");
                     System.out.println("Voulez-vous saisir un mot de passe plus sécurisé ? [O/N]\n" + GREEN);
                     String reponse = scanner.nextLine();
@@ -493,8 +492,7 @@ public class Interface {
             System.out.println("\nCe mot de passe n'est pas réutilisé.");
         }
 
-        boolean[] typeChar = {true, true, true, true};
-        if (services.estFaible(password) || services.check(password) != typeChar) {
+        if (services.estFaible(password)) {
             System.out.println(YELLOW + "\nCe mot de passe est considéré comme faible." + GREEN);
             System.out.println("\nVoulez-vous le modifier ?");
             System.out.println("[1] L'améliorer");

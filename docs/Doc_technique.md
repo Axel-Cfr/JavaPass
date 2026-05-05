@@ -100,17 +100,17 @@ Vulnérabilités :
 
 - **AES-OFB** : L'IV est chiffré avec la clé pour produire un premier bloc chiffreur, qui est XORé avec le bloc en clair. Ce bloc chiffreur est ensuite chiffré une deuxième fois pour être Xoré au deuxième bloc en clair. Il s'agit aussi d'un chiffrement par flux.  
 Vulnérabilités :
-    - Si l'IV est réutilisé, le flux de clés sera identique, permettant à l'attaquant de retrouver le XOR des deux textes en clair (attaque two-time pad)
+    - Si l'IV est réutilisé pour chiffrer d'autres données, l'attaquant peut déduire des informations sur le texte en clair
     - Pas de tag d'authentification integré, aucune indication si les données chiffrées ont été modifiées ou corrompues
 
 - **AES-CTR** : Un compteur de 32 bits combiné à un sel de 96bits est chiffré avec la clé pour générer un bloc chiffreur. Celui-ci est ensuite XORé avec un bloc de données en clair. Le compteur est incrémenté pour chaque bloc, ce qui permet le chiffrement et déchiffrement parallèles. Il s'agit aussi d'un chiffrement par flux.   
 Vulnérabilités :
-    - Si le nonce est réutilisé avec la même clé, le flux de clés sera identique, permettant la même attaque two-time pad qu'en OFB
+    - Si l'IV est réutilisé pour chiffrer d'autres données, l'attaquant peut déduire des informations sur le texte en clair
     - Pas de tag d'authentification integré, aucune indication si les données chiffrées ont été modifiées ou corrompues
 
 - **AES-GCM** : Il fonctionne exactement comme AES-CTR. En parallèle, un tag d'authentification est calculé sur les données chiffrées et les données associées. Si le tag ne correspond pas (si les données ont été altérées), une erreur est renvoyée vant même le déchiffrement. Il s'agit aussi d'un chiffrement par flux.   
 Vulnérabilités :
-    - Si le nonce est réutilisé avec la même clé, la sécurité est totalement compromise : l'attaquant peut retrouver la clé d'authentification et falsifier ou déchiffrer des messages
+    - Si l'IV est réutilisé pour chiffrer d'autres données, l'attaquant peut déduire des informations sur le texte en clair
 
 
 
