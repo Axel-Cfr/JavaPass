@@ -127,7 +127,7 @@ Elle est organisée en deux tables :
  
 #### Prepared Statements
  
-Toutes les requêtes adressées à la base de données utilisent des `PreparedStatement`. Cette approche empêche les injections SQL en séparant la requête de ses paramètres : la base de données reçoit la structure SQL d'un côté, et les données utilisateur de l'autre — ces dernières ne sont jamais interprétées comme du code SQL.
+Toutes les requêtes adressées à la base de données utilisent des `PreparedStatement`. Cette approche empêche les injections SQL en séparant la requête de ses paramètres : la base de données reçoit la structure SQL d'un côté, et les données utilisateur de l'autre, ces dernières ne sont jamais interprétées comme du code SQL.
 
 
 **L'injection SQL n'est pas la menace principale dans une application à base de données locale :) ([voir Chiffrement](#chiffrement)).** 
