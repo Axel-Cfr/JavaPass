@@ -136,11 +136,11 @@ Deux threads tournent en parallèle pendant la session active :
 `scanner.nextLine()` est bloquant car il ne rend la main qu'à la pression d'Entrée. Si l'utilisateur tape des caractères sans valider, le watchdog peut déclencher le verrou avant que la saisie soit terminée. Pour `JavaPass`, ce n'est pas un véritable problème.
 
 ### Détection réutilisation d'un mot de passe
-`JavaPass` fourni aux utilisateurs une protection **anti-effet Domino / anti flemmard** empechant toute utilisateurs de reuitiliser plusieurs fois le même mot de passe.
+`JavaPass` fourni aux utilisateurs une protection **anti-effet Domino / anti flemmard** suggerant à toutes utilisateur de ne surtout pas réuitiliser plusieurs fois le même mot de passe, une fois celui-ci analysé ([voir samePassword](#Fonctionnalités)).
 
 #### Détection d'inactivité
  
-##### Approche retenue : Thread + timestamp
+##### Approche retenue : Thread
  
 Deux threads tournent en parallèle pendant la session active :
  
@@ -149,16 +149,12 @@ Deux threads tournent en parallèle pendant la session active :
 
 ##### Points importants
  
-- Le timestamp partagé est un `AtomicLong` pour garantir la thread-safety entre les deux threads
 - Le watchdog est déclaré en `setDaemon(true)` — il s'arrête automatiquement avec le thread principal
 - Le watchdog est démarré **uniquement après authentification réussie**, pas avant
 
 ##### Limite connue
  
 `scanner.nextLine()` est bloquant car il ne rend la main qu'à la pression d'Entrée. Si l'utilisateur tape des caractères sans valider, le watchdog peut déclencher le verrou avant que la saisie soit terminée. Pour `JavaPass`, ce n'est pas un véritable problème.
-
-**Remarque** :
-- `AtomicLong` est une classe du package java.util.concurrent.atomic qui permet de manipuler une variable de type long de manière atomique et thread-safe, sans nécessiter de verrous (locks) traditionnels.
 
 ## Base de données
 
@@ -177,15 +173,11 @@ Elle utilise l'API `JDBC` qui permet de se conneter à une base données et d'in
 `L'architecture de la base de données` est simple, mais elle fournit un niveau de sécurité suffisant pour décourager <u>**quiconque**</u> d'essayer de déchiffrer ses données ([voir Chiffrement](#chiffrement)).
 
 Elle est organisée en deux tables : 
-- `users` : qui stocke un id (clé primaire), un nom d'utilisateur, le nom d'utilisateur chiffré, nécessaire à l'authentification, ainsi que la date de la dernière connexion.
+- `users` : qui stocke un id (clé primaire), un nom d'utilisateur, les données nécessaires au chiffrement et déchiffrement, ainsi que la date de la dernière connexion.
 
-- `passwords` : qui stocke de manière chiffré les mots de passe et identifiants utilisateurs relatifs aux sites web ainsi que les données nécessaires au chiffrement et déchiffrement des identifiants et mots de passe.
+- `passwords` : qui stocke de manière chiffré les mots de passe et identifiants utilisateurs relatifs aux sites web ainsi que de la même façon les données nécessaires au chiffrement et déchiffrement.
 
-<<<<<<< HEAD
-### 2. Protection contre les injections SQL
-=======
 ### Protection contre les injections SQL
->>>>>>> ca3adfd4e0d095382b27fc8cf954842f098adebb
  
 #### Prepared Statements
  
