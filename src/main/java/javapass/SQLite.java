@@ -43,7 +43,7 @@ public class SQLite
 
         // Active les foreign keys (elles sont désactivées par défaut dans SQLite)
         Statement stmt = co.createStatement();
-        String sql = "PRAGMA foreign_keys = ON";
+        String sql = "PRAGMA foreign_keys = ON; PRAGMA secure_delete = ON;";
         stmt.executeUpdate(sql);
         stmt.close();
 

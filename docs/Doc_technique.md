@@ -6,8 +6,9 @@
 - [Sécurité](#sécurité)
     - [Hachage](#hachage)
     - [Chiffrement](#chiffrement)
-    - [Bonnes pratiques](#bonnes-pratiques)
+    - [Détection d'inactivité](#Détection-d'inactivité)
 - [Base de données](#base-de-données)
+    - [Protection contre les injections SQL](#Protection-contre-les-injections-SQL)
 - [Fonctionnalités](#fonctionnalités)
 - [Gestion des Dépendances](#gestion-des-dépendances)
 - [Source]()
@@ -81,7 +82,25 @@ C'est l'algorithme de chiffrement le plus utilisé au monde et l'un des plus rob
 
 Pour en savoir plus, vous pouvez visualiser le code du fichier [Argon2.java](../src/main/java/javapass/AES.java).
 
-### Bonnes pratiques
+### Détection d'inactivité
+ 
+#### Approche retenue : Thread 
+ 
+Deux threads tournent en parallèle pendant la session active :
+ 
+- **Thread principal** : lit les entrées utilisateur via `Scanner` et met à jour le timestamp à chaque saisie
+- **Thread watchdog** : via la classe `InactivityCounter`, il vérifie toutes les secondes le temps écoulé depuis la dernière activité et déclenche le verrouillage si le délai est dépassé
+
+##### Points importants
+
+- Le watchdog est déclaré en `setDaemon(true)` — il s'arrête automatiquement avec le thread principal
+- Le watchdog est démarré **uniquement après authentification réussie**, pas avant
+#### Limite connue
+ 
+`scanner.nextLine()` est bloquant car il ne rend la main qu'à la pression d'Entrée. Si l'utilisateur tape des caractères sans valider, le watchdog peut déclencher le verrou avant que la saisie soit terminée. Pour `JavaPass`, ce n'est pas un véritable problème.
+
+### Détection réutilisation d'un mot de passe
+`JavaPass` fourni aux utilisateurs une protection **anti-effet Domino / anti flemmard** empechant toute utilisateurs de reuitiliser plusieurs fois le même mot de passe.
 
 ## Base de données
 
@@ -104,34 +123,15 @@ Elle est organisée en deux tables :
 
 - `passwords` : qui stocke de manière chiffré les mots de passe et identifiants utilisateurs relatifs aux sites web ainsi que de la même façon les données nécessaires au chiffrement et déchiffrement.
 
-### 1. Détection d'inactivité
- 
-#### Approche retenue : Thread + timestamp
- 
-Deux threads tournent en parallèle pendant la session active :
- 
-- **Thread principal** : lit les entrées utilisateur via `Scanner` et met à jour le timestamp à chaque saisie
-- **Thread watchdog** : via la classe `InactivityCounter`, il vérifie toutes les secondes le temps écoulé depuis la dernière activité et déclenche le verrouillage si le délai est dépassé
-
-##### Points importants
- 
-- Le timestamp partagé est un `AtomicLong` pour garantir la thread-safety entre les deux threads
-- Le watchdog est déclaré en `setDaemon(true)` — il s'arrête automatiquement avec le thread principal
-- Le watchdog est démarré **uniquement après authentification réussie**, pas avant
-### Limite connue
- 
-`scanner.nextLine()` est bloquant car il ne rend la main qu'à la pression d'Entrée. Si l'utilisateur tape des caractères sans valider, le watchdog peut déclencher le verrou avant que la saisie soit terminée. Pour `JavaPass`, ce n'est pas un véritable problème.
-
-[Remarque] :
-- `AtomicLong` est une classe du package java.util.concurrent.atomic qui permet de manipuler une variable de type long de manière atomique et thread-safe, sans nécessiter de verrous (locks) traditionnels.
-### 2. Protection contre les injections SQL
+### Protection contre les injections SQL
  
 #### Prepared Statements
  
 Toutes les requêtes adressées à la base de données utilisent des `PreparedStatement`. Cette approche empêche les injections SQL en séparant la requête de ses paramètres : la base de données reçoit la structure SQL d'un côté, et les données utilisateur de l'autre — ces dernières ne sont jamais interprétées comme du code SQL.
 
- 
-**L'injection SQL n'est pas la menace principale dans une application à base de données locale ([voir Chiffrement](#chiffrement)).** 
+
+**L'injection SQL n'est pas la menace principale dans une application à base de données locale :) ([voir Chiffrement](#chiffrement)).** 
+
 
 ## Fonctionnalités
 
@@ -179,6 +179,7 @@ Toutes les requêtes adressées à la base de données utilisent des `PreparedSt
     - https://www.datacamp.com/fr/tutorial/sqlite-data-types
     - https://sqlite.org/foreignkeys.html
     - https://stackoverflow.com/questions/457629/how-to-return-multiple-objects-from-a-java-method
+    - https://sqlite.fr/pragma/security/
 - Maven
     - https://maven.apache.org/download.cgi
     - https://www.youtube.com/watch?v=Aaq3FaadNQo
