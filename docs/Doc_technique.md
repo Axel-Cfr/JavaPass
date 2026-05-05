@@ -247,6 +247,7 @@ JavaPass est le fruit **exclusif** de nos idées, de nos refléxions et des conn
     - https://www.datacamp.com/fr/tutorial/sqlite-data-types
     - https://sqlite.org/foreignkeys.html
     - https://stackoverflow.com/questions/457629/how-to-return-multiple-objects-from-a-java-method
+    - https://sqlite.fr/pragma/security/
 - Maven
     - https://maven.apache.org/download.cgi
     - https://www.youtube.com/watch?v=Aaq3FaadNQo
