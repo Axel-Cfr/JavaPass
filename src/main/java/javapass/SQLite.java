@@ -113,7 +113,7 @@ public class SQLite
                                 byte[] iv_verify, byte[] salt, int argon2Type, 
                                 String last_login) throws SQLException 
     {
-        String sql = "INSERT INTO users VALUES (null,?,?,?,?,?,?)";
+        String sql = "INSERT INTO users VALUES (null,?,?,?,?,?,?);";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, username);
         pstmt.setString(2, encrypted_textAndTag_verify);
@@ -146,7 +146,7 @@ public class SQLite
                                 byte[] iv_password) throws SQLException 
         {
         
-        String sql = "INSERT INTO passwords VALUES (null,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO passwords VALUES (null,?,?,?,?,?,?,?);";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setInt(1, user_id);
         pstmt.setString(2, website_name);
@@ -167,7 +167,7 @@ public class SQLite
     */
     public UserValues get_user(String usernameTyped) throws SQLException 
     {
-        String sql = "SELECT * FROM users WHERE username = ?";
+        String sql = "SELECT * FROM users WHERE username = ?;";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1,usernameTyped);
         ResultSet rs = pstmt.executeQuery();
@@ -259,7 +259,7 @@ public class SQLite
     */
     public ArrayList<MdpValues> get_mdp(int user_id) throws SQLException 
     {
-        String sql = "SELECT * FROM passwords WHERE user_id = ?";
+        String sql = "SELECT * FROM passwords WHERE user_id = ?;";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setInt(1,user_id);
         ResultSet rs = pstmt.executeQuery();
@@ -362,7 +362,7 @@ public class SQLite
 
     public void suppr_utilisateur(String username) throws SQLException 
     {
-        String sql = "DELETE FROM users WHERE username = ?";
+        String sql = "DELETE FROM users WHERE username = ?;";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, username);
         
@@ -407,11 +407,10 @@ public class SQLite
 
     /*
     Cette méthode va simplement update le mot de passe d'un site
-    pour le moment il n'y a pas trop de sécurité avec simplement oldpassword en verif
     */
     public void update_sitemdp(int password_id, String newEncryptedPassword, byte[] newIvPassword) throws SQLException 
     {
-        String sql = "UPDATE passwords SET encrypted_password = ?, iv_password = ? WHERE password_id = ? ";
+        String sql = "UPDATE passwords SET encrypted_password = ?, iv_password = ? WHERE password_id = ?;";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, newEncryptedPassword);
         pstmt.setBytes(2, newIvPassword);
@@ -425,7 +424,7 @@ public class SQLite
     */
     public void update_last_login(String last_login, int user_id) throws SQLException 
     {
-        String sql = "UPDATE users SET last_login = ? WHERE user_id = ? ";
+        String sql = "UPDATE users SET last_login = ? WHERE user_id = ?;";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, last_login);
         pstmt.setInt(2, user_id);
@@ -434,24 +433,35 @@ public class SQLite
     }
 
     /*
-    Faire update_usermdp, pour le moment je laisse sur le cote */
-    /*
-    public void update_usermdp(String username, String oldpassword, String newpassword) throws SQLException 
-    {
-        Connection co = DriverManager.getConnection("jdbc:sqlite:base.db");
-        String sql = "UPDATE users SET  ";
+    Actualise la table user en fonction du nouveau mot de passe maitre
+    */
+    public void updateUserMdpVerif(int user_id, String encrypted_textAndTag_verify, byte[] iv_verify, byte[] salt) throws SQLException 
+    {   
+
+        String sql = "UPDATE users SET encrypted_textAndTag_verify = ?, iv_verify = ?, salt = ? WHERE user_id = ?;";
         PreparedStatement pstmt = co.prepareStatement(sql);
-        pstmt.setString(1, username);
-        pstmt.setString(2, encrypted_textAndTag_verify);
-        pstmt.setBytes(3, iv_verify);
-        pstmt.setBytes(4, salt);
-        pstmt.setInt(5, argon2Type);
-        pstmt.setString(6, last_login);
-        
+        pstmt.setString(1, encrypted_textAndTag_verify);
+        pstmt.setBytes(2, iv_verify);
+        pstmt.setBytes(3, salt);
+        pstmt.setInt(4, user_id);
         pstmt.executeUpdate();
         pstmt.close();
-        co.close();
-        //System.out.println("utilisateur ajouté avec succès");
-    }*/
-}
+    }
 
+    /*
+    Actualise le mot de passe chiffré et le nom d'utilisateur chiffré d'un site ainsi que leurs IVs
+    Cette méthode est utilisée dans le cadre de changement de mot de passe maître
+    */
+    public void updateMdpAndUsername(int password_id, String newEncryptedPassword, byte[] newIvPassword, String newEncryptedUsername, byte[] newIvUsername) throws SQLException 
+    {   
+        String sql = "UPDATE passwords encrypted_password = ?, iv_password = ?, encrypted_username = ?, iv_username = ? WHERE password_id = ?;";
+        PreparedStatement pstmt = co.prepareStatement(sql);
+        pstmt.setString(1, newEncryptedPassword);
+        pstmt.setBytes(2, newIvPassword);
+        pstmt.setString(3, newEncryptedUsername);
+        pstmt.setBytes(4, newIvUsername);
+        pstmt.setInt(5, password_id);
+        pstmt.executeUpdate();
+        pstmt.close();
+    }
+}

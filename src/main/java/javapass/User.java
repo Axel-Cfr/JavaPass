@@ -7,7 +7,6 @@ public class User {
     private String username;
     private byte[] key;
     private String last_login;
-    private String now_login;
     private ArrayList<SQLite.MdpValues> passwordList;
 
     User(int userID, String username, byte[] key, String last_login, ArrayList<SQLite.MdpValues> passwordList) {
@@ -32,6 +31,10 @@ public class User {
 
     public String getLast_login() {
         return last_login;
+    }
+
+    public ArrayList<SQLite.MdpValues> get_passwordList() {
+        return passwordList;
     }
 
     // Renvoie l'indice du mot de passe contenu dans l'ArrayList
