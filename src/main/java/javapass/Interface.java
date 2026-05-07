@@ -263,9 +263,16 @@ public class Interface {
         } else if(option.equals("2")) {
             ajouterMDP();
         } else if(option.equals("3")) {
-            System.out.println("\nLa mise à jour du mot de passe maître n'est pas encore implémentée.");
-            services.wait(2000);
-            accueil();
+            String reponse;
+            do {
+                System.out.println("Êtes-vous sûr de vouloir changer votre mot de passe maître ? [O/N]");
+                reponse = scanner.nextLine();
+            } while(!(reponse.equals("O") || reponse.equals("o") || reponse.equals("N") || reponse.equals("n")));
+            if(reponse.equals("O") || reponse.equals("o")) {
+                modifierMotDePasseMaitre();
+            } else {
+                accueil();
+            }
         } else if(option.equals("4")) {
             boolean choice = true;
             while(choice) {
@@ -549,8 +556,14 @@ public class Interface {
             clearScreen();
             bandeau();
             System.out.println("Ajout d'un nouveau mot de passe\n");
-            System.out.println("\nEntrez le nom du site");
-            websiteName = scanner.nextLine();
+            // Vérifie que le nom de site n'est pas déjà utilisé par cet utilisateur
+            do {
+                System.out.println("\nEntrez le nom du site");
+                websiteName = scanner.nextLine();
+                if(services.isWebsiteNameUsed(websiteName)) {
+                    System.out.println(RED + "\nVous avez déjà utilisé ce nom de site, veuillez en entrer un autre" + GREEN);
+                }
+            } while (services.isWebsiteNameUsed(websiteName));
             System.out.println("\nEntrez l'url du site (optionnel)");
             url = scanner.nextLine();
             System.out.println("\nEntrez le nom d'utilisateur ou l'email pour ce site");
@@ -562,7 +575,6 @@ public class Interface {
             choice = scanner.nextLine();
 
             if(choice.equals("1")) {
-                //peut-etre un reset timer ici ??
                 while(password.isBlank()) {
                     System.out.println("\nEntrez le mot de passe pour ce site");
                     password = scanner.nextLine();
@@ -581,5 +593,38 @@ public class Interface {
         } else {
             erreur(retour);
         }
+    }
+
+    public void modifierMotDePasseMaitre() {
+        // Reinitialise le compteur
+        services.resetTimer();
+        String oldPassword;
+        String newPassword;
+        String confirm;
+
+        do {
+            clearScreen();
+            bandeau();
+
+            System.out.println("Modification du mot de passe maître");
+            System.out.println("\nEntrez votre mot de passe actuel");
+            oldPassword = scanner.nextLine();
+            System.out.println("\nEntrez un nouveau mot de passe");
+            newPassword = scanner.nextLine();
+            System.out.println("\nConfirmez votre nouveau mot de passe");
+            confirm = scanner.nextLine();
+        } while(!newPassword.equals(confirm) || newPassword.isBlank());
+
+        String result = services.updateMasterPassword(oldPassword, newPassword);
+        if(result.equals("Done")) {
+            System.out.println("\nVotre mot de passe maître a été modifié avec succès\nVeuillez vous reconnecter");
+            services.wait(3000);
+        } else if(result.equals("Wrong")) {
+            System.out.println(RED + "Le mot de passe actuel saisi est erroné" + GREEN);
+            services.wait(3000);
+        } else {
+            erreur(result);
+        }
+        accueil();
     }
 }

@@ -57,7 +57,8 @@ public class Services {
             
             // Dérivation du mot de passe maître
             byte[] salt = uservalue.getSalt();
-            byte[] hash = Argon2.derivePassword(password, salt, uservalue.getArgon2Type());
+            int argon2Type = uservalue.getArgon2Type();
+            byte[] hash = Argon2.derivePassword(password, salt, argon2Type);
     	    
             // Déchiffrement du nom d'utilisateur chiffré
             SecretKey key = new SecretKeySpec(hash, "AES");
@@ -70,7 +71,7 @@ public class Services {
             if(decryptedText.equals(username)) {
                 int userID = uservalue.getUser_id();
                 ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userID);
-                user = new User(userID, username, hash, uservalue.getLast_login(), mdpValues);
+                user = new User(userID, username, salt, argon2Type, hash, uservalue.getLast_login(), mdpValues);
 
                 updateLastLogin();
                 return "Done";
@@ -170,6 +171,29 @@ public class Services {
         return newWebsiteNameList;
     }
 
+    // Fonction qui retourne le nom d'utilisateur en clair d'un site
+    public String[] giveUsername(String websiteName) {
+        String[] password = new String[2];
+        try {
+            int indPassword = user.getPasswordIndice(websiteName);
+
+            // Dechiffre le mot de passe
+            SecretKey key = new SecretKeySpec(user.getKey(), "AES");
+            byte[] ivPassword = user.getIvUsername(indPassword);
+            GCMParameterSpec gcmParameterSpecP = AES.generateGCMParameterSpec(ivPassword);
+    	    String algorithm = "AES/GCM/NoPadding";
+            String decryptedPassword = AES.decrypt(algorithm, user.getEncryptedUsername(indPassword), key, gcmParameterSpecP);
+
+            password[0] = "Done";
+            password[1] = decryptedPassword;
+            return password;
+        } catch(Exception e) {
+            password[0] = "Error";
+            password[1] = e.getMessage();
+            return password;
+        }
+    }
+
     // Fonction qui retourne le mot de passe en clair d'un site
     public String[] givePassword(String websiteName) {
         String[] password = new String[2];
@@ -222,6 +246,14 @@ public class Services {
         }
     }
 
+    public boolean isWebsiteNameUsed(String websiteName) {
+        ArrayList<String> websiteNameList = user.getWebsiteNameList();
+        if(websiteNameList.contains(websiteName)) {
+            return true;
+        }
+        return false;
+    }
+
     // Fonction qui ajoute un mot de passe
     public String addNewPassword(String[] PasswordInfos) {
         try {
@@ -248,8 +280,10 @@ public class Services {
             // Recréation du user actualisé
             String usernameAccount = user.getUsername();
             String last_login = user.getLast_login();
+            byte[] salt = user.getSalt();
+            int argon2Type = user.getArgon2Type();
             ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userID);
-            user = new User(userID, usernameAccount, hash, last_login, mdpValues);
+            user = new User(userID, usernameAccount, salt, argon2Type, hash, last_login, mdpValues);
             
             return "Done";
         } catch(Exception e) {
@@ -279,8 +313,10 @@ public class Services {
             int userId = user.getUserID();
             String usernameAccount = user.getUsername();
             String last_login = user.getLast_login();
+            byte[] salt = user.getSalt();
+            int argon2Type = user.getArgon2Type();
             ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userId);
-            user = new User(userId, usernameAccount, hash, last_login, mdpValues);
+            user = new User(userId, usernameAccount, salt, argon2Type, hash, last_login, mdpValues);
             
             return "Done";
         } catch (Exception e) {
@@ -300,8 +336,86 @@ public class Services {
             sqlite.suppr_mdp(userID, websiteName);
 
             // Recréation du user actualisé
+            byte[] salt = user.getSalt();
+            int argon2Type = user.getArgon2Type();
             ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userID);
-            user = new User(userID, usernameAccount, hash, last_login, mdpValues);
+            user = new User(userID, usernameAccount, salt, argon2Type, hash, last_login, mdpValues);
+
+            return "Done";
+        } catch(Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    // Fonction qui prend en charge la mise à jour du mot de passe maître et ses conséquences :
+    // Mettre à jour toutes les données cryptées avec la bonne clé et changer tout les IVs
+    public String updateMasterPassword(String oldMasterPassword, String newMasterPassword) {
+        try {
+            // Dérivation du mot de passe maître saisi pour vérification
+            byte[] salt = user.getSalt();
+            int argon2Type = user.getArgon2Type();
+            byte[] verifKey = Argon2.derivePassword(oldMasterPassword, salt, argon2Type);
+            if(!java.util.Arrays.equals(verifKey, user.getKey())) {
+                return "Wrong";
+            }
+
+            // Mise à jour des éléments de vérification du mot de passe maître
+            // Dérivation du mot de passe maître
+            byte[] newSalt = Argon2.generateSalt();
+            byte[] hash = Argon2.derivePassword(newMasterPassword, newSalt, argon2Type);
+            
+            // Chiffrement du nom d'utilisateur pour authentification ultérieure
+            SecretKey key = new SecretKeySpec(hash, "AES");
+            byte[] iv = AES.generateIv();
+    	    GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
+    	    String algorithm = "AES/GCM/NoPadding";
+            String username = user.getUsername();
+    	    String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
+
+            // Mise à jour des de la table users dans la BDD
+            int userID = user.getUserID();
+            sqlite.updateUserMdpVerif(userID, cipherText, iv, newSalt);
+
+            // Mise à jour des données chiffrées et des IVs en fonction du nouveau mot de passe maître avec une boucle
+            ArrayList<String> websiteNameList = user.getWebsiteNameList();
+            for(int i = 0; i < websiteNameList.size(); i++) {
+                // Récupération du passwordID et du nom du site duquel les données sont à modifier
+                int passwordID = user.getPasswordId(i);
+                String websiteName = user.getWebsiteName(i);
+
+                // Décrypte le nom d'utilisateur et le mot de passe du site
+                String[] decryptedUsername = giveUsername(websiteName);
+                String[] decryptedPassword = givePassword(websiteName);
+                
+                // Renvoie le message d'erreur produit si le déchiffrement échoue 
+                if(!decryptedUsername[0].equals("Done")) {
+                    return decryptedUsername[0];
+                } else if(!decryptedPassword[0].equals("Done")) {
+                    return decryptedPassword[0];
+                }
+
+                // Chiffrement du nom d'utilisateur
+                // Avec la nouvelle clé issue du nouveau mot de passe maître
+                byte[] ivUsername = AES.generateIv();
+    	        gcmParameterSpec = AES.generateGCMParameterSpec(ivUsername);
+    	        algorithm = "AES/GCM/NoPadding";
+    	        String encryptedUsername = AES.encrypt(algorithm, decryptedUsername[1], key, gcmParameterSpec);
+
+                // Chiffrement du mot de passe
+                // Avec la nouvelle clé issue du nouveau mot de passe maître
+                byte[] ivPassword = AES.generateIv();
+    	        gcmParameterSpec = AES.generateGCMParameterSpec(ivPassword);
+    	        algorithm = "AES/GCM/NoPadding";
+    	        String encryptedPassword = AES.encrypt(algorithm, decryptedPassword[1], key, gcmParameterSpec);
+
+                sqlite.updateMdpAndUsername(passwordID, encryptedPassword, ivPassword, encryptedUsername, ivUsername);
+            }
+
+            // Recréation du user actualisé
+            String usernameAccount = user.getUsername();
+            String last_login = user.getLast_login();
+            ArrayList<SQLite.MdpValues> mdpValues = sqlite.get_mdp(userID);
+            user = new User(userID, usernameAccount, newSalt, argon2Type, hash, last_login, mdpValues);
 
             return "Done";
         } catch(Exception e) {
@@ -315,7 +429,7 @@ public class Services {
             // Supression des informations dans la base de données
             // Les mots de passes affiliés à l'utilisateur sont aussi supprimés grâce au 'DELETE ON CASCADE'
             sqlite.suppr_utilisateur(user.getUsername());
-            user = new User(0, null, null, null, null);
+            user = new User(0, null, null, -1, null, null, null);
             return "Done";
         } catch (Exception e) {
             return e.getMessage();

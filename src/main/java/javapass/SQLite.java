@@ -454,7 +454,7 @@ public class SQLite
     */
     public void updateMdpAndUsername(int password_id, String newEncryptedPassword, byte[] newIvPassword, String newEncryptedUsername, byte[] newIvUsername) throws SQLException 
     {   
-        String sql = "UPDATE passwords encrypted_password = ?, iv_password = ?, encrypted_username = ?, iv_username = ? WHERE password_id = ?;";
+        String sql = "UPDATE passwords SET encrypted_password = ?, iv_password = ?, encrypted_username = ?, iv_username = ? WHERE password_id = ?;";
         PreparedStatement pstmt = co.prepareStatement(sql);
         pstmt.setString(1, newEncryptedPassword);
         pstmt.setBytes(2, newIvPassword);

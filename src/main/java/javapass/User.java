@@ -5,13 +5,17 @@ import java.util.ArrayList;
 public class User {
     private int userID;
     private String username;
+    private byte[] salt;
+    private int argon2Type;
     private byte[] key;
     private String last_login;
     private ArrayList<SQLite.MdpValues> passwordList;
 
-    User(int userID, String username, byte[] key, String last_login, ArrayList<SQLite.MdpValues> passwordList) {
+    User(int userID, String username, byte[] salt, int argon2Type, byte[] key, String last_login, ArrayList<SQLite.MdpValues> passwordList) {
         this.userID = userID;
         this.username = username;
+        this.salt = salt;
+        this.argon2Type = argon2Type;
         this.key = key;
         this.last_login = last_login;
         this.passwordList = passwordList;
@@ -23,6 +27,14 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public byte[] getSalt() {
+        return salt;
+    }
+
+    public int getArgon2Type() {
+        return argon2Type;
     }
 
     public byte[] getKey() {
