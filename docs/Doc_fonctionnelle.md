@@ -48,11 +48,22 @@ cd C:/Users/votre_user/chemin/vers/JavaPass
 java -jar target/JavaPass.jar
 ```
 
-7. Optionnel pour **Linux/Unix**: Vous pouvez créer un fichier JavaPass.sh cliquable en y écrivant ceci dans un fichier texte et en l'enregistrant sous forme de fichier .sh :
+7. Optionnel pour **Linux/Unix**: Vous pouvez créer un fichier JavaPass.sh cliquable :
 ```
-cd C:/home/votre_user/chemin/vers/JavaPass
+# Création du fichier .sh dans le bureau
+nano ~/Bureau/JavaPass.sh
+```
+```
+# À copier dans le fichier .sh
+#!/bin/bash
+cd ~/home/votre_user/chemin/vers/JavaPass
 java -jar target/JavaPass.jar
 ```
+```
+# Le rendre executable
+chmod +x ~/Bureau/JavaPass.sh
+```
+**Attention**, il est possible que vous ayez à activer : ``"executer dans le terminal"``, via les paramètres avancés du fichier.
 
 8. Optionnel : Vous pouvez créer un raccourci de JavaPass.bat et lui attribuer l'icône de JavaPass. Le fichier Javapass.ico se trouve dans `C:/Users/votre_user/chemin/vers/JavaPass/docs/img`.
 
