@@ -272,7 +272,7 @@ public class Interface {
             String reponse;
             // Demande de confirmation de changement du mot de passe maitre
             do {
-                System.out.println("Êtes-vous sûr de vouloir changer votre mot de passe maître ? [O/N]");
+                System.out.println("\nÊtes-vous sûr de vouloir changer votre mot de passe maître ? [O/N]");
                 reponse = scanner.nextLine();
             } while(!(reponse.equals("O") || reponse.equals("o") || reponse.equals("N") || reponse.equals("n")));
             if(reponse.equals("O") || reponse.equals("o")) {
