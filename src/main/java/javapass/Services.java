@@ -88,43 +88,34 @@ public class Services {
     }
 
     // Fonction permettant de créer un compte
-    public String inscription(String username, String password, String passwordverif, String option) {
+    public String inscription(String username, String password, String option) {
         try {
-            // Vérifie que la saisie n'est pas nulle
-            if(username.isBlank() || password.isBlank() || passwordverif.isBlank()) {
-                return "Empty";
-            }
-
             // Création d'un sel et dérivation du mot de passe maître
-            if(password.equals(passwordverif)) {
-                int argon2Type;
-                if(option.equals("1")) {
-                    argon2Type = 0; // Argon2d
-                } else {
-                    argon2Type = 2; // Argon2id
-                }
-                byte[] salt = Argon2.generateSalt();
-                byte[] hash = Argon2.derivePassword(password, salt, argon2Type);
+            int argon2Type;
+            if(option.equals("1")) {
+                argon2Type = 0; // Argon2d
+            } else {
+                argon2Type = 2; // Argon2id
+            }
+            byte[] salt = Argon2.generateSalt();
+            byte[] hash = Argon2.derivePassword(password, salt, argon2Type);
 
             // Chiffrement du nom d'utilisateur pour authentification ultérieure
-    	        SecretKey key = new SecretKeySpec(hash, "AES");
-                byte[] iv = AES.generateIv();
-    	        GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
-    	        String algorithm = "AES/GCM/NoPadding";
-    	        String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
+    	    SecretKey key = new SecretKeySpec(hash, "AES");
+            byte[] iv = AES.generateIv();
+            GCMParameterSpec gcmParameterSpec = AES.generateGCMParameterSpec(iv);
+	        String algorithm = "AES/GCM/NoPadding";
+    	    String cipherText = AES.encrypt(algorithm, username, key, gcmParameterSpec);
 
             // Défintion de la date et de l'heure de création du compte
-                LocalDateTime localDateTime = LocalDateTime.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm");
-                String formattedString = localDateTime.format(formatter);
+            LocalDateTime localDateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm");
+            String formattedString = localDateTime.format(formatter);
 
             // Création de l'utilisateur
-                sqlite.ajout_utilisateur(username, cipherText, iv, salt, argon2Type, formattedString);
+            sqlite.ajout_utilisateur(username, cipherText, iv, salt, argon2Type, formattedString);
 
-                return "Done";
-            } else {
-                return  "Different";
-            }
+            return "Done";
         } catch(Exception e) {
             return e.getMessage();
         }
