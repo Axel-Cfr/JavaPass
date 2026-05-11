@@ -1,5 +1,13 @@
 # Documentation Fonctionnelle de JavaPass
 
+## Table des matières
+
+- [Prérequis](#prérequis)
+- [Installation et Mise en place](#installation-et-mise-en-place)
+    - [Linux/Unix](#pour-linuxunix)
+    - [Windows](#pour-windows)
+- [Utilisation de JavaPass](#utilisation-de-javapass)
+
 ## Prérequis
 
 - [JDK Java 25](https://adoptium.net/fr/temurin/releases)
@@ -9,6 +17,52 @@
 Si vous n'avez pas configuré Maven, cliquez ici pour voir le [guide de configuration Maven](Tuto_Maven.md)
 
 ## Installation et Mise en place
+
+### Pour Linux/Unix
+
+1. Ouvrez l'invite de commandes et rendez-vous dans le répertoire où vous voulez que le dépôt soit cloné
+```
+cd chemin/où_je_veux/installer/JavaPass
+```
+
+2. Téléchargez le dépôt
+```
+git clone https://github.com/Axel-Cfr/JavaPass.git
+```
+
+3. Rendez-vous dans le répertoire racine de JavaPass
+```
+cd JavaPass
+```
+
+4. Nettoyez les potentiels fichiers générés par Maven, compilez et installez les fichiers du projet 
+```
+mvn clean install
+```
+
+5. Lancez JavaPass
+```
+java -jar target/JavaPass.jar
+```
+
+6. Optionnel : Vous pouvez créer un fichier JavaPass.sh cliquable :
+```
+# Création du fichier .sh dans le bureau
+nano ~/Bureau/JavaPass.sh
+```
+```
+# À copier dans le fichier .sh
+#!/bin/bash
+cd ~/home/votre_user/chemin/vers/JavaPass
+java -jar target/JavaPass.jar
+```
+```
+# Le rendre executable
+chmod +x ~/Bureau/JavaPass.sh
+```
+**Attention**, il est possible que vous ayez à activer : ``"executer dans le terminal"``, via les paramètres avancés du fichier.
+
+### Pour Windows
 
 1. Ouvrez l'invite de commandes et rendez-vous dans le répertoire où vous voulez que le dépôt soit cloné
 ```
@@ -31,9 +85,8 @@ mvn clean install
 ```
 
 5. Indiquez à la console d'afficher les caractères avec l'encodage UTF-8 (sinon certains caractères spéciaux s'afficheront mal).
-- **Vous pouvez passer cette étape si vous utilisez un système Linux/Unix**
 ```
-C:\Windows\System32\chcp.com 65001
+C:/Windows/System32/chcp.com 65001
 ```
 
 6. Lancez JavaPass
@@ -41,29 +94,12 @@ C:\Windows\System32\chcp.com 65001
 java -jar target/JavaPass.jar
 ```
 
-7. Optionnel pour **Windows**: Vous pouvez créer un fichier JavaPass.bat cliquable en y écrivant ceci dans un fichier texte et en l'enregistrant sous forme de fichier .bat :
+7. Optionnel : Vous pouvez créer un fichier JavaPass.bat cliquable en y écrivant ceci dans un fichier texte et en l'enregistrant sous forme de fichier .bat :
 ```
-C:\Windows\System32\chcp.com 65001
+C:/Windows/System32/chcp.com 65001
 cd C:/Users/votre_user/chemin/vers/JavaPass
 java -jar target/JavaPass.jar
 ```
-
-7. Optionnel pour **Linux/Unix**: Vous pouvez créer un fichier JavaPass.sh cliquable :
-```
-# Création du fichier .sh dans le bureau
-nano ~/Bureau/JavaPass.sh
-```
-```
-# À copier dans le fichier .sh
-#!/bin/bash
-cd ~/home/votre_user/chemin/vers/JavaPass
-java -jar target/JavaPass.jar
-```
-```
-# Le rendre executable
-chmod +x ~/Bureau/JavaPass.sh
-```
-**Attention**, il est possible que vous ayez à activer : ``"executer dans le terminal"``, via les paramètres avancés du fichier.
 
 8. Optionnel : Vous pouvez créer un raccourci de JavaPass.bat et lui attribuer l'icône de JavaPass. Le fichier Javapass.ico se trouve dans `C:/Users/votre_user/chemin/vers/JavaPass/docs/img`.
 
@@ -140,3 +176,8 @@ En consultant les détails d'un mot de passe, plusieurs actions s'offrent à vou
 - **[2] Modifier :** Remplace l'ancien mot de passe par un nouveau.
 - **[3] Supprimer :** Efface complètement ce mot de passe.
 - **[4] Retour :** Revient à la liste des sites.
+
+### 6. Modifier son mot de passe maître
+Après une demande de confirmation, votre mot de passe maître actuel est demandé par mesure de sécurité. Vous n'avez qu'à saisir votre nouveau mot de passe maître.
+
+![Ex_11](img/Exemples/11_ex.png)

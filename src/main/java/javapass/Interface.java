@@ -165,73 +165,79 @@ public class Interface {
     }
 
     public void inscription() {
-        clearScreen();
-        bandeau();
-        // Reinitialise le compteur
-        services.resetTimer();
-        System.out.println("Identifiant: ");
-        String username = scanner.nextLine();
-        System.out.println("\nMot de passe : ");
-        String password = scanner.nextLine();
-        System.out.println("\nConfirmer votre mot de passe : ");
-        String passwordverif = scanner.nextLine();
-        System.out.println("\nEntrez le type de machine sur lequel vous utilisez JavaPass");
-        System.out.println("[1] : Ordinateur puissant strictement personnel");
-        System.out.println("[2] : Serveur");
-        System.out.println("[3] : Autres");
-        System.out.println("\nEntrez votre choix (1, 2 ou 3): ");
-        
-        String option = scanner.nextLine();
+        String username;
+        String password;
+        String passwordverif;
+        String option;
+        boolean emptyInput = false;
+        boolean verifMDP = false;
 
-        // Vérifie si le nom d'utilisateur est disponible
-        String isAvailable = services.isUsernameAvailable(username);
-        if(isAvailable.equals("Yes")) {
+        do {
+            clearScreen();
+            bandeau();
+            // Reinitialise le compteur
+            services.resetTimer();
             
-            // Vérifie si le mot de passe maître est sécurisé, sinon propose de le changer
-            boolean verifMDP = false;
-            while(!verifMDP) {
-                System.out.println(password);
+            System.out.println("Identifiant: ");
+            username = scanner.nextLine();
+            System.out.println("\nMot de passe : ");
+            password = scanner.nextLine();
+            System.out.println("\nConfirmer votre mot de passe : ");
+            passwordverif = scanner.nextLine();
+            System.out.println("\nEntrez le type de machine sur lequel vous utilisez JavaPass");
+            System.out.println("[1] : Ordinateur puissant strictement personnel");
+            System.out.println("[2] : Serveur");
+            System.out.println("[3] : Par défaut, autres");
+            System.out.println("\nEntrez votre choix (1, 2 ou 3): ");
+            option = scanner.nextLine();
+
+            // Vérifie si le nom d'utilisateur est disponible
+            String isAvailable = services.isUsernameAvailable(username);
+            if(isAvailable.equals("Yes")) {
+
+                // Vérifie que les saisies ne sont pas vides
+                if(!username.isBlank() && !password.isBlank() && !passwordverif.isBlank()) {
+                    emptyInput = true;
+                } else {
+                    System.out.println(RED + "\nVeuillez entrer des identifiants corrects" + GREEN);
+                    services.wait(3000);
+                }
+
+                // Vérifie si les mots de passes saisis sont identiques
+                if(!password.equals(passwordverif)) {
+                    System.out.println(RED + "\nVeuillez entrer le même mot de passe" + GREEN);
+                    services.wait(3000);
+                }
+
+                // Vérifie si le mot de passe maître est sécurisé, sinon propose de le changer
                 if(services.estFaible(password)) {
                     System.out.println(RED + "\n[Sécurité] Votre mot de passe maître est faible");
                     System.out.println("Voulez-vous saisir un mot de passe plus sécurisé ? [O/N]\n" + GREEN);
                     String reponse = scanner.nextLine();
-                    if(reponse.equals("O") || reponse.equals("o")) {
-                        System.out.println("\nMot de passe sécurisé : ");
-                        password = scanner.nextLine();
-                        System.out.println("\nConfirmer votre mot de passe sécurisé : ");
-                        passwordverif = scanner.nextLine();
-                    } else if(reponse.equals("N") || reponse.equals("n")) {
+                    if(reponse.equals("N") || reponse.equals("n")) {
                         verifMDP = true;
                     }
                 } else {
                     verifMDP = true;
                 }
-            }
 
-            // Procède à l'inscription de l'utilisateur
-            String result = services.inscription(username, password, passwordverif, option);
-            if(result.equals("Done")) {
-                System.out.println("\nUtilisateur crée avec succès");
-                services.wait(2000);
-                afficherBienvenue();
-            } else if(result.equals("Different")) {
-                System.out.println(RED + "\nVeuillez entrer le même mot de passe" + GREEN);
-                services.wait(3000);
-                inscription();
-            } else if (result.equals("Empty")) {
-                System.out.println(RED + "\nVeuillez entrer des identifiants corrects" + GREEN);
+            } else if(isAvailable.equals("No")) {
+                System.out.println(RED + "\nLe nom d'utilisateur est déjà pris" + GREEN);
                 services.wait(3000);
                 inscription();
             } else {
-                erreur(result);
+                erreur(isAvailable);
             }
+        } while(!password.equals(passwordverif) || !verifMDP || !emptyInput || !password.equals(passwordverif));
 
-        } else if(isAvailable.equals("No")) {
-            System.out.println(RED + "\nLe nom d'utilisateur est déjà pris" + GREEN);
-            services.wait(3000);
-            inscription();
+        // Procède à l'inscription de l'utilisateur
+        String result = services.inscription(username, password, option);
+        if(result.equals("Done")) {
+            System.out.println("\nUtilisateur créé avec succès");
+            services.wait(2000);
+            afficherBienvenue();
         } else {
-            erreur(isAvailable);
+            erreur(result);
         }
     }
 
@@ -258,14 +264,15 @@ public class Interface {
             option = scanner.nextLine();
         } while(!inputs.contains(option));
 
-        if(option.equals("1")) {
+        if(option.equals("1")) { // Consultation des mots de passe
             voirListeMDP();
-        } else if(option.equals("2")) {
+        } else if(option.equals("2")) { // Ajout d'un mot de passe
             ajouterMDP();
-        } else if(option.equals("3")) {
+        } else if(option.equals("3")) { // Modification du mot de passe maitre
             String reponse;
+            // Demande de confirmation de changement du mot de passe maitre
             do {
-                System.out.println("Êtes-vous sûr de vouloir changer votre mot de passe maître ? [O/N]");
+                System.out.println("\nÊtes-vous sûr de vouloir changer votre mot de passe maître ? [O/N]");
                 reponse = scanner.nextLine();
             } while(!(reponse.equals("O") || reponse.equals("o") || reponse.equals("N") || reponse.equals("n")));
             if(reponse.equals("O") || reponse.equals("o")) {
@@ -602,6 +609,7 @@ public class Interface {
         String newPassword;
         String confirm;
 
+        boolean verifMDP = false;
         do {
             clearScreen();
             bandeau();
@@ -613,11 +621,23 @@ public class Interface {
             newPassword = scanner.nextLine();
             System.out.println("\nConfirmez votre nouveau mot de passe");
             confirm = scanner.nextLine();
-        } while(!newPassword.equals(confirm) || newPassword.isBlank());
+
+            // Vérifie si le mot de passe maître est sécurisé, sinon propose de le changer
+            if(services.estFaible(newPassword)) {
+                System.out.println(RED + "\n[Sécurité] Votre mot de passe maître est faible");
+                System.out.println("Voulez-vous saisir un mot de passe plus sécurisé ? [O/N]\n" + GREEN);
+                String reponse = scanner.nextLine();
+                if(reponse.equals("N") || reponse.equals("n")) {
+                    verifMDP = true;
+                }
+            } else {
+                verifMDP = true;
+            }
+        } while(!newPassword.equals(confirm) || newPassword.isBlank() || !verifMDP);
 
         String result = services.updateMasterPassword(oldPassword, newPassword);
         if(result.equals("Done")) {
-            System.out.println("\nVotre mot de passe maître a été modifié avec succès\nVeuillez vous reconnecter");
+            System.out.println("\nVotre mot de passe maître a été modifié avec succès");
             services.wait(3000);
         } else if(result.equals("Wrong")) {
             System.out.println(RED + "Le mot de passe actuel saisi est erroné" + GREEN);

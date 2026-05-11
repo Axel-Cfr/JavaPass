@@ -16,7 +16,7 @@ Ce projet a été réalisé dans le cadre du cours de programmation Java en prem
 
 ## Fonctionnalités
 
-- Stockage sécurisé de vos identifiants et mots de passe avec l'algorithme chiffrement **AES-256-GCM**
+- Stockage sécurisé de vos identifiants et mots de passe avec l'algorithme de chiffrement **AES-256-GCM**
 - Accès à vos identifiants via un mot de passe maître dérivé avec **Argon2d/id**
     - Ni votre mot de passe maître, ni la clé dérivée ne sont stockés
 - Génération de mots de passes sûrs
@@ -61,6 +61,8 @@ java -jar target/JavaPass.jar
 ```
 
 **Plus d'informations dans la [documentation fonctionnelle](docs/Doc_fonctionnelle.md)**
+
+Si vous voulez utiliser JavaPass sans aucune mise en place ou que vous n'avez pas Maven, un fichier [JavaPass.jar](simple_use/JavaPass.jar) est disponible dans le répertoire /simple_use.
 
 ## Auteurs
 
