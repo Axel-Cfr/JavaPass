@@ -9,21 +9,22 @@ import javax.crypto.spec.GCMParameterSpec;
 
 public class AES {
 	
-	// Fonction qui crée le vecteur d'initialisation (12bytes) et le tag d'authentification propre à CGM (16bytes)
+	// Fonction qui crée le vecteur d'initialisation (12bytes)
 	public static byte[] generateIv() {
 		byte[] iv = new byte[12];
     	new SecureRandom().nextBytes(iv);
     	return iv;
 	}
 
-	// Fonction qui crée un objet GCMParameterSpec avec un iv et le tag d'authentification propre à CGM (16bytes)
+	// Fonction qui crée un objet GCMParameterSpec (16bytes) avec un iv (12bytes) et le tag d'authentification propre à CGM (4bytes)
 	public static GCMParameterSpec generateGCMParameterSpec(byte[] iv) {
     	return new GCMParameterSpec(128, iv);
 	}
 
 	// Fonction qui chiffre une chaîne de caractère et la retourne une fois chiffrée
 	public static String encrypt(String algorithm, String input, SecretKey key, GCMParameterSpec iv) throws Exception {
-    	Cipher cipher = Cipher.getInstance(algorithm);
+    	// Crée un objet chiffreur avec l'algorithme AES-256-GCM
+		Cipher cipher = Cipher.getInstance(algorithm);
     	cipher.init(Cipher.ENCRYPT_MODE, key, iv);
     	byte[] cipherText = cipher.doFinal(input.getBytes());
     	return Base64.getEncoder().encodeToString(cipherText);
@@ -31,7 +32,8 @@ public class AES {
 
 	// Fonction qui dechiffre une chaîne de caractère chiffrée et la retourne une fois dechiffrée
 	public static String decrypt(String algorithm, String cipherText, SecretKey key, GCMParameterSpec iv) throws Exception {
-    	Cipher cipher = Cipher.getInstance(algorithm);
+    	// Crée un objet chiffreur avec l'algorithme AES-256-GCM
+		Cipher cipher = Cipher.getInstance(algorithm);
     	cipher.init(Cipher.DECRYPT_MODE, key, iv);
     	byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(cipherText));
     	return new String(plainText);
