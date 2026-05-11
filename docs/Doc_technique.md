@@ -35,11 +35,26 @@ La classe Main instancie un objet de la classe `Services` et un de la classe `In
 
 L'architecture en couches est une architecture très classique pour créer des applications de bureau. Elle permet de séparer les responsabilités; chaque couche ne peut communiquer qu'avec celle qui se trouve directement en dessous. Cela assure une certaine évolutivité et la lisibilité du code tout en restant une architecture adaptée à un projet académique (utiliser des architectures plus complexes ne serait d'aucune utilité dans ce cas de figure).
 
-## Liste des principales fonctions
+## Liste des fonctions principales
 
 ### Interface.java
 
+- [**`givePasswordInfos`**](../src/main/java/javapass/Interface.java#L32)
+- [**`quit`**](../src/main/java/javapass/Interface.java#L98)
+- [**`clearScreen`**](../src/main/java/javapass/Interface.java#L105)
+- [**`bandeau`**](../src/main/java/javapass/Interface.java#L118)
+- [**`erreur`**](../src/main/java/javapass/Interface.java#L138)
+- [**`accueil`**](../src/main/java/javapass/Interface.java#L250)
+- [**`voirMDP`**](../src/main/java/javapass/Interface.java#L379)
+- [**`analyserMDP`**](../src/main/java/javapass/Interface.java#L490)
+
 ### Services.java
+- [**`authentification`**](../src/main/java/javapass/Services.java#L47)
+- [**`inscription`**](../src/main/java/javapass/Services.java#L91)
+- [**`givePasswordInfos`**](../src/main/java/javapass/Services.java#L212)
+- [**`updateMasterPassword`**](../src/main/java/javapass/Services.java#L342)
+
+
 - [**`generatePassword`**](../src/main/java/javapass/Services.java#L446) : Génère un mot de passe aléatoire et robuste en fonction de critères définis (longueur, majuscules, chiffres et caractères spéciaux).
 - [**`check`**](../src/main/java/javapass/Services.java#L501) : Permet de vérifier si un mot de passe respecte bien certains critères.
 - [**`enhancePassword`**](../src/main/java/javapass/Services.java#L521) : Améliore un mot de passe jugé trop faible en le complexifiant (par exemple, en ajoutant des caractères manquants ou en augmentant sa longueur) pour atteindre un niveau de sécurité convenable, tout en gardant la base.

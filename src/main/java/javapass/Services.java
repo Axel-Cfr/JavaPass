@@ -45,6 +45,7 @@ public class Services {
     }
 
     // Fonction qui vérifie que les identifiants entrés sont valides et appartiennent à un compte
+    // afin de récupérer les données du compte et de se connecter à l'application
     public String authentification(String username, String password) {
         try {
             UserValues uservalue = sqlite.get_user(username);

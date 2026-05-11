@@ -14,6 +14,7 @@ public class Interface {
     private Scanner scanner = new Scanner(System.in, "UTF-8");
     private String osName;
 
+    // Constructeur qui assigne l'objet service en paramètre et vérifie sur quel OS est lancé JavaPass
     public Interface(Services services) {
         this.services =  services;
         String os = System.getProperty("os.name").toLowerCase();
@@ -28,6 +29,7 @@ public class Interface {
         }
     }
 
+    // Fonction affiche la page de bienvenue de JavaPass et se connecte à la base de données
     public void afficherBienvenue() {
         String result = services.connectionDB();
         clearScreen();
@@ -93,12 +95,14 @@ public class Interface {
         }
     }
 
+    // Fonction qui ferme le scanner, se déconnecte la bdd et quitte l'application'
     public void quit() {
         scanner.close();
         services.deconnectionDB();
         System.exit(0);
     }
 
+    // Fonction qui efface complétement l'écran de la console
     public void clearScreen() {
         try {
             if(osName.equals("Windows")) {
@@ -141,6 +145,7 @@ public class Interface {
         quit();
     }
 
+    // Fonction qui affiche l'interface de connexion
     public void connection() {
         clearScreen();
         bandeau();
@@ -164,6 +169,7 @@ public class Interface {
         }
     }
 
+    // Fonction qui affiche l'interface d'inscription
     public void inscription() {
         String username;
         String password;
@@ -241,6 +247,7 @@ public class Interface {
         }
     }
 
+    // Fonction qui affiche l'interface d'accueil
     public void accueil() {
         String option;
         String[] tab = {"1", "2", "3", "4", "5"};
@@ -282,6 +289,7 @@ public class Interface {
             }
         } else if(option.equals("4")) {
             boolean choice = true;
+            // Demande de confirmation de suppression de compte
             while(choice) {
                 System.out.println("Toutes vos données et vos mots de passe seront définitivement perdus");
                 System.out.println("Êtes vous sûr(e) de vouloir supprimer votre compte ? [O/N]");
@@ -302,6 +310,7 @@ public class Interface {
                     System.out.println("Veuillez faire une entrée valide");
                 }
             }
+        // Quitte l'application
         } else if(option.equals("5")) {
             System.out.println("\nPassez une bonne journée :D");
             services.wait(3000);
@@ -323,6 +332,7 @@ public class Interface {
             System.out.println("Ou entrez [s*] puis votre saisie pour rechercher un mot de passe");
             System.out.println("Entrez [Q] retourner à l'accueil\n");
 
+            // Affiche la liste des mots des sites
             for(int i = 0; i < websiteNameList.size(); i++) {
                 System.out.println("["+(i+1)+"] "+websiteNameList.get(i));
             }
@@ -449,6 +459,7 @@ public class Interface {
         }
     }
 
+    // Fonction qui affiche l'interface de modififcation du mot de passe
     public void modifierMDP(String websiteName) {
         String password;
         String confirm;
@@ -476,6 +487,7 @@ public class Interface {
         }
     }
 
+    // Fonction qui affiche l'analyse d'un mot de passe et les propositions associées
     public void analyserMDP(String websiteName, String url, String username, String password) {
         clearScreen();
         bandeau();
