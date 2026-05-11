@@ -23,6 +23,7 @@ Ce projet a été réalisé dans le cadre du cours de programmation Java en prem
 - Analyse de la robustesse d'un mot de passe
 - Renforcement d'un mot de passe existant
 - Recherche rapide de vos identifiants
+- Modification des mots de passes stockés et du mot de passe maître
 - Fermeture automatique du gestionnaire au bout de **5 min** d'inactivité
 - Interface soignée avec de l'ASCII et des codes couleurs ANSI
 

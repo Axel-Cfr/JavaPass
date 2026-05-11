@@ -179,7 +179,7 @@ Toutes les requêtes adressées à la base de données utilisent des `PreparedSt
 ## Fonctionnalités
 
 
-- **`generatePassword`** : Génère un mot de passe aléatoire et robuste en fonction de critères définis (longueur, majuscules, chiffres et caractères spéciaux).
+- [**`generatePassword`**](../src/main/java/javapass/Services.java#generatePassword) : Génère un mot de passe aléatoire et robuste en fonction de critères définis (longueur, majuscules, chiffres et caractères spéciaux).
 - **`check`** : Permet de vérifier si un mot de passe respecte bien certains critères.
 - **`enhancePassword`** : Améliore un mot de passe jugé trop faible en le complexifiant (par exemple, en ajoutant des caractères manquants ou en augmentant sa longueur) pour atteindre un niveau de sécurité convenable, tout en gardant la base.
 - **`analysePassword`** : Évalue la force d'un mot de passe (calcul d'entropie), calcule une estimation de durée de craquage par bruteforce et renvoie un rapport détaillé. 
