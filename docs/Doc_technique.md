@@ -16,11 +16,12 @@
     - [Chiffrement](#chiffrement)
     - [Détection d'inactivité](#détection-dinactivité)
 - [Base de données](#base-de-données)
+    - [Architecture](#architecture-de-la-base-de-données)
     - [Protection contre les injections SQL](#Protection-contre-les-injections-SQL)
 - [Fonctionnalités](#fonctionnalités)
 - [Gestion des Dépendances](#gestion-des-dépendances)
 - [Utilisation de l'Intelligence Artificielle](#utilisation-de-lintelligence-artificielle)
-- [Source](#sources)
+- [Sources](#sources)
 
 ## Architecture
 
@@ -36,6 +37,8 @@ La classe Main instancie un objet de la classe `Services` et un de la classe `In
 L'architecture en couches est une architecture très classique pour créer des applications de bureau. Elle permet de séparer les responsabilités; chaque couche ne peut communiquer qu'avec celle qui se trouve directement en dessous. Cela assure une certaine évolutivité et la lisibilité du code tout en restant une architecture adaptée à un projet académique (utiliser des architectures plus complexes ne serait d'aucune utilité dans ce cas de figure).
 
 ## Liste des fonctions principales
+
+Le nom de chaque fonction présentée est cliquable et vous redirige vers le **code largement commentée** de celle-ci.
 
 ### Interface.java
 
@@ -56,7 +59,7 @@ L'architecture en couches est une architecture très classique pour créer des a
 
 
 - [**`generatePassword`**](../src/main/java/javapass/Services.java#L446) : Génère un mot de passe aléatoire et robuste en fonction de critères définis (longueur, majuscules, chiffres et caractères spéciaux).
-- [**`check`**](../src/main/java/javapass/Services.java#L501) : Permet de vérifier si un mot de passe respecte bien certains critères.
+- [**`check`**](../src/main/java/javapass/Services.java#L501) : Permet de vérifier si un mot de passe contient des minucules, des majuscules, des chiffres et des caractères spéciaux.
 - [**`enhancePassword`**](../src/main/java/javapass/Services.java#L521) : Améliore un mot de passe jugé trop faible en le complexifiant (par exemple, en ajoutant des caractères manquants ou en augmentant sa longueur) pour atteindre un niveau de sécurité convenable, tout en gardant la base.
 - [**`analysePassword`**](../src/main/java/javapass/Services.java#L549) : Évalue la force d'un mot de passe (calcul d'entropie), calcule une estimation de durée de craquage par bruteforce et renvoie un rapport détaillé. 
 - [**`convertirDuree`**](../src/main/java/javapass/Services.java#L652) : Méthode interne servant à transformer un grand nombre de secondes en une unité plus lisible (secondes, jours, années, siècles, etc.).
@@ -65,15 +68,21 @@ L'architecture en couches est une architecture très classique pour créer des a
 - [**`wait`**](../src/main/java/javapass/Services.java#L717) : Met le programme en pause avec `duree` en millisecondes passée en argument.
 
 ### Argon2.java
+- [**`generateSalt`**](../src/main/java/javapass/Argon2.java#L11)
+- [**`derivePassword`**](../src/main/java/javapass/Argon2.java#L22)
 
 ### AES.java
+- [**`generateIV`**](../src/main/java/javapass/AES.java#L12)
+- [**`generateGCMParameterSpec`**](../src/main/java/javapass/AES.java#L22)
+- [**`encrypt`**](../src/main/java/javapass/AES.java#L28)
+- [**`decrypt`**](../src/main/java/javapass/AES.java#L40)
 
 ### User.java
 
 ### InactivityCounter.java
 
 ### SQLite.java
-- [**`initialisationDB`**](../src/main/java/javapass/SQLite.java#L39) : Établis la connexion avec la base de donnéeset lui ajoute les tables users et passwords si elles n'existent pas. 
+- [**`initialisationDB`**](../src/main/java/javapass/SQLite.java#L39) : Établis la connexion avec la base de données et lui ajoute les tables users et passwords si elles n'existent pas. 
 - [**`ajoutTable_base`**](../src/main/java/javapass/SQLite.java#L58) : Cette méthode permet d'ajouter les tables de base à la base de données seulement si celles-ci n'existent pas encore elle est utilisé dans l'initialisation de l'application.
 - [**`deconnexion`**](../src/main/java/javapass/SQLite.java#L98) : Cette méthode ferme la connexion avec la base de données.
 
@@ -81,9 +90,6 @@ L'architecture en couches est une architecture très classique pour créer des a
 - [**`ajout_mdp`**](../src/main/java/javapass/SQLite.java#L143) : Cette méthode ajoute un mot de passe dans la table passwords.
 - [**`suppr_utilisateur`**](../src/main/java/javapass/SQLite.java#L363) : Cette méthode permet de supprimer un utilisateur via son username.
 - [**`suppr_mdp`**](../src/main/java/javapass/SQLite.java#L378) : Cette méthode permet de supprimer le mot de passe d'un site renseigné via son website_name et le user_id.
-
-
-
 
 ## Sécurité
 
@@ -199,17 +205,23 @@ Deux threads tournent en parallèle pendant la session active :
 
 ## Base de données
 
-![Image de la BDD](img/DBdiagram.png)
-
 La classe `SQLite` contient plusieurs méthodes permettant d'envoyer et de récupérer de façon sécurisée les données utilisateurs via notre base de données relationnelle.
 
 Elle utilise l'API `JDBC` qui permet de se conneter à une base données et d'interagir avec elle, notamment en exécutant des rêquetes SQL du type :
- - CREATE TABLE ...
- - INSERT INTO ... VALUES ...
- - SELECT ... FROM ...
- - DELETE ... FROM ...
- - UPDATE ... SET ...
+- CREATE TABLE ...
+- INSERT INTO ... VALUES ...
+- SELECT ... FROM ...
+- DELETE ... FROM ...
+- UPDATE ... SET ...
 
+**Remarque** : 
+- Veuillez noter qu'il est important d'activer les **foreign keys** car par défaut, SQLite désactive cette fonctionnalité pour des raisons de rétro-compatibilité; sans cette commande, les relations entre tables sont ignorées et les violations de référence (comme l'insertion de données orphelines) ne génèrent pas d'erreurs. D'où l'utilisation de la commande ```PRAGMA foreign_keys = ON``` permettant d'activer l'application des contraintes de clés étrangères pour la connexion de base de données en cours.
+
+- Pour des mesures de sécurité encore plus poussées, l'utilisation de l'instruction SQL ```PRAGMA secure_delete = ON;``` force l'effacement sécurisé des données en écrasant le contenu supprimé avec des zéros, empêchant ainsi la récupération forensic des anciennes informations.
+
+### Architecture de la base de données
+
+![Image de la BDD](img/DBdiagram.png)
 
 `L'architecture de la base de données` est simple, mais elle fournit un niveau de sécurité suffisant pour décourager <u>**quiconque**</u> d'essayer de déchiffrer ses données ([voir Chiffrement](#chiffrement)).
 
@@ -217,11 +229,6 @@ Elle est organisée en deux tables :
 - `users` : qui stocke un id (clé primaire), un nom d'utilisateur, les données nécessaires au chiffrement et déchiffrement, ainsi que la date de la dernière connexion.
 
 - `passwords` : qui stocke de manière chiffré les mots de passe et identifiants utilisateurs relatifs aux sites web ainsi que de la même façon les données nécessaires au chiffrement et déchiffrement.
-
-**Remarque** : 
-- Veuillez noter qu'il est important d'activer les **foreign keys** car par défaut, SQLite désactive cette fonctionnalité pour des raisons de rétro-compatibilité; sans cette commande, les relations entre tables sont ignorées et les violations de référence (comme l'insertion de données orphelines) ne génèrent pas d'erreurs. D'où l'utilisation de la commande ```PRAGMA foreign_keys = ON``` permettant d'activer l'application des contraintes de clés étrangères pour la connexion de base de données en cours.
-
-- Pour des mesures de sécurité encore plus poussées, l'utilisation de l'instruction SQL ```PRAGMA secure_delete = ON;``` force l'effacement sécurisé des données en écrasant le contenu supprimé avec des zéros, empêchant ainsi la récupération forensic des anciennes informations.
 
 ### Protection contre les injections SQL
  

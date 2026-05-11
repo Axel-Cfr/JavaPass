@@ -8,20 +8,23 @@ import org.bouncycastle.crypto.params.Argon2Parameters;
 
 public class Argon2 {
 
-    // Fonction qui génère et retourne un sel de 16bytes (= 128bits)
+    // Fonction qui génère et retourne un sel de 16 octets (= 128bits)
     public static byte[] generateSalt() {
-        SecureRandom secureRandom = new SecureRandom();
+        // Crée un tableau de 16 octets
         byte[] salt = new byte[16];
+        // Remplit ce tableau de 16 octets aléatoires et complétement imprévisibles
+        SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(salt);
         
         return salt;
     }
 
+    // Fonction qui dérive le mot de passe passé en paramètre
     public static byte[] derivePassword(String password, byte[] salt, int userType) {
 
         int iterations; // Nombre de fois qu'Argon2 modifie tout les blocs mémoire
         int memAsk; // Quantité de mémoire allouée
-        int hashLength; // Longueur du hash demandé
+        int hashLength; // Longueur du hash demandé (ici 256 bits = 32 octets)
         int parallelism; // Nombre de coeurs alloués
         int argon2Type; // Variante d'Argon2 utilisée (d, i ou id)
 
@@ -46,7 +49,7 @@ public class Argon2 {
             parallelism = 2;
             argon2Type = Argon2Parameters.ARGON2_id;
         } else {
-            // 3 => Autres configurations
+            // 3 => Autres configurations, par défaut
             // Paramètres de hash supérieur à la norme RFC_9106_LOW_MEMORY
             iterations = 4; // 4 itérations au lieu de 3
             // 128mio au lieu de 64mio afin d'augmenter la sécurité sans toutefois monopoliser
@@ -68,7 +71,9 @@ public class Argon2 {
         // Création du hash
         Argon2BytesGenerator generate = new Argon2BytesGenerator();
         generate.init(builder.build());
+        // Crée un tableau d'octets de 32 octets
         byte[] hashbytes = new byte[hashLength];
+        // Remplit le tableau d'octets provenant de la dérivation du mot de passe 
         generate.generateBytes(password.getBytes(StandardCharsets.UTF_8), hashbytes, 0, hashbytes.length);
 
         return hashbytes;
