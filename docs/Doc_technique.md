@@ -3,6 +3,14 @@
 ## Table des matières
 
 - [Architecture](#architecture)
+- [Liste des principales fonctions](#liste-des-principales-fonctions)
+    - [Interface](#interfacejava)
+    - [Services](#servicesjava)
+    - [Argon2](#argon2java)
+    - [AES](#aesjava)
+    - [User](#userjava)
+    - [InactivityCounter](#inactivitycounterjava)
+    - [SQLite](#sqlitejava)
 - [Sécurité](#sécurité)
     - [Hachage](#hachage)
     - [Chiffrement](#chiffrement)
@@ -26,6 +34,30 @@ Ce projet possède une architecture en couches qui se distingue en 3 couches :
 La classe Main instancie un objet de la classe `Services` et un de la classe `Interface`  
 
 L'architecture en couches est une architecture très classique pour créer des applications de bureau. Elle permet de séparer les responsabilités; chaque couche ne peut communiquer qu'avec celle qui se trouve directement en dessous. Cela assure une certaine évolutivité et la lisibilité du code tout en restant une architecture adaptée à un projet académique (utiliser des architectures plus complexes ne serait d'aucune utilité dans ce cas de figure).
+
+## Liste des principales fonctions
+
+### Interface.java
+
+### Services.java
+- [**`generatePassword`**](../src/main/java/javapass/Services.java#L446) : Génère un mot de passe aléatoire et robuste en fonction de critères définis (longueur, majuscules, chiffres et caractères spéciaux).
+- [**`check`**](../src/main/java/javapass/Services.java#L501) : Permet de vérifier si un mot de passe respecte bien certains critères.
+- [**`enhancePassword`**](../src/main/java/javapass/Services.java#L521) : Améliore un mot de passe jugé trop faible en le complexifiant (par exemple, en ajoutant des caractères manquants ou en augmentant sa longueur) pour atteindre un niveau de sécurité convenable, tout en gardant la base.
+- [**`analysePassword`**](../src/main/java/javapass/Services.java#L549) : Évalue la force d'un mot de passe (calcul d'entropie), calcule une estimation de durée de craquage par bruteforce et renvoie un rapport détaillé. 
+- [**`convertirDuree`**](../src/main/java/javapass/Services.java#L652) : Méthode interne servant à transformer un grand nombre de secondes en une unité plus lisible (secondes, jours, années, siècles, etc.).
+- [**`estFaible`**](../src/main/java/javapass/Services.java#L678) : Retourne un booléen en évaluant si le mot de passe est considéré comme faible ou non.
+- [**`samePassword`**](../src/main/java/javapass/Services.java#L690) : Vérifie dans la base de données si le mot de passe fourni est déjà utilisé pour d'autres sites.
+- [**`wait`**](../src/main/java/javapass/Services.java#L717) : Met le programme en pause avec `duree` en millisecondes passée en argument
+
+### Argon2.java
+
+### AES.java
+
+### User.java
+
+### InactivityCounter.java
+
+### SQLite.java
 
 ## Sécurité
 
@@ -174,18 +206,6 @@ Toutes les requêtes adressées à la base de données utilisent des `PreparedSt
 **Fonctionnement :** Avec un `PreparedStatement`, la requête SQL est pré-compilée par le serveur avant même que les données utilisateur soient insérées. Les paramètres sont transmis séparément via des ? et sont traités comme de simples valeurs, jamais comme du code SQL. Ainsi, si un utilisateur tente d'injecter du code malveillant comme `' OR '1'='1`, celui-ci sera interprété comme une chaîne de caractères littérale à rechercher dans la base, et non exécuté. C'est cette séparation stricte entre le code SQL et les données qui rend l'injection impossible.
 
 **L'injection SQL n'est pas la menace principale dans une application à base de données locale :) ([voir Chiffrement](#chiffrement)).** 
-
-
-## Fonctionnalités
-
-
-- [**`generatePassword`**](../src/main/java/javapass/Services.java#generatePassword) : Génère un mot de passe aléatoire et robuste en fonction de critères définis (longueur, majuscules, chiffres et caractères spéciaux).
-- **`check`** : Permet de vérifier si un mot de passe respecte bien certains critères.
-- **`enhancePassword`** : Améliore un mot de passe jugé trop faible en le complexifiant (par exemple, en ajoutant des caractères manquants ou en augmentant sa longueur) pour atteindre un niveau de sécurité convenable, tout en gardant la base.
-- **`analysePassword`** : Évalue la force d'un mot de passe (calcul d'entropie), calcule une estimation de durée de craquage par bruteforce et renvoie un rapport détaillé. 
-- **`convertirDuree`** : Méthode interne servant à transformer un grand nombre de secondes en une unité plus lisible (secondes, jours, années, siècles, etc.).
-- **`estFaible`** : Retourne un booléen en évaluant si le mot de passe est considéré comme faible ou non.
-- **`samePassword`** : Vérifie dans la base de données si le mot de passe fourni est déjà utilisé pour d'autres sites.
 
 ## Gestion des dépendances
 
