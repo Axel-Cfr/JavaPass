@@ -35,7 +35,7 @@ La classe Main instancie un objet de la classe `Services` et un de la classe `In
 
 L'architecture en couches est une architecture très classique pour créer des applications de bureau. Elle permet de séparer les responsabilités; chaque couche ne peut communiquer qu'avec celle qui se trouve directement en dessous. Cela assure une certaine évolutivité et la lisibilité du code tout en restant une architecture adaptée à un projet académique (utiliser des architectures plus complexes ne serait d'aucune utilité dans ce cas de figure).
 
-## Liste des principales fonctions
+## Liste des principales fonctions 
 
 ### Interface.java
 
@@ -47,7 +47,7 @@ L'architecture en couches est une architecture très classique pour créer des a
 - [**`convertirDuree`**](../src/main/java/javapass/Services.java#L652) : Méthode interne servant à transformer un grand nombre de secondes en une unité plus lisible (secondes, jours, années, siècles, etc.).
 - [**`estFaible`**](../src/main/java/javapass/Services.java#L678) : Retourne un booléen en évaluant si le mot de passe est considéré comme faible ou non.
 - [**`samePassword`**](../src/main/java/javapass/Services.java#L690) : Vérifie dans la base de données si le mot de passe fourni est déjà utilisé pour d'autres sites.
-- [**`wait`**](../src/main/java/javapass/Services.java#L717) : Met le programme en pause avec `duree` en millisecondes passée en argument
+- [**`wait`**](../src/main/java/javapass/Services.java#L717) : Met le programme en pause avec `duree` en millisecondes passée en argument.
 
 ### Argon2.java
 
@@ -58,6 +58,17 @@ L'architecture en couches est une architecture très classique pour créer des a
 ### InactivityCounter.java
 
 ### SQLite.java
+- [**`initialisationDB`**](../src/main/java/javapass/SQLite.java#L39) : Établis la connexion avec la base de donnéeset lui ajoute les tables users et passwords si elles n'existent pas. 
+- [**`ajoutTable_base`**](../src/main/java/javapass/SQLite.java#L58) : Cette méthode permet d'ajouter les tables de base à la base de données seulement si celles-ci n'existent pas encore elle est utilisé dans l'initialisation de l'application.
+- [**`deconnexion`**](../src/main/java/javapass/SQLite.java#L98) : Cette méthode ferme la connexion avec la base de données.
+
+- [**`ajout_utilisateur`**](../src/main/java/javapass/SQLite.java#L112) : Cette méthode ajoute un utilisateur dans la table users.
+- [**`ajout_mdp`**](../src/main/java/javapass/SQLite.java#L143) : Cette méthode ajoute un mot de passe dans la table passwords.
+- [**`suppr_utilisateur`**](../src/main/java/javapass/SQLite.java#L363) : Cette méthode permet de supprimer un utilisateur via son username.
+- [**`suppr_mdp`**](../src/main/java/javapass/SQLite.java#L378) : Cette méthode permet de supprimer le mot de passe d'un site renseigné via son website_name et le user_id.
+
+
+
 
 ## Sécurité
 
