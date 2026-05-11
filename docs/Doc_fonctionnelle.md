@@ -95,7 +95,12 @@ Une fois connecté(e), tapez simplement le numéro de l'action souhaitée puis "
 
 ![Ex_4](img/Exemples/4_ex.png)
 
-### 3. Ajouter un nouveau mot de passe
+### 3. Modifier son mot de passe maitre
+Avec l'option **[3]**, vous êtes invité à définir  un nouveau mot de passe.
+
+**mettre image axel modifier mot de passe maitre**
+
+### 4. Ajouter un nouveau mot de passe
 Avec l'option **[2]**, enregistrez les identifiants d'un nouveau site (nom, URL, identifiant).
 Pour le mot de passe, vous avez le choix :
 - Le taper vous-même.
@@ -103,7 +108,7 @@ Pour le mot de passe, vous avez le choix :
 
 ![Ex_5](img/Exemples/5_ex.png)
 
-### 4. Consulter et rechercher
+### 5. Consulter et rechercher
 Avec l'option **[1]**, JavaPass liste vos sites enregistrés :
 - Tapez le **numéro** d'un site pour en voir les détails.
 
@@ -122,7 +127,7 @@ Avec l'option **[1]**, JavaPass liste vos sites enregistrés :
 
 - Tapez **[Q]** pour revenir à l'accueil.
 
-### 5. Gérer un mot de passe
+### 6. Gérer un mot de passe
 En consultant les détails d'un mot de passe, plusieurs actions s'offrent à vous :
 - **[1] Analyser :** Vérifie la robustesse du mot de passe et son temps de piratage estimé, alerte l'utilisateur en cas de réutilisation sur d'autres sites et propose de l'améliorer s'il est jugé trop faible.
     - Cas d'un mot de passe fort :

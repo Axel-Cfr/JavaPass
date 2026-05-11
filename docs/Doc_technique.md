@@ -160,11 +160,16 @@ Elle est organisée en deux tables :
 
 - `passwords` : qui stocke de manière chiffré les mots de passe et identifiants utilisateurs relatifs aux sites web ainsi que de la même façon les données nécessaires au chiffrement et déchiffrement.
 
+**Remarque** : 
+- Veuillez noter qu'il est important d'activer les **foreign keys** car par défaut, SQLite désactive cette fonctionnalité pour des raisons de rétro-compatibilité; sans cette commande, les relations entre tables sont ignorées et les violations de référence (comme l'insertion de données orphelines) ne génèrent pas d'erreurs. D'où l'utilisation de la commande ```PRAGMA foreign_keys = ON``` permettant d'activer l'application des contraintes de clés étrangères pour la connexion de base de données en cours.
+
+- Pour des mesures de sécurité encore plus poussées, l'utilisation de l'instruction SQL ```PRAGMA secure_delete = ON;``` force l'effacement sécurisé des données en écrasant le contenu supprimé avec des zéros, empêchant ainsi la récupération forensic des anciennes informations.
+
 ### Protection contre les injections SQL
  
 #### **Prepared Statements**
  
-Toutes les requêtes adressées à la base de données utilisent des `PreparedStatement`. Cette approche empêche les injections SQL en séparant la requête de ses paramètres : la base de données reçoit la structure SQL d'un côté, et les données utilisateur de l'autre, ces dernières ne sont jamais interprétées comme du code SQL.\
+Toutes les requêtes adressées à la base de données utilisent des `PreparedStatement`. Cette approche empêche les injections SQL en séparant la requête de ses paramètres : la base de données reçoit la structure SQL d'un côté, et les données utilisateur de l'autre, ces dernières ne sont jamais interprétées comme du code SQL
 
 **Fonctionnement :** Avec un `PreparedStatement`, la requête SQL est pré-compilée par le serveur avant même que les données utilisateur soient insérées. Les paramètres sont transmis séparément via des ? et sont traités comme de simples valeurs, jamais comme du code SQL. Ainsi, si un utilisateur tente d'injecter du code malveillant comme `' OR '1'='1`, celui-ci sera interprété comme une chaîne de caractères littérale à rechercher dans la base, et non exécuté. C'est cette séparation stricte entre le code SQL et les données qui rend l'injection impossible.
 

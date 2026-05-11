@@ -20,9 +20,9 @@ utilisation de Java Database Connectivity (JDBC) API pour se connecter à une ba
 Avec un système de pilotes, le jdbc.jar est notre pilote (au sein du pom.xml). 
 
 *//*════════════════════════════════════════════════════════════════════════════════════════════════════════════
-Explication de la Class :
+Explication de la Classe :
 
-Class SQLite utilisé de façon à gérer toutes les données utilisateurs dans l'application
+Classe SQLite utilisé de façon à gérer toutes les données utilisateurs dans l'application
 Des chiffrements AES et ARGON2 sont implémentés afin que toutes les données soient sécurisées
 
 ══════════════════════════════════════════════════════════════════════════════════════════════════════════════*/

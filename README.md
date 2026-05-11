@@ -7,7 +7,7 @@
 
 ## Description
 
-JavaPass est un gestionnaire de mots de passe local et open source entièrement développé en Java.  
+JavaPass est un gestionnaire de mots de passe en ligne de commande (CLI) local et open source entièrement développé en Java.  
 Il fonctionne dans le terminal et stocke vos mots de passe chiffrés dans une base de données SQLite.  
 Vos données restent sur votre ordinateur et votre mot de passe maître n'est stocké nulle part, pas même sur votre machine.  
 Ce projet a été réalisé dans le cadre du cours de programmation Java en première année du cycle préparatoire intégré de 3iL.
