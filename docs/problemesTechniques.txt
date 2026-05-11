@@ -1,5 +1,7 @@
-Utilisation des places holders
-Gestion de la BDD
+Utilisation des places holders -> vers preparedStatements
+
+Gestion de la BDD: on a du adopter ce schema et pourquoi 
+
 gestion du counter d'inactivite: on a d'abord essayer de l'incorporer a l'interface, 
                                 mais il y avait un scanner qui bloquait le thread principal 
                                 nous empechant d'effectuer de quit()

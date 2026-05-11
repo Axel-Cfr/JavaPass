@@ -203,7 +203,7 @@ Elle est organisée en deux tables :
  
 Toutes les requêtes adressées à la base de données utilisent des `PreparedStatement`. Cette approche empêche les injections SQL en séparant la requête de ses paramètres : la base de données reçoit la structure SQL d'un côté, et les données utilisateur de l'autre, ces dernières ne sont jamais interprétées comme du code SQL
 
-**Fonctionnement :** Avec un `PreparedStatement`, la requête SQL est pré-compilée par le serveur avant même que les données utilisateur soient insérées. Les paramètres sont transmis séparément via des ? et sont traités comme de simples valeurs, jamais comme du code SQL. Ainsi, si un utilisateur tente d'injecter du code malveillant comme `' OR '1'='1`, celui-ci sera interprété comme une chaîne de caractères littérale à rechercher dans la base, et non exécuté. C'est cette séparation stricte entre le code SQL et les données qui rend l'injection impossible.
+**Fonctionnement :** Avec un `PreparedStatement`, la requête SQL est pré-compilée par le serveur avant même que les données utilisateur soient insérées. Les paramètres sont transmis séparément via des `?` et sont traités comme de simples valeurs, jamais comme du code SQL. Ainsi, si un utilisateur tente d'injecter du code malveillant comme `' OR '1'='1`, celui-ci sera interprété comme une chaîne de caractères littérale à rechercher dans la base, et non exécuté. C'est cette séparation stricte entre le code SQL et les données qui rend l'injection impossible.
 
 **L'injection SQL n'est pas la menace principale dans une application à base de données locale :) ([voir Chiffrement](#chiffrement)).** 
 
