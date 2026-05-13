@@ -13,11 +13,12 @@ public class InactivityCounter {
     private static TimerTask currentTask;
 
     // Plus de main(), on expose start() à la place
+    // elle va servir a initialiser le compteur d'inactivité
     public void start(Services services) {
         this.services = services;
         resetTimer();
     }
-
+    // Cette méthode est kappelée à chaque interaction de l'utilisateur pour réinitialiser le compteur d'inactivité
     public synchronized void resetTimer() {
         if (currentTask != null) {
             currentTask.cancel();
