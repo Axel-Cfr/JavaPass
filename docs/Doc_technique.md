@@ -52,8 +52,8 @@ Le nom de chaque fonction présentée est cliquable et vous redirige vers le **c
 - [**`analyserMDP`**](../src/main/java/javapass/Interface.java#L490)
 
 ### Services.java
-- [**`authentification`**](../src/main/java/javapass/Services.java#L47)
-- [**`inscription`**](../src/main/java/javapass/Services.java#L91)
+- [**`authentification`**](../src/main/java/javapass/Services.java#L47) : Vérifie que les identifiants entrés sont valides et appartiennent à un compte afin de récupérer les données du compte et de se connecter à l'application.
+- [**`inscription`**](../src/main/java/javapass/Services.java#L91) : Créé un compte et l'inscrit dans la base de données
 - [**`givePasswordInfos`**](../src/main/java/javapass/Services.java#L212)
 - [**`updateMasterPassword`**](../src/main/java/javapass/Services.java#L342)
 
@@ -78,14 +78,16 @@ Le nom de chaque fonction présentée est cliquable et vous redirige vers le **c
 - [**`decrypt`**](../src/main/java/javapass/AES.java#L40)
 
 ### User.java
+- [**`get...`**](../src/main/java/javapass/User.java#L24) : `User.java` contient un certain nombre de getters permettant de récupérer efficacement les données d'un utilisateur.
 
 ### InactivityCounter.java
+- [**`start`**](../src/main/java/javapass/InactivityCounter.java#L17) : Initialise le compteur d'inactivité.
+- [**`resetTimer`**](../src/main/java/javapass/InactivityCounter.java#L22) : est appelée à chaque intéraction de l'utilisateur pour réinitialiser le compteur d'inactivité.
 
 ### SQLite.java
 - [**`initialisationDB`**](../src/main/java/javapass/SQLite.java#L39) : Établis la connexion avec la base de données et lui ajoute les tables users et passwords si elles n'existent pas. 
 - [**`ajoutTable_base`**](../src/main/java/javapass/SQLite.java#L58) : Cette méthode permet d'ajouter les tables de base à la base de données seulement si celles-ci n'existent pas encore elle est utilisé dans l'initialisation de l'application.
 - [**`deconnexion`**](../src/main/java/javapass/SQLite.java#L98) : Cette méthode ferme la connexion avec la base de données.
-
 - [**`ajout_utilisateur`**](../src/main/java/javapass/SQLite.java#L112) : Cette méthode ajoute un utilisateur dans la table users.
 - [**`ajout_mdp`**](../src/main/java/javapass/SQLite.java#L143) : Cette méthode ajoute un mot de passe dans la table passwords.
 - [**`suppr_utilisateur`**](../src/main/java/javapass/SQLite.java#L363) : Cette méthode permet de supprimer un utilisateur via son username.
