@@ -63,7 +63,7 @@ java -jar target/JavaPass.jar
 
 **Plus d'informations dans la [documentation fonctionnelle](docs/Doc_fonctionnelle.md)**
 
-Si vous voulez utiliser JavaPass sans aucune mise en place ou que vous n'avez pas Maven, un fichier [JavaPass.jar](simple_use/JavaPass.jar) est disponible dans le répertoire /simple_use.
+Si vous voulez utiliser JavaPass sans aucune mise en place ou que vous n'avez pas Maven, un fichier [JavaPass.jar](simple_use/JavaPass.jar) est disponible dans le répertoire `/simple_use`.
 
 ## Auteurs
 
@@ -75,8 +75,9 @@ Si vous voulez utiliser JavaPass sans aucune mise en place ou que vous n'avez pa
 
 - [GitHub](https://github.com/Axel-Cfr/JavaPass)
 - [Trello](https://trello.com/b/ZfCDiRwj/javapass)
-- [Technical Documentation](docs/Doc_technique.md)
-- [Functional Documentation](docs/Doc_fonctionnelle.md)
+- [Documentation Technique](docs/Doc_technique.md)
+- [Documentation Fonctionnelle](docs/Doc_fonctionnelle.md)
+- [Vidéo de présentation](https://drive.proton.me/urls/96A4Z7G8YM#y1oNaVTeoBKT) (disponible jusqu'au 7 juin 2026)
 
 ## Licence
 

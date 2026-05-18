@@ -16,7 +16,7 @@ public class Services {
     // Instanciation d'objets des classes SQLite, InactivityCounter et User
     private final SQLite sqlite = new SQLite();
     private final InactivityCounter inactivityCounter = new InactivityCounter();
-    public User user;
+    private User user;
 
     // Variables de caractères disponibles
     private static final String MINUSCULES = "abcdefghijklmnopqrstuvwxyz";
@@ -732,5 +732,13 @@ public class Services {
     // Fonction qui reset le compteur d'inactivité
     public void resetTimer() {
         inactivityCounter.resetTimer();
+    }
+
+    // Fonction qui renvoie le nom de l'utilisateur ainsi la date et l'heure de la dernière connexion
+    public String[] getUsernameAndLastLogin() {
+        String[] usernameAndLastLogin = new String[2];
+        usernameAndLastLogin[0] = user.getUsername();
+        usernameAndLastLogin[1] = user.getLast_login();
+        return usernameAndLastLogin;
     }
 }

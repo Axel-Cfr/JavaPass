@@ -55,8 +55,7 @@ Le nom de chaque fonction présentée est cliquable et vous redirige vers le **c
 - [**`authentification`**](../src/main/java/javapass/Services.java#L47) : Vérifie que les identifiants entrés sont valides et appartiennent à un compte afin de récupérer les données du compte et de se connecter à l'application.
 - [**`inscription`**](../src/main/java/javapass/Services.java#L91) : Créé un compte et l'inscrit dans la base de données.
 - [**`givePasswordInfos`**](../src/main/java/javapass/Services.java#L212) : Donne les informations du password.
-- [**`updateMasterPassword`**](../src/main/java/javapass/Services.java#L342) : Change le mot de passe maître en s'assurant de recalculer le chiffrement de chacun des mots de passe.
-
+- [**`updateMasterPassword`**](../src/main/java/javapass/Services.java#L342) : prend en charge la mise à jour du mot de passe maître et ses conséquences (dechiffrer toutes les données cryptées avec l'ancienne clé et les anciens IVs puis les rechiffer avec la bonne clé et de nouveaux IVs)
 
 - [**`generatePassword`**](../src/main/java/javapass/Services.java#L446) : Génère un mot de passe aléatoire et robuste en fonction de critères définis (longueur, majuscules, chiffres et caractères spéciaux).
 - [**`check`**](../src/main/java/javapass/Services.java#L501) : Permet de vérifier si un mot de passe contient des minucules, des majuscules, des chiffres et des caractères spéciaux.
@@ -68,14 +67,14 @@ Le nom de chaque fonction présentée est cliquable et vous redirige vers le **c
 - [**`wait`**](../src/main/java/javapass/Services.java#L717) : Met le programme en pause avec `duree` en millisecondes passée en argument.
 
 ### Argon2.java
-- [**`generateSalt`**](../src/main/java/javapass/Argon2.java#L11)
-- [**`derivePassword`**](../src/main/java/javapass/Argon2.java#L22)
+- [**`generateSalt`**](../src/main/java/javapass/Argon2.java#L11) : Génère et retourne un sel de 16 octets (= 128bits)
+- [**`derivePassword`**](../src/main/java/javapass/Argon2.java#L22) : Dérive le mot de passe passé en paramètre
 
 ### AES.java
-- [**`generateIV`**](../src/main/java/javapass/AES.java#L12)
-- [**`generateGCMParameterSpec`**](../src/main/java/javapass/AES.java#L22)
-- [**`encrypt`**](../src/main/java/javapass/AES.java#L28)
-- [**`decrypt`**](../src/main/java/javapass/AES.java#L40)
+- [**`generateIV`**](../src/main/java/javapass/AES.java#L12) : Crée un vecteur d'initialisation aléatoire (12 octets)
+- [**`generateGCMParameterSpec`**](../src/main/java/javapass/AES.java#L22) : Crée un objet GCMParameterSpec (128bits = 16 octets) avec un iv (12 octets) et un tag d'authentification propre à GCM (4 octets)
+- [**`encrypt`**](../src/main/java/javapass/AES.java#L28) : Chiffre une chaîne de caractère et la retourne une fois chiffrée
+- [**`decrypt`**](../src/main/java/javapass/AES.java#L40) : Dechiffre une chaîne de caractère chiffrée et la retourne une fois dechiffrée
 
 ### User.java
 - [**`get...`**](../src/main/java/javapass/User.java#L24) : `User.java` contient un certain nombre de getters permettant de récupérer efficacement les données d'un utilisateur.

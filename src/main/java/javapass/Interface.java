@@ -252,6 +252,7 @@ public class Interface {
         String option;
         String[] tab = {"1", "2", "3", "4", "5"};
         List<String> inputs = Arrays.asList(tab);
+        String[] usernameAndLastLogin = services.getUsernameAndLastLogin();
 
         do {
             clearScreen();
@@ -259,8 +260,8 @@ public class Interface {
             // Reinitialise le compteur
             services.resetTimer();
 
-            System.out.println("Bonjour "+services.user.getUsername());
-            System.out.println("Dernière connexion le "+services.user.getLast_login());
+            System.out.println("Bonjour "+usernameAndLastLogin[0]);
+            System.out.println("Dernière connexion le "+usernameAndLastLogin[1]);
             System.out.println("\nQue voulez vous faire ?");
             System.out.println("[1] : Consulter mes mots de passe");
             System.out.println("[2] : Ajouter un nouveau mot de passe");
