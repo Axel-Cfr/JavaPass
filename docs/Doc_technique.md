@@ -42,20 +42,20 @@ Le nom de chaque fonction présentée est cliquable et vous redirige vers le **c
 
 ### Interface.java
 
-- [**`givePasswordInfos`**](../src/main/java/javapass/Interface.java#L32)
-- [**`quit`**](../src/main/java/javapass/Interface.java#L98)
-- [**`clearScreen`**](../src/main/java/javapass/Interface.java#L105)
-- [**`bandeau`**](../src/main/java/javapass/Interface.java#L118)
-- [**`erreur`**](../src/main/java/javapass/Interface.java#L138)
-- [**`accueil`**](../src/main/java/javapass/Interface.java#L250)
-- [**`voirMDP`**](../src/main/java/javapass/Interface.java#L379)
-- [**`analyserMDP`**](../src/main/java/javapass/Interface.java#L490)
+- [**`givePasswordInfos`**](../src/main/java/javapass/Interface.java#L32) : Donne les informations du password.
+- [**`quit`**](../src/main/java/javapass/Interface.java#L98) : Quitte proprement l'application JavaPass.
+- [**`clearScreen`**](../src/main/java/javapass/Interface.java#L105) : Réinitialise l'affichage console.
+- [**`bandeau`**](../src/main/java/javapass/Interface.java#L118) : Affichage du bandeau de JavaPass.
+- [**`erreur`**](../src/main/java/javapass/Interface.java#L138) : Affichage des messages d'erreur.
+- [**`accueil`**](../src/main/java/javapass/Interface.java#L250) : Affichage de l'acceuil.
+- [**`voirMDP`**](../src/main/java/javapass/Interface.java#L379) : Permet de voir tous les mots de passe d'un utilisateur.
+- [**`analyserMDP`**](../src/main/java/javapass/Interface.java#L490) : Analyse un mot de passe et donne des informations sur son entropie, son temps estimé de craquage par un super-ordinateur ainsi que sa force.
 
 ### Services.java
 - [**`authentification`**](../src/main/java/javapass/Services.java#L47) : Vérifie que les identifiants entrés sont valides et appartiennent à un compte afin de récupérer les données du compte et de se connecter à l'application.
-- [**`inscription`**](../src/main/java/javapass/Services.java#L91) : Créé un compte et l'inscrit dans la base de données
-- [**`givePasswordInfos`**](../src/main/java/javapass/Services.java#L212)
-- [**`updateMasterPassword`**](../src/main/java/javapass/Services.java#L342)
+- [**`inscription`**](../src/main/java/javapass/Services.java#L91) : Créé un compte et l'inscrit dans la base de données.
+- [**`givePasswordInfos`**](../src/main/java/javapass/Services.java#L212) : Donne les informations du password.
+- [**`updateMasterPassword`**](../src/main/java/javapass/Services.java#L342) : Change le mot de passe maître en s'assurant de recalculer le chiffrement de chacun des mots de passe.
 
 
 - [**`generatePassword`**](../src/main/java/javapass/Services.java#L446) : Génère un mot de passe aléatoire et robuste en fonction de critères définis (longueur, majuscules, chiffres et caractères spéciaux).
