@@ -3,17 +3,24 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>javapass</groupId>
+  <!--Nom de l'application-->
   <artifactId>JavaPass</artifactId>
+  <!--Format de sortie, doit être compilé en .jar-->
   <packaging>jar</packaging>
+  <!--Numéro de version-->
   <version>1.0</version>
 
   <name>JavaPass</name>
   <url>http://maven.apache.org</url>
 
+<!--Dépendances téléchargées et ajoutée au classpath du projet-->
 <dependencies>
     <dependency>
+        <!--Nom de domaine inversé de l'éditeur, ici bouncycastle.org-->
         <groupId>org.bouncycastle</groupId>
+        <!--Nom de la dépendance-->
         <artifactId>bcprov-jdk18on</artifactId>
+        <!--Numéro de version de la dépendance-->
         <version>1.83</version>
     </dependency>
     <dependency>
@@ -25,30 +32,39 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.13.2</version>
+      <!--N'est utilisée que pour les tests, n'est pas compilée dans le .jar-->
       <scope>test</scope>
     </dependency>
   </dependencies>
 
+  <!--Paramètres pour la compilation-->
   <build>
+    <!--Nom du .jar compilé-->
     <finalName>JavaPass</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <!--Assemble plusieurs .jar en un seul, ici le code compilé et les dépendances-->
         <artifactId>maven-assembly-plugin</artifactId>
           <executions>
             <execution>
+              <!--Se déclenche lors de la phase "mvn package"-->
               <phase>package</phase>
               <goals>
+                <!--Ne crée qu'un seul fichier compilé-->
                 <goal>single</goal>
               </goals>
               <configuration>
+                <!--Ne rajoute pas au nom du .jar qu'il est assemblé (-with-dependencies)-->
                 <appendAssemblyId>false</appendAssemblyId>
                 <archive>
                 <manifest>
+                    <!--Indique que la classe Main.java est la classe principale du projet-->
                     <mainClass>javapass.Main</mainClass>
                 </manifest>
                 </archive>
                 <descriptorRefs>
+                    <!--Indique à Maven d'ajouter les dépendances au .jar produit-->
                     <descriptorRef>jar-with-dependencies</descriptorRef>
                 </descriptorRefs>
             </configuration>

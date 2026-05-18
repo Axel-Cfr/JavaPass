@@ -127,6 +127,8 @@ Parallélisme | 4 | 4 | 4 | 2 | 4 |
 Longueur du sel | 128 bits | 128 bits | 128 bits | 128 bits | 128 bits |
 Longueur du hash | 256 bits | 256 bits | 256 bits | 256 bits | 256 bits |  
 
+Nous utilisons la bibliothèque BouncyCastle bcprov-jdk18on version 1.83 dans JavaPass.
+
 Pour en savoir plus, vous pouvez visualiser le code du fichier [Argon2.java](../src/main/java/javapass/Argon2.java).
 
 ### Chiffrement
@@ -244,6 +246,16 @@ Toutes les requêtes adressées à la base de données utilisent des `PreparedSt
 
 ## Gestion des dépendances
 
+Pour installer et ajouter au Classpath les dépendances nécessaires au projet de manière automatique, nous avons choisi d'utiliser Apache Maven.
+- Le Classpath est un paramètre passé à une machine virtuelle Java qui définit le chemin d'accès au répertoire où se trouvent les classes, les dépendances et les packages Java.
+
+Liste des bibliothèques utilisées :
+- Pour Argon2 : bcprov-jdk18on version 1.83 de BouncyCastle
+- Pour SQLite : sqlite-jdbc version 3.51.1.0 de Xerial
+- Pour les tests unitaires : junit version 4.13.2 de JUnit (présent par défaut)
+
+Pour en savoir plus, vous pouvez visualiser le fichier contenant les informations nécessaires au traitement du projet par Maven : [pom.xml](../pom.xml)
+
 ## Utilisation de l'Intelligence artificielle
 
 **Aucune** ligne de code de JavaPass n'a été écrite par une IA ou recopiée à partir de celle-ci.  
@@ -254,10 +266,12 @@ JavaPass est le fruit **exclusif** de nos idées, de nos refléxions et des conn
 
 - Architecture
     - https://www.redhat.com/fr/topics/cloud-native-apps/what-is-an-application-architecture
+    - https://www.infoq.com/fr/articles/architecture-couches/
 - AES
     - https://www.youtube.com/watch?v=5ZEYKk8BHcE
     - https://www.developpez.net/forums/blogs/863457-autran/b1016/chiffrement-aes-java/
     - https://www.remipoignon.fr/aes-le-big-boss-du-chiffrement-symetrique/
+    - https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf
     - https://owasp.org/www-community/Using_the_Java_Cryptographic_Extensions
     - https://jmdoudoux.developpez.com/cours/developpons/java/chap-jce.php
     - https://www.baeldung.com/java-aes-encryption-decryption
@@ -288,6 +302,7 @@ JavaPass est le fruit **exclusif** de nos idées, de nos refléxions et des conn
     - https://maven.apache.org/download.cgi
     - https://www.youtube.com/watch?v=Aaq3FaadNQo
     - https://objis.com/tutoriel-maven-n1-installation-et-phases/
+    - https://fr.wikipedia.org/wiki/Classpath_(java)
     - https://www.baeldung.com/executable-jar-with-maven
     - https://maven.apache.org/plugins/maven-jar-plugin/jar-mojo.html
     - https://maven.apache.org/plugins/maven-assembly-plugin/single-mojo.html
