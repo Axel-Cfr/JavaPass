@@ -19,8 +19,8 @@ public class AES {
     	return iv;
 	}
 
-	// Fonction qui crée un objet GCMParameterSpec (128bits = 16 octets) avec un iv (12 octets) 
-	// et le tag d'authentification propre à GCM (4 octets)
+	// Fonction qui crée un objet GCMParameterSpec contenant un iv (de 12 octets qui sera combiné à un compteur de 4 octets) 
+	// et l'indication que le tag d'authentification propre à GCM devra faire 128bits
 	public static GCMParameterSpec generateGCMParameterSpec(byte[] iv) {
     	return new GCMParameterSpec(128, iv);
 	}

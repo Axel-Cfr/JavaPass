@@ -121,7 +121,7 @@ Si l'option par défaut est choisie, la variante **Argon2id** avec des paramètr
 | | RFC_9106 HIGH_MEMORY | RFC_9106 LOW_MEMORY | PC puissant et strictement personnel | Serveur | Autres |
 |:---: |:---:|:---:|:---:|:---:|:---:|
 Itérations | 1 | 4 | 1 | 2 | 4 |
-Coût mémoire | 2 Gio (= 2.14 Go) | 64 mio (= 134 mo) | 2 Gio | 128 mio | 128 mio |
+Coût mémoire | 2 Gio (= 2.14 Go) | 64 mio (= 67 mo) | 2 Gio | 128 mio | 128 mio |
 Parallélisme | 4 | 4 | 4 | 2 | 4 |
 Longueur du sel | 128 bits | 128 bits | 128 bits | 128 bits | 128 bits |
 Longueur du hash | 256 bits | 256 bits | 256 bits | 256 bits | 256 bits |  
