@@ -14,11 +14,11 @@
 - [Sécurité](#sécurité)
     - [Hachage](#hachage)
     - [Chiffrement](#chiffrement)
+    - [Authentification et utilisation de la clé dérivée](#authentification-et-utilisation-de-la-clé-dérivée)
     - [Détection d'inactivité](#détection-dinactivité)
 - [Base de données](#base-de-données)
     - [Architecture](#architecture-de-la-base-de-données)
     - [Protection contre les injections SQL](#Protection-contre-les-injections-SQL)
-- [Fonctionnalités](#fonctionnalités)
 - [Gestion des Dépendances](#gestion-des-dépendances)
 - [Utilisation de l'Intelligence Artificielle](#utilisation-de-lintelligence-artificielle)
 - [Sources](#sources)
@@ -179,11 +179,13 @@ Vulnérabilités :
 Vulnérabilités :
     - Si l'IV est réutilisé pour chiffrer d'autres données, l'attaquant peut déduire des informations sur le texte en clair
 
-
-
 #### Utilisation d'AES-256-GCM dans JavaPass
 
 Pour en savoir plus, vous pouvez visualiser le code du fichier [AES.java](../src/main/java/javapass/AES.java).
+
+### Authentification et utilisation de la clé dérivée
+
+![Authenfication](img/Doc_technique/Authentification.png)
 
 ### Détection d'inactivité
  
